@@ -6,81 +6,8 @@ import { motion } from 'motion/react';
 import { MapPin, TrendingUp, Clock, ArrowRight, Filter, Search } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-
-const projects = [
-  {
-    id: 1,
-    title: 'Торговый центр "Галерея"',
-    category: 'Арендный бизнес',
-    location: 'Москва, ЦАО',
-    minInvestment: '50 000 ₽',
-    yield: '22.5%',
-    term: '36 мес',
-    funded: 85,
-    image: 'https://picsum.photos/seed/building1/800/600',
-    status: 'Сбор средств',
-  },
-  {
-    id: 2,
-    title: 'Складской комплекс А+',
-    category: 'Логистика',
-    location: 'Московская область',
-    minInvestment: '10 000 ₽',
-    yield: '19.8%',
-    term: '24 мес',
-    funded: 100,
-    image: 'https://picsum.photos/seed/warehouse/800/600',
-    status: 'Сбор закрыт',
-  },
-  {
-    id: 3,
-    title: 'Сеть стрит-ритейла',
-    category: 'Редевелопмент',
-    location: 'Санкт-Петербург',
-    minInvestment: '100 000 ₽',
-    yield: '26.0%',
-    term: '12 мес',
-    funded: 45,
-    image: 'https://picsum.photos/seed/street/800/600',
-    status: 'Сбор средств',
-  },
-  {
-    id: 4,
-    title: 'Сеть кофеен "Утро"',
-    category: 'Готовый бизнес',
-    location: 'Москва',
-    minInvestment: '150 000 ₽',
-    yield: '30.0%',
-    term: '18 мес',
-    funded: 12,
-    image: 'https://picsum.photos/seed/coffee/800/600',
-    status: 'Сбор средств',
-  },
-  {
-    id: 5,
-    title: 'Медицинская клиника',
-    category: 'Готовый бизнес',
-    location: 'Казань',
-    minInvestment: '500 000 ₽',
-    yield: '24.0%',
-    term: '48 мес',
-    funded: 60,
-    image: 'https://picsum.photos/seed/clinic/800/600',
-    status: 'Сбор средств',
-  },
-  {
-    id: 6,
-    title: 'IT-компания (SaaS)',
-    category: 'Доли предприятий',
-    location: 'Иннополис',
-    minInvestment: '1 000 000 ₽',
-    yield: '45.0%',
-    term: '60 мес',
-    funded: 90,
-    image: 'https://picsum.photos/seed/it/800/600',
-    status: 'Сбор средств',
-  }
-];
+import Link from 'next/link';
+import { projectCategories, projects } from '@/lib/domain/projects';
 
 export default function ProjectsPage() {
   const [filter, setFilter] = useState('Все');
@@ -126,7 +53,7 @@ export default function ProjectsPage() {
             <div className="flex items-center gap-2 px-4 py-3 bg-indigo-950 text-white rounded-full text-sm font-bold mr-4 shadow-lg shadow-indigo-950/20">
               <Filter className="w-4 h-4" /> Фильтры
             </div>
-            {['Все', 'Арендный бизнес', 'Готовый бизнес', 'Редевелопмент', 'Доли предприятий', 'Логистика'].map((cat) => (
+            {projectCategories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
@@ -219,16 +146,19 @@ export default function ProjectsPage() {
                       <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Мин. сумма</p>
                       <p className="text-xl font-display font-black text-indigo-950">{project.minInvestment}</p>
                     </div>
-                    <button 
-                      className={`flex items-center justify-center w-14 h-14 rounded-full transition-all duration-300 ${
-                        project.funded === 100 
-                          ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                          : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 shadow-lg shadow-indigo-600/20'
-                      }`}
-                      disabled={project.funded === 100}
-                    >
-                      <ArrowRight className="w-6 h-6" />
-                    </button>
+                    {project.funded === 100 ? (
+                      <span className="flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 text-slate-400 cursor-not-allowed">
+                        <ArrowRight className="w-6 h-6" />
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/projects/${project.id}`}
+                        className="flex items-center justify-center w-14 h-14 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 shadow-lg shadow-indigo-600/20 transition-all duration-300"
+                        aria-label={`Подробнее о проекте ${project.title}`}
+                      >
+                        <ArrowRight className="w-6 h-6" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </motion.div>

@@ -1,1 +1,83 @@
 @import "tailwindcss";
+
+@theme {
+  /* Primary brand scale: deep blue -> vivid azure */
+  --color-indigo-50: #eef5ff;
+  --color-indigo-100: #dceaff;
+  --color-indigo-200: #bfd8ff;
+  --color-indigo-300: #93bdff;
+  --color-indigo-400: #5f98ff;
+  --color-indigo-500: #3673f5;
+  --color-indigo-600: #2158d8;
+  --color-indigo-700: #1d46b1;
+  --color-indigo-800: #1d3d8f;
+  --color-indigo-900: #1e376f;
+  --color-indigo-950: #152449;
+
+  /* Secondary accent scale: sky/cyan for CTA and highlights */
+  --color-teal-50: #ebfbff;
+  --color-teal-100: #cff4ff;
+  --color-teal-200: #a4e8ff;
+  --color-teal-300: #70d8ff;
+  --color-teal-400: #35c2ff;
+  --color-teal-500: #0da8f2;
+  --color-teal-600: #0a86ca;
+  --color-teal-700: #0e6ba2;
+  --color-teal-800: #145882;
+  --color-teal-900: #164a6c;
+  --color-teal-950: #122f47;
+
+  /* Supportive blue scale for gradients and surfaces */
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  --color-blue-950: #172554;
+
+  /* Cool neutral scale for backgrounds and borders */
+  --color-slate-50: #f5f9ff;
+  --color-slate-100: #edf3fb;
+  --color-slate-200: #dce7f5;
+  --color-slate-300: #c2d4eb;
+  --color-slate-400: #90a9cb;
+  --color-slate-500: #6b84aa;
+  --color-slate-600: #4e6789;
+  --color-slate-700: #3d516e;
+  --color-slate-800: #2b3d55;
+  --color-slate-900: #1d2b3f;
+  --color-slate-950: #0f1729;
+
+  /*
+   * Keep semantic success classes inside the same blue language
+   * to avoid accidental green accents in UI sections.
+   */
+  --color-emerald-50: #eefaff;
+  --color-emerald-100: #d6f4ff;
+  --color-emerald-200: #b7ecff;
+  --color-emerald-300: #86deff;
+  --color-emerald-400: #4bcaff;
+  --color-emerald-500: #1fb2ff;
+  --color-emerald-600: #0d8fe6;
+  --color-emerald-700: #0e72b8;
+  --color-emerald-800: #125e95;
+  --color-emerald-900: #154f79;
+  --color-emerald-950: #10324e;
+
+  --color-green-50: #eefaff;
+  --color-green-100: #d6f4ff;
+  --color-green-200: #b7ecff;
+  --color-green-300: #86deff;
+  --color-green-400: #4bcaff;
+  --color-green-500: #1fb2ff;
+  --color-green-600: #0d8fe6;
+  --color-green-700: #0e72b8;
+  --color-green-800: #125e95;
+  --color-green-900: #154f79;
+  --color-green-950: #10324e;
+}

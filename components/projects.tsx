@@ -5,45 +5,7 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 import { MapPin, TrendingUp, Clock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
-const projects = [
-  {
-    id: 1,
-    title: 'Торговый центр "Галерея"',
-    category: 'Арендный бизнес',
-    location: 'Москва, ЦАО',
-    minInvestment: '50 000 ₽',
-    yield: '22.5%',
-    term: '36 мес',
-    funded: 85,
-    image: 'https://picsum.photos/seed/building1/800/600',
-    status: 'Сбор средств',
-  },
-  {
-    id: 2,
-    title: 'Складской комплекс А+',
-    category: 'Логистика',
-    location: 'Московская область',
-    minInvestment: '10 000 ₽',
-    yield: '19.8%',
-    term: '24 мес',
-    funded: 100,
-    image: 'https://picsum.photos/seed/warehouse/800/600',
-    status: 'Успешно профинансирован',
-  },
-  {
-    id: 3,
-    title: 'Сеть стрит-ритейла',
-    category: 'Редевелопмент',
-    location: 'Санкт-Петербург',
-    minInvestment: '100 000 ₽',
-    yield: '26.0%',
-    term: '12 мес',
-    funded: 45,
-    image: 'https://picsum.photos/seed/street/800/600',
-    status: 'Сбор средств',
-  },
-];
+import { projects } from '@/lib/domain/projects';
 
 export default function Projects() {
   const [filter, setFilter] = useState('Все');
@@ -79,7 +41,10 @@ export default function Projects() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {projects
+            .filter((project) => filter === 'Все' || project.category === filter)
+            .slice(0, 3)
+            .map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
@@ -153,16 +118,19 @@ export default function Projects() {
                     <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Мин. сумма</p>
                     <p className="text-xl font-display font-black text-indigo-950">{project.minInvestment}</p>
                   </div>
-                  <button 
-                    className={`flex items-center justify-center w-14 h-14 rounded-full transition-all duration-300 ${
-                      project.funded === 100 
-                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 shadow-lg shadow-indigo-600/20'
-                    }`}
-                    disabled={project.funded === 100}
-                  >
-                    <ArrowRight className="w-6 h-6" />
-                  </button>
+                  {project.funded === 100 ? (
+                    <span className="flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 text-slate-400 cursor-not-allowed">
+                      <ArrowRight className="w-6 h-6" />
+                    </span>
+                  ) : (
+                    <Link
+                      href={`/projects/${project.id}`}
+                      className="flex items-center justify-center w-14 h-14 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 shadow-lg shadow-indigo-600/20 transition-all duration-300"
+                      aria-label={`Подробнее о проекте ${project.title}`}
+                    >
+                      <ArrowRight className="w-6 h-6" />
+                    </Link>
+                  )}
                 </div>
               </div>
             </motion.div>

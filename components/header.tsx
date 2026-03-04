@@ -6,12 +6,18 @@ import { Menu, X, Building2, MapPin, Clock, Send, MessageCircle, Search, Phone, 
 import { motion, AnimatePresence } from 'motion/react';
 
 const navLinks = [
-  { name: 'Каталог активов', href: '/projects' },
-  { name: 'Услуги', href: '/services' },
-  { name: 'Блог и аналитика', href: '/blog' },
+  { name: 'Главная', href: '/' },
   { name: 'О компании', href: '/about' },
-  { name: 'Карьера', href: '/career' },
+  { name: 'Как это работает', href: '/how' },
+  { name: 'Проекты', href: '/projects' },
+  { name: 'Калькулятор', href: '/calculator' },
+  { name: 'Тарифы', href: '/tariffs' },
+  { name: 'Документы', href: '/documents' },
+  { name: 'Отзывы', href: '/reviews' },
+  { name: 'FAQ', href: '/faq' },
+  { name: 'Блог', href: '/blog' },
   { name: 'Контакты', href: '/contacts' },
+  { name: 'Кабинет', href: '/dashboard' },
 ];
 
 export default function Header() {
@@ -71,10 +77,10 @@ export default function Header() {
             Привлечь инвестиции
           </button>
           <Link 
-            href="/dashboard"
+            href="/login"
             className="px-6 py-3.5 bg-teal-400 text-indigo-950 font-bold rounded-full hover:bg-teal-500 transition-all shadow-lg shadow-teal-400/20 text-sm flex items-center gap-2"
           >
-            <User className="w-4 h-4" /> Личный кабинет
+            <User className="w-4 h-4" /> Вход
           </Link>
         </div>
 
@@ -88,9 +94,9 @@ export default function Header() {
       </div>
 
       {/* Bottom Nav */}
-      <nav className="hidden lg:flex bg-indigo-950 text-white px-8 py-3.5 gap-10 justify-center shadow-inner">
+      <nav className="hidden lg:flex bg-indigo-950 text-white px-6 py-3.5 gap-7 justify-start overflow-x-auto whitespace-nowrap shadow-inner">
         {navLinks.map(link => (
-          <Link key={link.name} href={link.href} className="text-xs font-bold hover:text-teal-400 transition-colors uppercase tracking-widest">
+          <Link key={link.name} href={link.href} className="text-xs font-bold hover:text-teal-400 transition-colors uppercase tracking-widest shrink-0">
             {link.name}
           </Link>
         ))}
@@ -124,11 +130,11 @@ export default function Header() {
                 Привлечь инвестиции
               </button>
               <Link 
-                href="/dashboard"
+                href="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="w-full py-3 bg-teal-400 text-indigo-950 font-bold rounded-xl text-sm flex items-center justify-center gap-2"
               >
-                <User className="w-4 h-4" /> Личный кабинет
+                <User className="w-4 h-4" /> Вход
               </Link>
             </div>
           </motion.div>

@@ -38,11 +38,12 @@ export default function Footer() {
           <div className="lg:col-span-2 lg:col-start-6">
             <h4 className="text-white font-display font-bold mb-6 uppercase tracking-wider text-sm">Навигация</h4>
             <ul className="space-y-4 text-sm font-medium">
+              <li><Link href="/how" className="hover:text-teal-400 transition-colors">Как это работает</Link></li>
               <li><Link href="/about" className="hover:text-teal-400 transition-colors">О компании</Link></li>
-              <li><Link href="/projects" className="hover:text-teal-400 transition-colors">Каталог активов</Link></li>
-              <li><Link href="/services" className="hover:text-teal-400 transition-colors">Услуги</Link></li>
-              <li><Link href="/blog" className="hover:text-teal-400 transition-colors">Блог и аналитика</Link></li>
-              <li><Link href="/career" className="hover:text-teal-400 transition-colors">Карьера</Link></li>
+              <li><Link href="/projects" className="hover:text-teal-400 transition-colors">Проекты</Link></li>
+              <li><Link href="/calculator" className="hover:text-teal-400 transition-colors">Калькулятор</Link></li>
+              <li><Link href="/tariffs" className="hover:text-teal-400 transition-colors">Тарифы</Link></li>
+              <li><Link href="/faq" className="hover:text-teal-400 transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
@@ -50,10 +51,10 @@ export default function Footer() {
           <div className="lg:col-span-3">
             <h4 className="text-white font-display font-bold mb-6 uppercase tracking-wider text-sm">Документы</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><Link href="#" className="hover:text-teal-400 transition-colors">Правила платформы</Link></li>
-              <li><Link href="#" className="hover:text-teal-400 transition-colors">Политика конфиденциальности</Link></li>
-              <li><Link href="#" className="hover:text-teal-400 transition-colors">Декларация о рисках</Link></li>
-              <li><Link href="#" className="hover:text-teal-400 transition-colors">Пользовательское соглашение</Link></li>
+              <li><Link href="/documents" className="hover:text-teal-400 transition-colors">Все документы</Link></li>
+              <li><Link href="/reviews" className="hover:text-teal-400 transition-colors">Отзывы и кейсы</Link></li>
+              <li><Link href="/blog" className="hover:text-teal-400 transition-colors">Блог и аналитика</Link></li>
+              <li><Link href="/login" className="hover:text-teal-400 transition-colors">Вход в кабинет</Link></li>
             </ul>
           </div>
 

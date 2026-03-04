@@ -30,8 +30,8 @@ export default function Features() {
             <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/80 to-transparent"></div>
             
             <div className="relative z-10 h-full flex flex-col justify-between">
-              <div className="w-20 h-20 bg-teal-400 rounded-3xl flex items-center justify-center text-indigo-950 shadow-2xl shadow-teal-400/20">
-                <Building className="w-10 h-10" />
+              <div className="w-16 md:w-20 aspect-square bg-teal-400 rounded-2xl md:rounded-3xl flex items-center justify-center text-indigo-950 shadow-2xl shadow-teal-400/20 shrink-0">
+                <Building className="w-8 h-8 md:w-10 md:h-10" />
               </div>
               <div className="mt-auto">
                 <h3 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 leading-tight">Управление <br/>под ключ</h3>
@@ -45,7 +45,7 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
             className="md:col-span-4 md:row-span-2 bg-teal-400 rounded-[40px] p-10 flex flex-col justify-between group shadow-xl shadow-teal-400/10"
           >
-            <div className="w-16 h-16 bg-indigo-950 rounded-full flex items-center justify-center text-teal-400 shadow-lg">
+            <div className="w-16 aspect-square bg-indigo-950 rounded-2xl flex items-center justify-center text-teal-400 shadow-lg shrink-0">
               <Wallet className="w-8 h-8" />
             </div>
             <div>
@@ -59,8 +59,8 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
             className="md:col-span-6 bg-white border border-slate-200 rounded-[40px] p-10 flex flex-col sm:flex-row items-start sm:items-center gap-8 group hover:border-indigo-300 hover:shadow-2xl hover:shadow-indigo-900/5 transition-all"
           >
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform duration-500">
-              <CalendarDays className="w-10 h-10" />
+            <div className="w-16 md:w-20 aspect-square bg-blue-50 rounded-2xl md:rounded-full flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform duration-500">
+              <CalendarDays className="w-8 h-8 md:w-10 md:h-10" />
             </div>
             <div>
               <h3 className="text-2xl font-display font-bold text-indigo-950 mb-3">Регулярные выплаты</h3>
@@ -73,8 +73,8 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
             className="md:col-span-6 bg-indigo-50 rounded-[40px] p-10 flex flex-col sm:flex-row items-start sm:items-center gap-8 group hover:bg-indigo-100 transition-colors"
           >
-            <div className="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center text-white shrink-0 shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform duration-500">
-              <FileCheck className="w-10 h-10" />
+            <div className="w-16 md:w-20 aspect-square bg-indigo-600 rounded-2xl md:rounded-full flex items-center justify-center text-white shrink-0 shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform duration-500">
+              <FileCheck className="w-8 h-8 md:w-10 md:h-10" />
             </div>
             <div>
               <h3 className="text-2xl font-display font-bold text-indigo-950 mb-3">Прозрачные документы</h3>
