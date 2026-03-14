@@ -1,7 +1,60 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-@theme {
-  /* Primary brand scale: deep blue -> vivid azure */
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f5f9ff;
+  --foreground: #152449;
+  --card: #ffffff;
+  --card-foreground: #152449;
+  --popover: #ffffff;
+  --popover-foreground: #152449;
+  --primary: #35c2ff;
+  --primary-foreground: #152449;
+  --secondary: #152449;
+  --secondary-foreground: #ffffff;
+  --muted: #edf3fb;
+  --muted-foreground: #4e6789;
+  --accent: #dceaff;
+  --accent-foreground: #152449;
+  --destructive: #e11d48;
+  --border: #dce7f5;
+  --input: #dce7f5;
+  --ring: #2158d8;
+  --radius: 1rem;
+}
+
+@theme inline {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.25rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+
   --color-indigo-50: #eef5ff;
   --color-indigo-100: #dceaff;
   --color-indigo-200: #bfd8ff;
@@ -14,7 +67,6 @@
   --color-indigo-900: #1e376f;
   --color-indigo-950: #152449;
 
-  /* Secondary accent scale: sky/cyan for CTA and highlights */
   --color-teal-50: #ebfbff;
   --color-teal-100: #cff4ff;
   --color-teal-200: #a4e8ff;
@@ -27,7 +79,6 @@
   --color-teal-900: #164a6c;
   --color-teal-950: #122f47;
 
-  /* Supportive blue scale for gradients and surfaces */
   --color-blue-50: #eff6ff;
   --color-blue-100: #dbeafe;
   --color-blue-200: #bfdbfe;
@@ -40,7 +91,6 @@
   --color-blue-900: #1e3a8a;
   --color-blue-950: #172554;
 
-  /* Cool neutral scale for backgrounds and borders */
   --color-slate-50: #f5f9ff;
   --color-slate-100: #edf3fb;
   --color-slate-200: #dce7f5;
@@ -53,10 +103,6 @@
   --color-slate-900: #1d2b3f;
   --color-slate-950: #0f1729;
 
-  /*
-   * Keep semantic success classes inside the same blue language
-   * to avoid accidental green accents in UI sections.
-   */
   --color-emerald-50: #eefaff;
   --color-emerald-100: #d6f4ff;
   --color-emerald-200: #b7ecff;
@@ -80,4 +126,21 @@
   --color-green-800: #125e95;
   --color-green-900: #154f79;
   --color-green-950: #10324e;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at top left, rgba(53, 194, 255, 0.1), transparent 24rem),
+      radial-gradient(circle at top right, rgba(29, 70, 177, 0.08), transparent 28rem);
+  }
 }

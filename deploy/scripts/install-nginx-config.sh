@@ -7,8 +7,8 @@ if [[ "${EUID}" -ne 0 ]]; then
 fi
 
 MODE="${1:-https}"
-SITE_NAME="cpf.elifsyndicate.online.test.conf"
-HTTP_BOOTSTRAP_NAME="cpf.elifsyndicate.online.test.http.conf"
+SITE_NAME="cpf.elifsyndicate.online.conf"
+HTTP_BOOTSTRAP_NAME="cpf.elifsyndicate.online.http.conf"
 
 install -d /etc/nginx/snippets
 cp -f deploy/nginx/snippets/acme-challenge.conf /etc/nginx/snippets/acme-challenge.conf
