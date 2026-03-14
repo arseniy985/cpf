@@ -13,9 +13,19 @@ if [[ -z "${REPO_URL}" ]]; then
   exit 1
 fi
 
+run_remote() {
+  local remote_command="$1"
+
+  if bash -ic "source ~/.bashrc >/dev/null 2>&1; alias ${TARGET_HOST}" >/dev/null 2>&1; then
+    bash -ic "source ~/.bashrc >/dev/null 2>&1; ${TARGET_HOST} ${remote_command@Q}"
+    return
+  fi
+
+  ${SSH_COMMAND} "${TARGET_HOST}" "${remote_command}"
+}
+
 echo "Deploying ${REPO_URL}@${BRANCH} to ${TARGET_HOST}:${TARGET_DIR} ..."
-${SSH_COMMAND} "${TARGET_HOST}" \
-  "TARGET_DIR='${TARGET_DIR}' BRANCH='${BRANCH}' REPO_URL='${REPO_URL}' BACKUP_ROOT='${BACKUP_ROOT}' bash -s" <<'EOF'
+run_remote "TARGET_DIR='${TARGET_DIR}' BRANCH='${BRANCH}' REPO_URL='${REPO_URL}' BACKUP_ROOT='${BACKUP_ROOT}' bash -s" <<'EOF'
 set -euo pipefail
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
