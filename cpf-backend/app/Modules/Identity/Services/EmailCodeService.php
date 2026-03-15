@@ -42,14 +42,26 @@ class EmailCodeService
             ->where('purpose', $purpose)
             ->latest()
             ->first();
+        $maxAttempts = (int) config('cpf.auth.email_code_max_attempts', 5);
 
         if (! $code || ! $code->canBeUsed()) {
             throw new UnprocessableEntityHttpException('Код недействителен или истек.');
         }
 
+        if ($code->attempts >= $maxAttempts) {
+            $code->forceFill(['consumed_at' => now()])->save();
+
+            throw new UnprocessableEntityHttpException('Превышено количество попыток. Запросите новый код.');
+        }
+
         $code->increment('attempts');
+        $code->refresh();
 
         if (! Hash::check($plainCode, $code->code_hash)) {
+            if ($code->attempts >= $maxAttempts) {
+                $code->forceFill(['consumed_at' => now()])->save();
+            }
+
             throw new UnprocessableEntityHttpException('Неверный код подтверждения.');
         }
 

@@ -7,6 +7,7 @@ use App\Modules\Catalog\Data\ProjectData;
 use App\Modules\Catalog\Domain\Models\Project;
 use App\Modules\Origination\Http\Requests\StoreOwnerProjectRequest;
 use App\Modules\Origination\Http\Requests\UpdateOwnerProjectRequest;
+use App\Modules\Origination\Services\OwnerAccountProvisioner;
 use App\Support\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
@@ -14,8 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OwnerProjectController extends Controller
 {
+    public function __construct(
+        private readonly OwnerAccountProvisioner $provisioner,
+    ) {}
+
     public function index(): JsonResponse
     {
+        $this->provisioner->ensureForUser(request()->user());
+
         $projects = request()->user()
             ->ownedProjects()
             ->with(['documents', 'reports'])
@@ -27,9 +34,12 @@ class OwnerProjectController extends Controller
 
     public function store(StoreOwnerProjectRequest $request): JsonResponse
     {
+        $account = $this->provisioner->ensureForUser($request->user());
+
         $project = Project::query()->create([
             ...$request->validated(),
             'owner_id' => $request->user()->id,
+            'owner_account_id' => $account->id,
             'status' => 'draft',
             'funding_status' => 'preparing',
             'current_amount' => 0,

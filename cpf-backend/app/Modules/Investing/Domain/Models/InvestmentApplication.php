@@ -4,6 +4,7 @@ namespace App\Modules\Investing\Domain\Models;
 
 use App\Models\User;
 use App\Modules\Catalog\Domain\Models\Project;
+use App\Modules\Origination\Domain\Models\OfferingRound;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,7 @@ class InvestmentApplication extends Model
         'id',
         'user_id',
         'project_id',
+        'offering_round_id',
         'amount',
         'status',
         'confirmed_at',
@@ -46,6 +48,11 @@ class InvestmentApplication extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function round(): BelongsTo
+    {
+        return $this->belongsTo(OfferingRound::class, 'offering_round_id');
     }
 
     public function getActivitylogOptions(): LogOptions

@@ -13,18 +13,18 @@ export function CabinetBrand({ className, onClick }: CabinetBrandProps) {
   return (
     <Link
       href="/"
-      className={cn('flex items-center gap-3 rounded-lg px-1 py-1.5 transition-opacity hover:opacity-90', className)}
+      className={cn('flex items-center gap-3 rounded-2xl px-1 py-1.5 transition-[transform,opacity] hover:-translate-y-0.5 hover:opacity-90', className)}
       onClick={onClick}
     >
-      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-600 text-white">
-        <Building2 className="h-6 w-6" />
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cabinet-ink text-cabinet-panel-strong shadow-[0_12px_30px_rgba(31,50,66,0.16)]">
+        <Building2 className="h-5 w-5" />
       </div>
       <div className="flex min-w-0 flex-col">
-        <span className="font-display text-2xl font-bold uppercase leading-none tracking-wider text-indigo-950">
+        <span className="font-display text-2xl font-bold uppercase leading-none tracking-[0.16em] text-cabinet-ink">
           ЦПФ
         </span>
-        <span className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.28em] text-slate-500">
-          Инвестиции
+        <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-cabinet-accent-strong">
+          Investor Desk
         </span>
       </div>
     </Link>

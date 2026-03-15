@@ -20,8 +20,26 @@ export default function DashboardKycPage() {
   const profileQuery = useKycProfileQuery();
   const documentsQuery = useKycDocumentsQuery();
 
-  if (!session.token || profileQuery.isPending || documentsQuery.isPending) {
+  if (!session.token) {
     return null;
+  }
+
+  if (profileQuery.isPending || documentsQuery.isPending) {
+    return (
+      <CabinetEmptyState
+        title="Загружаем проверку профиля…"
+        description="Собираем анкету, документы и текущий статус проверки."
+      />
+    );
+  }
+
+  if (profileQuery.isError || documentsQuery.isError) {
+    return (
+      <CabinetEmptyState
+        title="Проверка профиля временно недоступна"
+        description="Не удалось загрузить анкету или документы. Попробуйте обновить страницу позже."
+      />
+    );
   }
 
   const profile = profileQuery.data?.data ?? null;

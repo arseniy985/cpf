@@ -37,7 +37,7 @@ const mocks = vi.hoisted(() => ({
   },
   verifyCodeMutation: {
     mutateAsync: vi.fn(async () => ({
-    data: { token: 'verified-token', user: { id: '1', name: 'User', email: 'a@b.c', phone: null, emailVerifiedAt: null, kycStatus: null, roles: [] } },
+    data: { token: 'verified-token', user: { id: '1', name: 'User', email: 'a@b.c', phone: null, emailVerifiedAt: null, kycStatus: null, roles: [], ownerAccount: null, investorPayoutProfile: null } },
     })),
     isPending: false,
     isError: false,
@@ -165,6 +165,8 @@ describe('auth forms', () => {
           emailVerifiedAt: '2026-03-13T00:00:00Z',
           kycStatus: null,
           roles: ['investor'],
+          ownerAccount: null,
+          investorPayoutProfile: null,
         },
       },
     } as never);
@@ -200,6 +202,8 @@ describe('auth forms', () => {
         emailVerifiedAt: '2026-03-13T00:00:00Z',
         kycStatus: null,
         roles: ['investor'],
+        ownerAccount: null,
+        investorPayoutProfile: null,
       },
     });
   });
@@ -249,6 +253,8 @@ describe('auth forms', () => {
           emailVerifiedAt: '2026-03-13T00:00:00Z',
           kycStatus: null,
           roles: ['investor'],
+          ownerAccount: null,
+          investorPayoutProfile: null,
         },
       },
     } as never);
@@ -282,6 +288,8 @@ describe('auth forms', () => {
         emailVerifiedAt: '2026-03-13T00:00:00Z',
         kycStatus: null,
         roles: ['investor'],
+        ownerAccount: null,
+        investorPayoutProfile: null,
       },
     });
   });

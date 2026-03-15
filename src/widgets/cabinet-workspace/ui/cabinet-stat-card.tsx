@@ -9,6 +9,7 @@ type CabinetStatCardProps = {
   hint?: string;
   accent?: ReactNode;
   className?: string;
+  variant?: 'signal' | 'quiet';
 };
 
 export function CabinetStatCard({
@@ -17,18 +18,25 @@ export function CabinetStatCard({
   hint,
   accent,
   className,
+  variant = 'signal',
 }: CabinetStatCardProps) {
+  const cardClasses = variant === 'quiet'
+    ? 'rounded-[24px] border-cabinet-border/60 bg-cabinet-panel shadow-none'
+    : 'rounded-[26px] border-cabinet-border/65 bg-cabinet-panel-strong shadow-[0_16px_45px_rgba(31,50,66,0.07)]';
+
   return (
-    <Card className={cn('rounded-lg border-slate-200 bg-white shadow-sm', className)}>
+    <Card className={cn(cardClasses, className)}>
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</p>
-            <p className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 sm:text-[30px]">{value}</p>
-            {hint ? <p className="mt-2 text-sm text-slate-600">{hint}</p> : null}
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-muted-ink">{label}</p>
+            <p className="mt-3 truncate font-mono text-[28px] font-semibold tracking-[-0.04em] text-cabinet-ink sm:text-[34px]">
+              {value}
+            </p>
+            {hint ? <p className="mt-2 text-sm leading-relaxed text-cabinet-muted-ink">{hint}</p> : null}
           </div>
           {accent ?? (
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cabinet-panel-muted text-cabinet-accent-strong">
               <ArrowUpRight className="h-4 w-4" />
             </div>
           )}

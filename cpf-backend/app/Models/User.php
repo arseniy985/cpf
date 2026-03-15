@@ -6,7 +6,13 @@ namespace App\Models;
 use App\Modules\Catalog\Domain\Models\Project;
 use App\Modules\Engagement\Domain\Models\Notification;
 use App\Modules\Identity\Domain\Models\KycProfile;
+use App\Modules\Investing\Domain\Models\InvestorAllocation;
 use App\Modules\Investing\Domain\Models\InvestmentApplication;
+use App\Modules\Origination\Domain\Models\OwnerAccount;
+use App\Modules\Origination\Domain\Models\OwnerMember;
+use App\Modules\Payments\Domain\Models\DistributionLine;
+use App\Modules\Payments\Domain\Models\InvestorPayoutProfile;
+use App\Modules\Payments\Domain\Models\PayoutInstruction;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
 use App\Modules\Payments\Domain\Models\WalletTransaction;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
@@ -79,6 +85,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(InvestmentApplication::class);
     }
 
+    public function investorAllocations(): HasMany
+    {
+        return $this->hasMany(InvestorAllocation::class);
+    }
+
     public function paymentTransactions(): HasMany
     {
         return $this->hasMany(PaymentTransaction::class);
@@ -94,6 +105,21 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(WalletTransaction::class);
     }
 
+    public function distributionLines(): HasMany
+    {
+        return $this->hasMany(DistributionLine::class);
+    }
+
+    public function payoutInstructions(): HasMany
+    {
+        return $this->hasMany(PayoutInstruction::class);
+    }
+
+    public function investorPayoutProfile(): HasOne
+    {
+        return $this->hasOne(InvestorPayoutProfile::class);
+    }
+
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class)->latest();
@@ -102,6 +128,16 @@ class User extends Authenticatable implements FilamentUser
     public function ownedProjects(): HasMany
     {
         return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    public function ownerMemberships(): HasMany
+    {
+        return $this->hasMany(OwnerMember::class);
+    }
+
+    public function primaryOwnerAccounts(): HasMany
+    {
+        return $this->hasMany(OwnerAccount::class, 'primary_user_id');
     }
 
     public function canAccessPanel(Panel $panel): bool

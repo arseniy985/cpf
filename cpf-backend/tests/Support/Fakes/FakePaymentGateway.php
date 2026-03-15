@@ -19,7 +19,7 @@ class FakePaymentGateway implements PaymentGateway
             'status' => 'pending',
             'amount' => $amount,
             'currency' => 'RUB',
-            'external_id' => 'fake-'.$idempotenceKey,
+            'external_id' => sprintf('fake-%s-%s', $user->id, $idempotenceKey),
             'idempotency_key' => $idempotenceKey,
             'confirmation_url' => 'https://yookassa.test/confirm/'.$idempotenceKey,
             'payload' => [

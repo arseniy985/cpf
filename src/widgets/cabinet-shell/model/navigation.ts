@@ -74,15 +74,36 @@ const ownerNavigation: CabinetNavItem[] = [
   {
     href: '/owner',
     label: 'Обзор',
-    description: 'Главное по проектам и проверке',
+    description: 'Статус профиля компании, задачи и ближайшие шаги',
     icon: Building2,
     match: 'exact',
   },
   {
+    href: '/owner/organization',
+    label: 'Организация',
+    description: 'Юрлицо, реквизиты и проверка профиля',
+    icon: ShieldCheck,
+    match: 'prefix',
+  },
+  {
     href: '/owner/projects',
-    label: 'Мои проекты',
-    description: 'Список и рабочие карточки',
+    label: 'Проекты',
+    description: 'Черновики, карточки проектов и публикация',
     icon: FolderKanban,
+    match: 'prefix',
+  },
+  {
+    href: '/owner/rounds',
+    label: 'Раунды',
+    description: 'Сбор, аллокации и распределения по каждому объекту',
+    icon: Landmark,
+    match: 'prefix',
+  },
+  {
+    href: '/owner/payouts',
+    label: 'Выплаты',
+    description: 'Очередь выплат и операции, требующие внимания',
+    icon: WalletCards,
     match: 'prefix',
   },
 ];
@@ -167,9 +188,17 @@ const routeMatchers: Array<{
   {
     match: (pathname) => pathname === '/owner',
     meta: {
-      section: 'Проекты',
-      title: 'Обзор проектов',
-      description: 'Состояние проектов, модерации и привлечения капитала.',
+      section: 'Кабинет владельца',
+      title: 'Кабинет объекта',
+      description: 'Готовность профиля компании, статус проверки и ближайшие шаги по запуску проектов.',
+    },
+  },
+  {
+    match: (pathname) => pathname.startsWith('/owner/organization'),
+    meta: {
+      section: 'Профиль компании',
+      title: 'Организация',
+      description: 'Юрлицо, банковские реквизиты и данные для проверки.',
     },
   },
   {
@@ -178,6 +207,30 @@ const routeMatchers: Array<{
       section: 'Проекты',
       title: 'Мои проекты',
       description: 'Полный список проектов, статусы раундов и доступ к рабочим карточкам.',
+    },
+  },
+  {
+    match: (pathname) => pathname === '/owner/rounds',
+    meta: {
+      section: 'Раунды',
+      title: 'Раунды привлечения',
+      description: 'Рабочий список раундов: стадии сбора, аллокации, распределения и готовность к выплатам.',
+    },
+  },
+  {
+    match: (pathname) => pathname.startsWith('/owner/rounds/'),
+    meta: {
+      section: 'Раунды',
+      title: 'Карточка раунда',
+      description: 'Аллокации, реестры выплат и действия по текущему раунду.',
+    },
+  },
+  {
+    match: (pathname) => pathname === '/owner/payouts',
+    meta: {
+      section: 'Выплаты',
+      title: 'Очередь выплат',
+      description: 'Состояние выплат, причины ручной обработки и последние результаты.',
     },
   },
   {
@@ -210,7 +263,7 @@ export function getCabinetNavigation(roles: string[]): CabinetNavGroup[] {
   if (roles.includes('project_owner')) {
     groups.push({
       id: 'owner',
-      label: 'Инициатор',
+      label: 'Владелец объекта',
       items: ownerNavigation,
     });
   }
@@ -226,7 +279,7 @@ export function getCabinetNavigation(roles: string[]): CabinetNavGroup[] {
 
 export function getCabinetRouteMeta(pathname: string): CabinetRouteMeta {
   return routeMatchers.find((route) => route.match(pathname))?.meta ?? {
-    section: pathname.startsWith('/owner') ? 'Проекты' : 'Личный кабинет',
+    section: pathname.startsWith('/owner') ? 'Кабинет владельца' : 'Личный кабинет',
     title: 'Рабочее пространство',
     description: 'Основные рабочие разделы по деньгам, документам и статусам.',
   };
@@ -241,7 +294,7 @@ export function isCabinetItemActive(pathname: string, item: CabinetNavItem) {
 }
 
 export function getCabinetAreaLabel(pathname: string) {
-  return pathname.startsWith('/owner') ? 'Проекты' : 'Личный кабинет';
+  return pathname.startsWith('/owner') ? 'Кабинет владельца' : 'Личный кабинет';
 }
 
 export function getLandingShortcut(pathname: string) {

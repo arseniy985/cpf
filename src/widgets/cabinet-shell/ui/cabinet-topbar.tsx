@@ -21,14 +21,14 @@ export function CabinetTopbar({
   onLogout,
 }: CabinetTopbarProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-[#f4f5f7]/95 backdrop-blur">
-      <div className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-cabinet-border/80 bg-cabinet-canvas/90 backdrop-blur-xl">
+      <div className="flex min-h-18 items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-3">
           <Button
             type="button"
             variant="outline"
             size="icon"
-            className="rounded-lg border-slate-200 bg-white lg:hidden"
+            className="rounded-2xl border-cabinet-border bg-cabinet-panel-strong lg:hidden"
             onClick={onOpenMenu}
           >
             <Menu className="h-4 w-4" />
@@ -36,29 +36,32 @@ export function CabinetTopbar({
           </Button>
 
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-cabinet-muted-ink">
               <span>{areaLabel}</span>
               <ChevronRight className="h-3.5 w-3.5" />
               <span>{meta.section}</span>
             </div>
-            <div className="mt-1">
-              <h1 className="truncate text-xl font-semibold tracking-tight text-slate-950">{meta.title}</h1>
-              <p className="mt-1 hidden text-sm text-slate-600 md:block">{meta.description}</p>
-            </div>
+            <p className="mt-1 hidden text-sm text-cabinet-muted-ink md:block">{meta.description}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Button
             variant="ghost"
-            className="rounded-lg text-slate-600 hover:bg-white hover:text-slate-950"
+            className="rounded-2xl text-cabinet-muted-ink hover:bg-cabinet-panel hover:text-cabinet-ink"
             onClick={() => void onLogout()}
           >
             <PanelLeftClose className="h-4 w-4" />
             Выйти
           </Button>
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm font-semibold text-slate-700">
-            {getInitials(user.name)}
+          <div className="flex items-center gap-3 rounded-2xl border border-cabinet-border bg-cabinet-panel-strong px-3 py-2 shadow-[0_10px_30px_rgba(31,50,66,0.05)]">
+            <div className="hidden text-right sm:block">
+              <p className="max-w-40 truncate text-sm font-medium text-cabinet-ink">{user.name}</p>
+              <p className="text-xs text-cabinet-muted-ink">{meta.section}</p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cabinet-ink text-sm font-semibold text-cabinet-panel-strong">
+              {getInitials(user.name)}
+            </div>
           </div>
         </div>
       </div>

@@ -4,8 +4,10 @@ namespace App\Modules\Investing\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Identity\Data\AuthUserData;
+use App\Modules\Investing\Data\InvestorAllocationData;
 use App\Modules\Investing\Data\InvestmentApplicationData;
 use App\Modules\Investing\Data\InvestorDashboardData;
+use App\Modules\Payments\Data\DistributionLineData;
 use App\Modules\Payments\Data\PaymentTransactionData;
 use App\Modules\Payments\Data\WalletTransactionData;
 use App\Modules\Payments\Data\WithdrawalRequestData;
@@ -18,6 +20,12 @@ class InvestorDashboardController extends Controller
     {
         $user = request()->user()->load([
             'investmentApplications.project.documents',
+            'investmentApplications.round',
+            'investorAllocations.project.documents',
+            'investorAllocations.round',
+            'distributionLines.allocation.round',
+            'distributionLines.allocation.project.documents',
+            'distributionLines.payoutInstruction',
             'paymentTransactions',
             'walletTransactions',
             'withdrawalRequests',
@@ -29,6 +37,8 @@ class InvestorDashboardController extends Controller
             'user' => AuthUserData::fromModel($user),
             'summary' => InvestorDashboardData::fromUser($user),
             'applications' => InvestmentApplicationData::collect($user->investmentApplications),
+            'allocations' => InvestorAllocationData::collect($user->investorAllocations->sortByDesc('allocated_at')->values()),
+            'distributionLines' => DistributionLineData::collect($user->distributionLines->sortByDesc('created_at')->values()),
             'transactions' => PaymentTransactionData::collect(
                 $user->paymentTransactions->sortByDesc('created_at')->values(),
             ),

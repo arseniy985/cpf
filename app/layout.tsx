@@ -16,6 +16,12 @@ export default function RootLayout({
   return (
     <html lang="ru" className="scroll-smooth">
       <body className="font-sans antialiased bg-slate-50 text-slate-900 selection:bg-indigo-600 selection:text-white">
+        <a
+          href="#main-content"
+          className="sr-only z-50 rounded-full bg-slate-950 px-4 py-2 text-sm font-medium text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Перейти к основному содержимому
+        </a>
         <Providers>
           {children}
           <ChatWidget />

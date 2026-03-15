@@ -3,12 +3,11 @@
 import Link from 'next/link';
 import type { ComponentType } from 'react';
 import {
-  BellDot,
   BriefcaseBusiness,
   CheckCircle2,
+  Clock3,
+  History,
   Landmark,
-  ShieldAlert,
-  WalletCards,
 } from 'lucide-react';
 import { useDashboardQuery, useNotificationsQuery } from '@/entities/cabinet/api/hooks';
 import { useSession } from '@/features/session/model/use-session';
@@ -20,23 +19,40 @@ import { CabinetPageHeader } from '@/widgets/cabinet-workspace/ui/cabinet-page-h
 import { CabinetStatCard } from '@/widgets/cabinet-workspace/ui/cabinet-stat-card';
 import { CabinetSurface } from '@/widgets/cabinet-workspace/ui/cabinet-surface';
 import { StatusBadge } from '@/shared/ui/status-badge';
+import { DashboardActionRail } from './dashboard-action-rail';
+import { DashboardOverviewHero } from './dashboard-overview-hero';
 
 export default function DashboardOverviewPage() {
   const session = useSession();
   const dashboardQuery = useDashboardQuery();
   const notificationsQuery = useNotificationsQuery();
 
-  if (!session.token || dashboardQuery.isPending) {
+  if (!session.token) {
     return null;
+  }
+
+  if (dashboardQuery.isPending) {
+    return (
+      <CabinetEmptyState
+        title="Загружаем обзор кабинета…"
+        description="Собираем заявки, уведомления и движение средств."
+      />
+    );
   }
 
   const dashboard = dashboardQuery.data?.data;
   const notifications = notificationsQuery.data?.data ?? [];
 
-  if (!session.user || !dashboard) {
-    return null;
+  if (!session.user || dashboardQuery.isError || !dashboard) {
+    return (
+      <CabinetEmptyState
+        title="Обзор кабинета временно недоступен"
+        description="Не удалось загрузить ключевые данные. Обновите страницу или вернитесь чуть позже."
+      />
+    );
   }
 
+  const latestWalletEntry = dashboard.walletTransactions[0] ?? null;
   const nextActions = [
     session.user.kycStatus !== 'approved'
       ? {
@@ -60,116 +76,85 @@ export default function DashboardOverviewPage() {
   ].filter(Boolean) as Array<{ title: string; description: string; href: string }>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <CabinetPageHeader
-        eyebrow="Рабочий стол"
-        title="Обзор кабинета"
-        description="Главное по портфелю, кошельку, проверке профиля и последним действиям."
+        eyebrow="Кабинет инвестора"
+        title="Кабинет без визуального шума"
+        description="Сначала ориентиры и обязательные шаги, затем рабочие списки по сделкам, событиям и движению средств."
         actions={(
           <>
-            <Link href="/projects">
-              <Button variant="outline" className="rounded-lg border-slate-200 bg-white">
-                Каталог проектов
-              </Button>
-            </Link>
-            <Link href="/dashboard/wallet">
-              <Button className="rounded-lg">Пополнить кошелек</Button>
-            </Link>
+            <Button asChild variant="outline" className="rounded-full border-cabinet-border bg-cabinet-panel-strong text-cabinet-ink">
+              <Link href="/projects">Каталог проектов</Link>
+            </Button>
+            <Button asChild className="rounded-full bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92">
+              <Link href="/dashboard/wallet">Пополнить кошелёк</Link>
+            </Button>
           </>
         )}
       />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
+        <DashboardOverviewHero summary={dashboard.summary} user={session.user} />
+        <DashboardActionRail actions={nextActions} />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
         <CabinetStatCard
-          label="Баланс кошелька"
-          value={formatMoney(dashboard.summary.walletBalance)}
-          hint="Доступно для участия и выводов"
-          accent={<IconAccent icon={WalletCards} tone="bg-sky-50 text-sky-700" />}
-        />
-        <CabinetStatCard
-          label="Портфель"
-          value={formatMoney(dashboard.summary.portfolioAmount)}
-          hint="Сумма подтвержденных и активных участий"
-          accent={<IconAccent icon={BriefcaseBusiness} tone="bg-indigo-50 text-indigo-700" />}
-        />
-        <CabinetStatCard
-          label="На проверке"
+          label="Заявок в работе"
           value={String(dashboard.summary.applicationsCount)}
-          hint="Заявки и новые участия"
-          accent={<IconAccent icon={Landmark} tone="bg-amber-50 text-amber-700" />}
+          hint="Черновики, рассмотрение и подтверждение участия"
+          accent={<IconAccent icon={Landmark} tone="bg-cabinet-accent-soft text-cabinet-accent-strong" />}
+          variant="quiet"
         />
         <CabinetStatCard
-          label="Непрочитанные"
-          value={String(dashboard.summary.unreadNotifications)}
-          hint="Системные события и статусы"
-          accent={<IconAccent icon={BellDot} tone="bg-emerald-50 text-emerald-700" />}
+          label="Подтверждено в портфеле"
+          value={formatMoney(dashboard.summary.approvedAmount)}
+          hint="Капитал, который уже закреплён за сделками"
+          accent={<IconAccent icon={BriefcaseBusiness} tone="bg-emerald-50 text-cabinet-success" />}
+          variant="quiet"
+        />
+        <CabinetStatCard
+          label="Последнее движение"
+          value={latestWalletEntry ? formatMoney(latestWalletEntry.amount) : 'Нет данных'}
+          hint={latestWalletEntry ? formatDateTime(latestWalletEntry.occurredAt) : 'После первой операции здесь появится якорь по движению средств'}
+          accent={<IconAccent icon={History} tone="bg-cabinet-panel-muted text-cabinet-ink" />}
+          variant="quiet"
         />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <CabinetSurface
-          title="Статусы профиля"
-          description="Текущий статус основных разделов вашего кабинета."
-        >
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <StatusTile label="Почта" status={session.user.emailVerifiedAt ? 'verified' : 'pending'} />
-            <StatusTile label="Проверка" status={dashboard.summary.kycStatus ?? 'draft'} />
-            <StatusTile label="Кошелек" status={dashboard.summary.walletBalance > 0 ? 'approved' : 'draft'} />
-            <StatusTile label="Уведомления" status={dashboard.summary.unreadNotifications > 0 ? 'pending' : 'approved'} />
-          </div>
-        </CabinetSurface>
-
-        <CabinetSurface
-          title="Требует внимания"
-          description="Короткий список действий, который держит кабинет в рабочем состоянии."
-        >
-          <div className="space-y-3">
-            {nextActions.map((item) => (
-              <Link key={item.title} href={item.href}>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 transition-colors hover:border-slate-300 hover:bg-white">
-                  <p className="text-sm font-semibold text-slate-950">{item.title}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </CabinetSurface>
-      </div>
-
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <CabinetSurface
+          eyebrow="Заявки"
           title="Последние заявки"
-          description="Свежие действия по проектам, которые уже находятся в вашем портфеле."
-          action={(
-            <Link href="/dashboard/portfolio">
-              <Button variant="ghost" className="rounded-lg text-slate-600">
-                Открыть портфель
-              </Button>
-            </Link>
-          )}
+          description="Свежие движения по проектам, которые уже вошли или входят в ваш портфель."
         >
           {dashboard.applications.length === 0 ? (
             <CabinetEmptyState
               title="Портфель пока пуст"
               description="Выберите проект в каталоге и отправьте первую инвестиционную заявку."
               action={(
-                <Link href="/projects">
-                  <Button className="rounded-lg">Смотреть проекты</Button>
-                </Link>
+                <Button asChild className="rounded-full bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92">
+                  <Link href="/projects">Смотреть проекты</Link>
+                </Button>
               )}
             />
           ) : (
             <div className="space-y-3">
               {dashboard.applications.slice(0, 4).map((application) => (
-                <div key={application.id} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-slate-950">{application.project.title}</p>
-                      <p className="mt-1 text-sm text-slate-600">{application.project.location}</p>
-                      <p className="mt-2 text-xs text-slate-500">{formatDateTime(application.createdAt)}</p>
+                <div
+                  key={application.id}
+                  className="rounded-[24px] border border-cabinet-border bg-cabinet-panel p-4"
+                >
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-cabinet-ink">{application.project.title}</p>
+                      <p className="mt-1 text-sm text-cabinet-muted-ink">{application.project.location}</p>
+                      <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-cabinet-muted-ink">
+                        <span>{formatDateTime(application.createdAt)}</span>
+                        <span className="font-mono text-cabinet-ink">{formatMoney(application.amount)}</span>
+                      </div>
                     </div>
-                    <div className="space-y-2 sm:text-right">
-                      <p className="text-sm font-semibold text-slate-950">{formatMoney(application.amount)}</p>
+                    <div className="flex shrink-0 items-center gap-3">
                       <StatusBadge status={application.status} />
                     </div>
                   </div>
@@ -179,8 +164,18 @@ export default function DashboardOverviewPage() {
           )}
         </CabinetSurface>
 
-        <CabinetSurface title="Последние события" description="Операционные изменения по заявкам, платежам и проверкам.">
-          {notifications.length === 0 ? (
+        <CabinetSurface
+          eyebrow="События"
+          title="Последние события"
+          description="Только операционные изменения по проверкам, платежам и заявкам."
+          variant="subtle"
+        >
+          {notificationsQuery.isError ? (
+            <CabinetEmptyState
+              title="События временно недоступны"
+              description="Не удалось загрузить ленту уведомлений. Проверьте раздел позже."
+            />
+          ) : notifications.length === 0 ? (
             <CabinetEmptyState
               title="Событий пока нет"
               description="Когда менеджер изменит статус проверки, заявки или операции, это появится здесь."
@@ -188,19 +183,19 @@ export default function DashboardOverviewPage() {
           ) : (
             <div className="space-y-3">
               {notifications.slice(0, 4).map((notification) => (
-                <div key={notification.id} className="rounded-lg border border-slate-200 bg-white px-4 py-4">
+                <div key={notification.id} className="rounded-[22px] border border-cabinet-border bg-cabinet-panel-strong px-4 py-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-semibold text-slate-950">{notification.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{notification.body}</p>
-                      <p className="mt-2 text-xs text-slate-500">{formatDateTime(notification.createdAt)}</p>
+                      <p className="text-sm font-semibold text-cabinet-ink">{notification.title}</p>
+                      <p className="mt-1 text-sm leading-relaxed text-cabinet-muted-ink">{notification.body}</p>
+                      <p className="mt-2 text-xs text-cabinet-muted-ink">{formatDateTime(notification.createdAt)}</p>
                     </div>
                     {!notification.isRead ? (
-                      <Badge className="rounded-md border border-indigo-200 bg-indigo-50 text-indigo-700">
+                      <Badge className="rounded-full border border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong">
                         Новое
                       </Badge>
                     ) : (
-                      <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-slate-300" />
+                      <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cabinet-success" />
                     )}
                   </div>
                 </div>
@@ -210,35 +205,56 @@ export default function DashboardOverviewPage() {
         </CabinetSurface>
       </div>
 
-      <CabinetSurface title="Последние проводки" description="Быстрый обзор последних движений средств по кошельку.">
-        {dashboard.walletTransactions.length === 0 ? (
-          <CabinetEmptyState
-            title="Движений пока нет"
-            description="После пополнений, подтверждений участия или вывода здесь появятся проводки кошелька."
-          />
-        ) : (
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {dashboard.walletTransactions.slice(0, 6).map((entry) => (
-              <div key={entry.id} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-950">{entry.description ?? entry.type}</p>
-                    <p className="mt-1 text-xs text-slate-500">{formatDateTime(entry.occurredAt)}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-slate-950">
-                      {entry.direction === 'credit' ? '+' : '-'}{formatMoney(entry.amount)}
-                    </p>
-                    <div className="mt-2 flex justify-end">
-                      <StatusBadge status={entry.status} />
+      <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+        <CabinetSurface
+          eyebrow="Готовность"
+          title="Статусы доступа"
+          description="Короткая проверка, всё ли готово для работы с деньгами и документами."
+          variant="subtle"
+        >
+          <div className="grid gap-3">
+            <StatusTile label="Почта" status={session.user.emailVerifiedAt ? 'verified' : 'pending'} />
+            <StatusTile label="Проверка" status={dashboard.summary.kycStatus ?? 'draft'} />
+            <StatusTile label="Кошелёк" status={dashboard.summary.walletBalance > 0 ? 'approved' : 'draft'} />
+            <StatusTile label="Уведомления" status={dashboard.summary.unreadNotifications > 0 ? 'pending' : 'approved'} />
+          </div>
+        </CabinetSurface>
+
+        <CabinetSurface
+          eyebrow="Кошелёк"
+          title="Последние проводки"
+          description="Быстрый обзор последних движений средств по кошельку."
+          variant="subtle"
+        >
+          {dashboard.walletTransactions.length === 0 ? (
+            <CabinetEmptyState
+              title="Движений пока нет"
+              description="После пополнений, подтверждений участия или вывода здесь появятся проводки кошелька."
+            />
+          ) : (
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {dashboard.walletTransactions.slice(0, 6).map((entry) => (
+                <div key={entry.id} className="rounded-[22px] border border-cabinet-border bg-cabinet-panel p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-cabinet-ink">{entry.description ?? entry.type}</p>
+                      <p className="mt-1 text-xs text-cabinet-muted-ink">{formatDateTime(entry.occurredAt)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-mono text-sm font-semibold text-cabinet-ink">
+                        {entry.direction === 'credit' ? '+' : '-'}{formatMoney(entry.amount)}
+                      </p>
+                      <div className="mt-2 flex justify-end">
+                        <StatusBadge status={entry.status} />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CabinetSurface>
+              ))}
+            </div>
+          )}
+        </CabinetSurface>
+      </div>
     </div>
   );
 }
@@ -251,7 +267,7 @@ function IconAccent({
   tone: string;
 }) {
   return (
-    <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${tone}`}>
+    <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tone}`}>
       <Icon className="h-4 w-4" />
     </div>
   );
@@ -261,10 +277,10 @@ function StatusTile({ label, status }: { label: string; status: string }) {
   const isProblem = status === 'draft' || status === 'pending';
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
+    <div className="rounded-[22px] border border-cabinet-border bg-cabinet-panel px-4 py-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</p>
-        {isProblem ? <ShieldAlert className="h-4 w-4 text-amber-500" /> : <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-muted-ink">{label}</p>
+        {isProblem ? <Clock3 className="h-4 w-4 text-cabinet-warning" /> : <CheckCircle2 className="h-4 w-4 text-cabinet-success" />}
       </div>
       <div className="mt-3">
         <StatusBadge status={status} />

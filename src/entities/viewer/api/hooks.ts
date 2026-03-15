@@ -11,6 +11,7 @@ import {
   register,
   requestEmailCode,
   resetPassword,
+  updateInvestorPayoutProfile,
   updateProfile,
   verifyEmailCode,
 } from './service';
@@ -78,6 +79,18 @@ export function useUpdateProfileMutation() {
 
   return useMutation({
     mutationFn: updateProfile,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: authKeys.me(token) });
+    },
+  });
+}
+
+export function useUpdateInvestorPayoutProfileMutation() {
+  const queryClient = useQueryClient();
+  const token = useAuthToken();
+
+  return useMutation({
+    mutationFn: updateInvestorPayoutProfile,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: authKeys.me(token) });
     },

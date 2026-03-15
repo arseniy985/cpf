@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Middleware\AssignTraceId;
+use App\Http\Middleware\RequireApprovedKyc;
 use App\Http\Middleware\RequireAnyRole;
+use App\Http\Middleware\RequireApprovedOwnerOnboarding;
 use App\Http\Middleware\RequireIdempotencyKey;
+use App\Http\Middleware\VerifyYooKassaWebhookSource;
 use App\Support\Http\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -12,6 +15,8 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -24,6 +29,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role.any' => RequireAnyRole::class,
             'idempotency' => RequireIdempotencyKey::class,
+            'kyc.approved' => RequireApprovedKyc::class,
+            'kyb.approved' => RequireApprovedOwnerOnboarding::class,
+            'yookassa.webhook' => VerifyYooKassaWebhookSource::class,
         ]);
 
         $middleware->api(prepend: [
@@ -80,6 +88,32 @@ return Application::configure(basePath: dirname(__DIR__))
                 code: 'not_found',
                 message: 'Запрашиваемый ресурс не найден.',
                 status: 404,
+                traceId: $request->attributes->get('trace_id'),
+            );
+        });
+
+        $exceptions->render(function (TooManyRequestsHttpException $exception, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return ApiResponse::error(
+                code: 'too_many_requests',
+                message: 'Слишком много попыток. Подождите немного и повторите действие.',
+                status: 429,
+                traceId: $request->attributes->get('trace_id'),
+            );
+        });
+
+        $exceptions->render(function (UnprocessableEntityHttpException $exception, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return ApiResponse::error(
+                code: 'unprocessable_entity',
+                message: $exception->getMessage() ?: 'Операция не может быть выполнена.',
+                status: 422,
                 traceId: $request->attributes->get('trace_id'),
             );
         });

@@ -1,3 +1,5 @@
+import type { OwnerAccountSummary } from '@/entities/owner-account/api/types';
+
 export type AuthUser = {
   id: string;
   name: string;
@@ -6,6 +8,17 @@ export type AuthUser = {
   emailVerifiedAt: string | null;
   kycStatus: string | null;
   roles: string[];
+  ownerAccount: OwnerAccountSummary | null;
+  investorPayoutProfile: InvestorPayoutProfile | null;
+};
+
+export type InvestorPayoutProfile = {
+  id: string | null;
+  provider: 'yookassa' | null;
+  status: string | null;
+  payoutMethodLabel: string | null;
+  lastVerifiedAt: string | null;
+  isReady: boolean;
 };
 
 export type EmailCodePurpose = 'verify_email' | 'login' | 'password_reset';

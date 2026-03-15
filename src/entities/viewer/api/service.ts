@@ -103,6 +103,20 @@ export async function updateProfile(
   });
 }
 
+export async function updateInvestorPayoutProfile(
+  payload: {
+    provider: 'yookassa';
+    payout_method_label?: string;
+    payout_token?: string;
+  },
+) {
+  return fetchJson<{ data: AuthUser['investorPayoutProfile'] }>('/api/v1/me/payout-profile', {
+    method: 'PATCH',
+    requireAuth: true,
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function refreshToken(deviceName: string) {
   return fetchJson<AuthResponse>('/api/v1/auth/refresh', {
     method: 'POST',

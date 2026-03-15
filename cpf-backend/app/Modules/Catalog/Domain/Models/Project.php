@@ -4,6 +4,8 @@ namespace App\Modules\Catalog\Domain\Models;
 
 use App\Models\User;
 use App\Modules\Investing\Domain\Models\InvestmentApplication;
+use App\Modules\Origination\Domain\Models\OfferingRound;
+use App\Modules\Origination\Domain\Models\OwnerAccount;
 use App\Modules\Origination\Domain\Models\ProjectReport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -27,6 +29,7 @@ class Project extends Model
     protected $fillable = [
         'id',
         'owner_id',
+        'owner_account_id',
         'slug',
         'title',
         'excerpt',
@@ -70,6 +73,11 @@ class Project extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    public function ownerAccount(): BelongsTo
+    {
+        return $this->belongsTo(OwnerAccount::class);
+    }
+
     public function documents(): HasMany
     {
         return $this->hasMany(ProjectDocument::class)->orderBy('sort_order');
@@ -88,6 +96,11 @@ class Project extends Model
     public function investmentApplications(): HasMany
     {
         return $this->hasMany(InvestmentApplication::class);
+    }
+
+    public function offeringRounds(): HasMany
+    {
+        return $this->hasMany(OfferingRound::class)->latest();
     }
 
     public function scopePublished(Builder $query): Builder
@@ -128,6 +141,7 @@ class Project extends Model
                 'target_amount',
                 'target_yield',
                 'owner_id',
+                'owner_account_id',
             ])
             ->logOnlyDirty();
     }

@@ -18,6 +18,13 @@ use App\Modules\CRM\Domain\Models\ContactLead;
 use App\Modules\Engagement\Domain\Models\Notification;
 use App\Modules\Identity\Domain\Models\KycProfile;
 use App\Modules\Investing\Domain\Models\InvestmentApplication;
+use App\Modules\Investing\Domain\Models\InvestorAllocation;
+use App\Modules\Origination\Domain\Models\OfferingRound;
+use App\Modules\Origination\Domain\Models\OwnerAccount;
+use App\Modules\Origination\Domain\Models\OwnerBankProfile;
+use App\Modules\Origination\Domain\Models\OwnerMember;
+use App\Modules\Origination\Domain\Models\OwnerOnboarding;
+use App\Modules\Origination\Domain\Models\OwnerOrganization;
 use App\Modules\Origination\Domain\Models\ProjectReport;
 use App\Modules\Origination\Domain\Models\ProjectSubmission;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
@@ -25,6 +32,7 @@ use App\Modules\Payments\Domain\Models\WalletTransaction;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -79,10 +87,72 @@ class DatabaseSeeder extends Seeder
         );
         $projectOwner->syncRoles(['project_owner']);
 
+        $ownerAccount = OwnerAccount::query()->updateOrCreate(
+            ['slug' => 'owner-demo-desk'],
+            [
+                'primary_user_id' => $projectOwner->id,
+                'display_name' => 'Owner Demo Desk',
+                'status' => 'account_created',
+                'overview' => 'Owner-side desk для управления объектами, раундами и выплатами.',
+                'website_url' => 'https://owner-demo.example',
+            ],
+        );
+
+        OwnerMember::query()->updateOrCreate(
+            [
+                'owner_account_id' => $ownerAccount->id,
+                'user_id' => $projectOwner->id,
+            ],
+            [
+                'role' => 'owner',
+                'status' => 'active',
+            ],
+        );
+
+        OwnerOrganization::query()->updateOrCreate(
+            ['owner_account_id' => $ownerAccount->id],
+            [
+                'legal_name' => 'ООО Галера Капитал',
+                'brand_name' => 'Galera Capital',
+                'entity_type' => 'ooo',
+                'registration_number' => '1234567890123',
+                'tax_id' => '7701234567',
+                'website_url' => 'https://owner-demo.example',
+                'address' => 'Москва, Пресненская наб., 8',
+                'signatory_name' => 'Олег Демидов',
+                'signatory_role' => 'Генеральный директор',
+                'beneficiary_name' => 'Олег Демидов',
+                'overview' => 'SPV и owner-side управление коммерческими активами.',
+            ],
+        );
+
+        OwnerBankProfile::query()->updateOrCreate(
+            ['owner_account_id' => $ownerAccount->id],
+            [
+                'payout_method' => 'bank_transfer',
+                'recipient_name' => 'ООО Галера Капитал',
+                'bank_name' => 'АО Банк Развития',
+                'bank_bik' => '044525225',
+                'bank_account' => '40702810900000000001',
+                'correspondent_account' => '30101810400000000225',
+                'status' => 'ready_for_review',
+                'notes' => 'Основной расчетный счет для owner settlements.',
+            ],
+        );
+
+        OwnerOnboarding::query()->updateOrCreate(
+            ['owner_account_id' => $ownerAccount->id],
+            [
+                'status' => 'account_created',
+                'account_created_at' => now()->subDays(7),
+            ],
+        );
+
         $project1 = Project::query()->updateOrCreate(
             ['slug' => 'galleria-moscow'],
             [
                 'owner_id' => $projectOwner->id,
+                'owner_account_id' => $ownerAccount->id,
                 'title' => 'Торговый центр "Галерея"',
                 'excerpt' => 'Действующий арендный объект в Москве с ежемесячным денежным потоком.',
                 'description' => 'Объект с устойчивым арендным потоком, якорными арендаторами и прозрачной отчетностью.',
@@ -110,6 +180,7 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'warehouse-a-plus'],
             [
                 'owner_id' => $projectOwner->id,
+                'owner_account_id' => $ownerAccount->id,
                 'title' => 'Складской комплекс A+',
                 'excerpt' => 'Логистический актив с долгосрочным договором аренды.',
                 'description' => 'Складской объект с подтвержденным спросом и прогнозируемым денежным потоком.',
@@ -179,6 +250,7 @@ class DatabaseSeeder extends Seeder
         InvestmentApplication::query()->updateOrCreate(
             ['user_id' => $investor->id, 'project_id' => $project1->id],
             [
+                'offering_round_id' => null,
                 'amount' => 150000,
                 'status' => 'approved',
                 'agreement_url' => 'https://example.com/agreements/galleria-moscow.pdf',
@@ -189,11 +261,67 @@ class DatabaseSeeder extends Seeder
         InvestmentApplication::query()->updateOrCreate(
             ['user_id' => $investor->id, 'project_id' => $project2->id],
             [
+                'offering_round_id' => null,
                 'amount' => 50000,
                 'status' => 'pending',
                 'notes' => 'Ожидает пополнения.',
             ],
         );
+
+        $round1 = OfferingRound::query()->updateOrCreate(
+            ['slug' => 'galleria-moscow-main-round'],
+            [
+                'project_id' => $project1->id,
+                'owner_account_id' => $ownerAccount->id,
+                'title' => 'Галерея Москва · Основной раунд',
+                'status' => 'live',
+                'target_amount' => $project1->target_amount,
+                'current_amount' => $project1->current_amount,
+                'min_investment' => $project1->min_investment,
+                'target_yield' => $project1->target_yield,
+                'payout_frequency' => $project1->payout_frequency,
+                'term_months' => $project1->term_months,
+                'oversubscription_allowed' => false,
+                'opens_at' => $project1->published_at ?? now()->subDays(5),
+                'went_live_at' => $project1->published_at ?? now()->subDays(5),
+                'review_submitted_at' => now()->subDays(6),
+                'notes' => 'Основной публичный раунд для инвесторов платформы.',
+            ],
+        );
+
+        $round2 = OfferingRound::query()->updateOrCreate(
+            ['slug' => 'warehouse-a-plus-main-round'],
+            [
+                'project_id' => $project2->id,
+                'owner_account_id' => $ownerAccount->id,
+                'title' => 'Склад A+ · Основной раунд',
+                'status' => 'live',
+                'target_amount' => $project2->target_amount,
+                'current_amount' => $project2->current_amount,
+                'min_investment' => $project2->min_investment,
+                'target_yield' => $project2->target_yield,
+                'payout_frequency' => $project2->payout_frequency,
+                'term_months' => $project2->term_months,
+                'oversubscription_allowed' => false,
+                'opens_at' => $project2->published_at ?? now()->subDays(2),
+                'went_live_at' => $project2->published_at ?? now()->subDays(2),
+                'review_submitted_at' => now()->subDays(3),
+                'notes' => 'Основной публичный раунд для инвесторов платформы.',
+            ],
+        );
+
+        $approvedApplication = InvestmentApplication::query()
+            ->where('user_id', $investor->id)
+            ->where('project_id', $project1->id)
+            ->first();
+
+        $pendingApplication = InvestmentApplication::query()
+            ->where('user_id', $investor->id)
+            ->where('project_id', $project2->id)
+            ->first();
+
+        $approvedApplication?->forceFill(['offering_round_id' => $round1->id])->save();
+        $pendingApplication?->forceFill(['offering_round_id' => $round2->id])->save();
 
         ContactLead::query()->updateOrCreate(
             ['email' => 'lead@cpf.local'],

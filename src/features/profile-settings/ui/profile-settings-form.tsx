@@ -62,7 +62,7 @@ export function ProfileSettingsForm({
             <FormItem>
               <FormLabel>Имя</FormLabel>
               <FormControl>
-                <Input className="rounded-lg" {...field} />
+                <Input className="rounded-2xl" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -71,7 +71,7 @@ export function ProfileSettingsForm({
 
         <FormItem>
           <FormLabel>Почта</FormLabel>
-          <Input value={user.email} disabled className="rounded-lg bg-slate-50" />
+          <Input value={user.email} disabled className="rounded-2xl bg-cabinet-panel" />
         </FormItem>
 
         <FormField
@@ -81,15 +81,19 @@ export function ProfileSettingsForm({
             <FormItem>
               <FormLabel>Телефон</FormLabel>
               <FormControl>
-                <Input className="rounded-lg" placeholder="+7 900 000 00 00" {...field} value={field.value ?? ''} />
+                <Input className="rounded-2xl" placeholder="+7 900 000 00 00" {...field} value={field.value ?? ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="rounded-lg" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Сохраняем...' : 'Сохранить профиль'}
+        <Button
+          type="submit"
+          className="rounded-full bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92"
+          disabled={mutation.isPending}
+        >
+          {mutation.isPending ? 'Сохраняем…' : 'Сохранить профиль'}
         </Button>
       </form>
     </Form>

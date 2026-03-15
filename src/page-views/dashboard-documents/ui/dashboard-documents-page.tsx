@@ -20,8 +20,26 @@ export default function DashboardDocumentsPage() {
   const session = useSession();
   const documentsQuery = useCabinetDocumentsQuery();
 
-  if (!session.token || documentsQuery.isPending) {
+  if (!session.token) {
     return null;
+  }
+
+  if (documentsQuery.isPending) {
+    return (
+      <CabinetEmptyState
+        title="Загружаем документы…"
+        description="Собираем проектные и юридические материалы по вашему кабинету."
+      />
+    );
+  }
+
+  if (documentsQuery.isError) {
+    return (
+      <CabinetEmptyState
+        title="Документы временно недоступны"
+        description="Не удалось загрузить архив документов. Попробуйте снова позже."
+      />
+    );
   }
 
   const documents = documentsQuery.data?.data ?? { projectDocuments: [], legalDocuments: [] };

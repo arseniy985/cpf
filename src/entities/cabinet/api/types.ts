@@ -32,7 +32,62 @@ export type InvestmentApplication = {
   status: 'pending' | 'approved' | 'rejected' | 'confirmed' | string;
   notes: string | null;
   project: PublicProject;
+  round: {
+    id: string;
+    slug: string;
+    title: string;
+    status: string;
+    projectId: string;
+    projectSlug: string;
+    projectTitle: string;
+  } | null;
   createdAt: string;
+};
+
+export type InvestorAllocation = {
+  id: string;
+  userId: number;
+  investorName: string | null;
+  investorEmail: string | null;
+  amount: number;
+  status: string;
+  agreementUrl: string | null;
+  allocatedAt: string | null;
+  settledAt: string | null;
+  project: PublicProject;
+  round: {
+    id: string;
+    slug: string;
+    title: string;
+    status: string;
+    projectId: string;
+    projectSlug: string;
+    projectTitle: string;
+    payoutFrequency: string;
+  };
+};
+
+export type DistributionLine = {
+  id: string;
+  amount: number;
+  status: string;
+  failureReason: string | null;
+  paidAt: string | null;
+  allocation: InvestorAllocation;
+  payoutInstruction: {
+    id: string;
+    amount: number;
+    currency: string;
+    direction: string;
+    gateway: string;
+    status: string;
+    distributionId: string | null;
+    distributionTitle: string | null;
+    externalId: string | null;
+    referenceLabel: string | null;
+    failureReason: string | null;
+    processedAt: string | null;
+  } | null;
 };
 
 export type PaymentTransaction = {
@@ -83,9 +138,11 @@ export type CabinetNotification = {
 
 export type DashboardSummary = {
   applicationsCount: number;
+  allocationsCount: number;
   portfolioAmount: number;
   approvedAmount: number;
   pendingAmount: number;
+  distributionsAmount: number;
   walletBalance: number;
   pendingWithdrawals: number;
   unreadNotifications: number;
@@ -97,6 +154,8 @@ export type DashboardResponse = {
     user: AuthUser;
     summary: DashboardSummary;
     applications: InvestmentApplication[];
+    allocations: InvestorAllocation[];
+    distributionLines: DistributionLine[];
     transactions: PaymentTransaction[];
     walletTransactions: WalletTransaction[];
     withdrawals: WithdrawalRequest[];

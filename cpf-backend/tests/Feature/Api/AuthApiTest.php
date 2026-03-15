@@ -201,4 +201,56 @@ class AuthApiTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.email', 'investor@cpf.local');
     }
+
+    public function test_email_code_verification_stops_after_max_attempts(): void
+    {
+        Notification::fake();
+        Config::set('cpf.auth.email_code_max_attempts', 2);
+
+        $this->postJson('/api/v1/auth/login', [
+            'email' => 'investor@cpf.local',
+            'password' => 'password',
+            'device_name' => 'phpunit',
+        ])->assertOk();
+
+        $this->postJson('/api/v1/auth/verify-email-code', [
+            'email' => 'investor@cpf.local',
+            'code' => '000000',
+            'purpose' => 'login',
+            'device_name' => 'phpunit',
+        ])->assertUnprocessable();
+
+        $this->postJson('/api/v1/auth/verify-email-code', [
+            'email' => 'investor@cpf.local',
+            'code' => '000000',
+            'purpose' => 'login',
+            'device_name' => 'phpunit',
+        ])->assertUnprocessable();
+
+        $this->postJson('/api/v1/auth/verify-email-code', [
+            'email' => 'investor@cpf.local',
+            'code' => '123456',
+            'purpose' => 'login',
+            'device_name' => 'phpunit',
+        ])
+            ->assertUnprocessable();
+    }
+
+    public function test_auth_routes_are_rate_limited(): void
+    {
+        Notification::fake();
+        Config::set('cpf.auth.throttle.login_per_minute', 2);
+
+        $payload = [
+            'email' => 'investor@cpf.local',
+            'password' => 'password',
+            'device_name' => 'phpunit',
+        ];
+
+        $this->postJson('/api/v1/auth/login', $payload)->assertOk();
+        $this->postJson('/api/v1/auth/login', $payload)->assertOk();
+        $this->postJson('/api/v1/auth/login', $payload)
+            ->assertStatus(429)
+            ->assertJsonPath('code', 'too_many_requests');
+    }
 }

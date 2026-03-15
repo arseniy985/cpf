@@ -27,27 +27,33 @@ class PublicProjectController extends Controller
         return ApiResponse::paginated($projects, ProjectData::collect($projects->getCollection()->all()));
     }
 
-    public function show(Project $project): JsonResponse
+    public function show(string $projectSlug): JsonResponse
     {
-        return ApiResponse::success(ProjectData::fromModel($this->showProject->execute($project)));
+        return ApiResponse::success(ProjectData::fromModel(
+            $this->showProject->execute($this->resolvePublishedProject($projectSlug)),
+        ));
     }
 
-    public function documents(Project $project): JsonResponse
+    public function documents(string $projectSlug): JsonResponse
     {
+        $project = $this->resolvePublishedProject($projectSlug);
         $project->load('documents');
 
         return ApiResponse::success(ProjectDocumentData::collect($project->documents->where('is_public', true)->values()));
     }
 
-    public function faq(Project $project): JsonResponse
+    public function faq(string $projectSlug): JsonResponse
     {
+        $project = $this->resolvePublishedProject($projectSlug);
         $items = $project->faqItems()->published()->get();
 
         return ApiResponse::success(ProjectFaqItemData::collect($items));
     }
 
-    public function payoutForecast(Project $project): JsonResponse
+    public function payoutForecast(string $projectSlug): JsonResponse
     {
+        $project = $this->resolvePublishedProject($projectSlug);
+
         return ApiResponse::success(
             $this->buildForecast(
                 $project,
@@ -93,5 +99,13 @@ class PublicProjectController extends Controller
             'totalPayout' => array_sum(array_column($schedule, 'payout')),
             'schedule' => $schedule,
         ];
+    }
+
+    private function resolvePublishedProject(string $projectSlug): Project
+    {
+        return Project::query()
+            ->published()
+            ->where('slug', $projectSlug)
+            ->firstOrFail();
     }
 }

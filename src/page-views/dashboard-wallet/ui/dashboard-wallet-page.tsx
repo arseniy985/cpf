@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { RotateCcw } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCancelWithdrawalMutation, useDashboardQuery } from '@/entities/cabinet/api/hooks';
 import { useSession } from '@/features/session/model/use-session';
+import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { formatDateTime, formatMoney } from '@/shared/lib/format';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,44 +28,104 @@ export default function DashboardWalletPage() {
   const session = useSession();
   const dashboardQuery = useDashboardQuery();
   const cancelWithdrawalMutation = useCancelWithdrawalMutation();
+  const [pendingCancellationId, setPendingCancellationId] = useState<string | null>(null);
 
-  if (!session.token || dashboardQuery.isPending) {
+  if (!session.token) {
     return null;
+  }
+
+  if (dashboardQuery.isPending) {
+    return (
+      <CabinetEmptyState
+        title="Загружаем кошелёк…"
+        description="Собираем баланс, платежи и заявки на вывод."
+      />
+    );
   }
 
   const dashboard = dashboardQuery.data?.data;
 
-  if (!dashboard) {
-    return null;
+  if (dashboardQuery.isError || !dashboard) {
+    return (
+      <CabinetEmptyState
+        title="Кошелёк временно недоступен"
+        description="Не удалось загрузить баланс и журнал операций. Попробуйте снова чуть позже."
+      />
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <CabinetPageHeader
-        eyebrow="Кошелек"
-        title="Кошелек и операции"
-        description="Пополнения, вывод средств и история операций по вашему кабинету."
+        eyebrow="Кошелёк"
+        title="Кошелёк и операции"
+        description="Сначала доступный остаток и активные заявки, затем рабочие формы и журнал движений."
       />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <CabinetStatCard label="Доступно" value={formatMoney(dashboard.summary.walletBalance)} />
-        <CabinetStatCard label="В очереди на вывод" value={formatMoney(dashboard.summary.pendingWithdrawals)} />
-        <CabinetStatCard label="Платежей" value={String(dashboard.transactions.length)} />
-        <CabinetStatCard label="Операций" value={String(dashboard.walletTransactions.length)} />
+      <CabinetSurface
+        eyebrow="Баланс"
+        title="Деньги под контролем"
+        description="Рабочий срез по средствам: что уже доступно, что ушло в ручную обработку и сколько операций накопилось."
+        variant="hero"
+      >
+        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-[28px] bg-cabinet-ink p-6 text-cabinet-panel-strong shadow-[0_18px_44px_rgba(31,50,66,0.22)]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cabinet-accent-soft/90">
+              Доступный остаток
+            </p>
+            <p className="mt-4 font-mono text-[38px] font-semibold tracking-[-0.05em] sm:text-[46px]">
+              {formatMoney(dashboard.summary.walletBalance)}
+            </p>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/72">
+              Используйте эту сумму для подтверждения участия в проектах или формирования заявки на вывод.
+            </p>
+          </div>
+
+          <div className="grid gap-3">
+            <CabinetStatCard
+              label="В очереди на вывод"
+              value={formatMoney(dashboard.summary.pendingWithdrawals)}
+              hint="Заявки, которые менеджер ещё не закрыл"
+              variant="quiet"
+            />
+            <CabinetStatCard
+              label="Платёжных сессий"
+              value={String(dashboard.transactions.length)}
+              hint="Пополнения и шаги оплаты через платёжный шлюз"
+              variant="quiet"
+            />
+            <CabinetStatCard
+              label="Записей в журнале"
+              value={String(dashboard.walletTransactions.length)}
+              hint="Проводки по дебету и кредиту кошелька"
+              variant="quiet"
+            />
+          </div>
+        </div>
+      </CabinetSurface>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <CabinetStatCard label="Доступно" value={formatMoney(dashboard.summary.walletBalance)} variant="quiet" />
+        <CabinetStatCard label="Платежей" value={String(dashboard.transactions.length)} variant="quiet" />
+        <CabinetStatCard label="Операций" value={String(dashboard.walletTransactions.length)} variant="quiet" />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <CabinetSurface title="Пополнение">
+        <CabinetSurface eyebrow="Пополнение" title="Пополнение">
           <DepositFundsForm />
         </CabinetSurface>
 
-        <CabinetSurface title="Вывод средств" description="Заявка будет обработана менеджером вручную.">
+        <CabinetSurface
+          eyebrow="Вывод"
+          title="Вывод средств"
+          description="Заявка будет обработана менеджером вручную."
+        >
           <WithdrawFundsForm />
         </CabinetSurface>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <CabinetSurface title="История операций">
+        <CabinetSurface eyebrow="История" title="История операций">
           {dashboard.walletTransactions.length === 0 ? (
             <CabinetEmptyState
               title="Движений пока нет"
@@ -83,15 +146,15 @@ export default function DashboardWalletPage() {
                   <TableRow key={entry.id}>
                     <TableCell>
                       <div>
-                        <p className="font-medium text-slate-950">{entry.description ?? entry.type}</p>
-                        <p className="mt-1 text-xs text-slate-500">{entry.type}</p>
+                        <p className="font-medium text-cabinet-ink">{entry.description ?? entry.type}</p>
+                        <p className="mt-1 text-xs text-cabinet-muted-ink">{entry.type}</p>
                       </div>
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={entry.status} />
                     </TableCell>
                     <TableCell>{formatDateTime(entry.occurredAt)}</TableCell>
-                    <TableCell className="text-right font-medium text-slate-950">
+                    <TableCell className="text-right font-mono font-medium text-cabinet-ink">
                       {entry.direction === 'credit' ? '+' : '-'}{formatMoney(entry.amount)}
                     </TableCell>
                   </TableRow>
@@ -101,10 +164,15 @@ export default function DashboardWalletPage() {
           )}
         </CabinetSurface>
 
-        <CabinetSurface title="Платежи и выводы" description="Последние пополнения и заявки на вывод.">
+        <CabinetSurface
+          eyebrow="Текущие операции"
+          title="Платежи и выводы"
+          description="Активные пополнения и последние заявки на вывод."
+          variant="subtle"
+        >
           <div className="space-y-5">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Пополнения</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-muted-ink">Пополнения</p>
               <div className="mt-3 space-y-3">
                 {dashboard.transactions.length === 0 ? (
                   <CabinetEmptyState
@@ -114,21 +182,25 @@ export default function DashboardWalletPage() {
                   />
                 ) : (
                   dashboard.transactions.map((transaction) => (
-                    <div key={transaction.id} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
+                    <div key={transaction.id} className="rounded-[22px] border border-cabinet-border bg-cabinet-panel px-4 py-4">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-sm font-medium text-slate-950">{transaction.gateway}</p>
-                          <p className="mt-1 text-sm text-slate-600">{formatMoney(transaction.amount)} · {transaction.type}</p>
+                          <p className="text-sm font-medium text-cabinet-ink">{transaction.gateway}</p>
+                          <p className="mt-1 text-sm text-cabinet-muted-ink">{formatMoney(transaction.amount)} · {transaction.type}</p>
                         </div>
                         <StatusBadge status={transaction.status} />
                       </div>
                       {transaction.confirmationUrl ? (
                         <div className="mt-3">
-                          <a href={transaction.confirmationUrl} target="_blank" rel="noreferrer">
-                            <Button variant="outline" className="rounded-lg border-slate-200 bg-white">
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="rounded-full border-cabinet-border bg-cabinet-panel-strong text-cabinet-ink"
+                          >
+                            <a href={transaction.confirmationUrl} target="_blank" rel="noreferrer">
                               Продолжить оплату
-                            </Button>
-                          </a>
+                            </a>
+                          </Button>
                         </div>
                       ) : null}
                     </div>
@@ -138,7 +210,7 @@ export default function DashboardWalletPage() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Выводы</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-muted-ink">Выводы</p>
               <div className="mt-3 space-y-3">
                 {dashboard.withdrawals.length === 0 ? (
                   <CabinetEmptyState
@@ -148,30 +220,58 @@ export default function DashboardWalletPage() {
                   />
                 ) : (
                   dashboard.withdrawals.map((withdrawal) => (
-                    <div key={withdrawal.id} className="rounded-lg border border-slate-200 bg-white px-4 py-4">
+                    <div key={withdrawal.id} className="rounded-[22px] border border-cabinet-border bg-cabinet-panel-strong px-4 py-4">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-sm font-medium text-slate-950">{formatMoney(withdrawal.amount)}</p>
-                          <p className="mt-1 text-sm text-slate-600">{withdrawal.bankName} · {withdrawal.bankAccount}</p>
-                          <p className="mt-2 text-xs text-slate-500">{formatDateTime(withdrawal.createdAt)}</p>
+                          <p className="font-mono text-sm font-medium text-cabinet-ink">{formatMoney(withdrawal.amount)}</p>
+                          <p className="mt-1 text-sm text-cabinet-muted-ink">{withdrawal.bankName} · {withdrawal.bankAccount}</p>
+                          <p className="mt-2 text-xs text-cabinet-muted-ink">{formatDateTime(withdrawal.createdAt)}</p>
                         </div>
                         <div className="space-y-2 text-right">
                           <StatusBadge status={withdrawal.status} />
                           {['pending_review', 'approved'].includes(withdrawal.status) ? (
-                            <Button
-                              variant="ghost"
-                              className="rounded-lg"
-                              onClick={async () => {
-                                try {
-                                  await cancelWithdrawalMutation.mutateAsync({ id: withdrawal.id });
-                                } catch {
-                                  return;
-                                }
-                              }}
-                            >
-                              <RotateCcw className="h-4 w-4" />
-                              Отменить
-                            </Button>
+                            pendingCancellationId === withdrawal.id ? (
+                              <div className="max-w-[18rem] space-y-2 rounded-[18px] border border-amber-200 bg-amber-50 px-3 py-3 text-left" aria-live="polite">
+                                <p className="text-sm font-semibold text-amber-950">Отменить заявку?</p>
+                                <p className="text-sm leading-relaxed text-amber-900">
+                                  Заявка на {formatMoney(withdrawal.amount)} будет снята, а резерв в кошельке освободится.
+                                </p>
+                                <div className="flex flex-wrap justify-end gap-2">
+                                  <Button
+                                    className="rounded-full"
+                                    disabled={cancelWithdrawalMutation.isPending}
+                                    onClick={async () => {
+                                      try {
+                                        await cancelWithdrawalMutation.mutateAsync({ id: withdrawal.id });
+                                        setPendingCancellationId(null);
+                                        toast.success('Заявка на вывод отменена');
+                                      } catch (error) {
+                                        toast.error(getApiErrorMessage(error, 'Не удалось отменить заявку на вывод.'));
+                                      }
+                                    }}
+                                  >
+                                    {cancelWithdrawalMutation.isPending ? 'Отменяем…' : 'Подтвердить отмену'}
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    className="rounded-full"
+                                    disabled={cancelWithdrawalMutation.isPending}
+                                    onClick={() => setPendingCancellationId(null)}
+                                  >
+                                    Оставить
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                className="rounded-full text-cabinet-muted-ink hover:bg-cabinet-panel hover:text-cabinet-ink"
+                                onClick={() => setPendingCancellationId(withdrawal.id)}
+                              >
+                                <RotateCcw className="h-4 w-4" />
+                                Отменить
+                              </Button>
+                            )
                           ) : null}
                         </div>
                       </div>
