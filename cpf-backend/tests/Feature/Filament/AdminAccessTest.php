@@ -20,6 +20,19 @@ class AdminAccessTest extends TestCase
             ->assertRedirect('/admin/login');
     }
 
+    public function test_guest_proxy_https_request_keeps_secure_admin_login_redirect(): void
+    {
+        $this->withServerVariables([
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+            'HTTP_X_FORWARDED_HOST' => 'cpf.elifsyndicate.online',
+            'HTTP_X_FORWARDED_PORT' => '443',
+            'HTTP_HOST' => 'cpf.elifsyndicate.online',
+            'REMOTE_ADDR' => '10.0.0.1',
+        ])
+            ->get('/admin')
+            ->assertRedirect('https://cpf.elifsyndicate.online/admin/login');
+    }
+
     public function test_investor_cannot_access_admin_panel(): void
     {
         $investor = User::query()->where('email', 'investor@cpf.local')->firstOrFail();

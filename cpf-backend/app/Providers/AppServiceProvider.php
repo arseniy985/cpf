@@ -4,11 +4,11 @@ namespace App\Providers;
 
 use App\Modules\Payments\Contracts\PaymentGateway;
 use App\Modules\Payments\Contracts\PayoutGateway;
-use App\Modules\Payments\Services\YooKassaPaymentGateway;
 use App\Modules\Payments\Services\YooKassaPayoutGateway;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +36,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $appUrl = (string) config('app.url');
+
+        if (parse_url($appUrl, PHP_URL_SCHEME) === 'https') {
+            URL::forceRootUrl(rtrim($appUrl, '/'));
+            URL::forceScheme('https');
+        }
+
         RateLimiter::for('auth.login', function (Request $request): Limit {
             $email = strtolower((string) $request->input('email'));
 

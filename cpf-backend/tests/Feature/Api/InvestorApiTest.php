@@ -5,9 +5,9 @@ namespace Tests\Feature\Api;
 use App\Models\User;
 use App\Modules\Catalog\Domain\Models\Project;
 use App\Modules\Engagement\Domain\Models\Notification;
+use App\Modules\Identity\Domain\Models\KycProfile;
 use App\Modules\Investing\Domain\Models\InvestmentApplication;
 use App\Modules\Origination\Domain\Models\OfferingRound;
-use App\Modules\Identity\Domain\Models\KycProfile;
 use App\Modules\Payments\Contracts\PaymentGateway;
 use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
@@ -159,6 +159,13 @@ class InvestorApiTest extends TestCase
         $this->getJson('/api/v1/me/kyc')
             ->assertOk()
             ->assertJsonPath('data.legalName', 'Investor Updated');
+
+        $kycProfile = KycProfile::query()->where('user_id', $investor->id)->firstOrFail();
+
+        $this->assertDatabaseHas('activity_log', [
+            'subject_type' => KycProfile::class,
+            'subject_id' => $kycProfile->id,
+        ]);
     }
 
     public function test_investor_can_save_payout_profile_for_automatic_distributions(): void
