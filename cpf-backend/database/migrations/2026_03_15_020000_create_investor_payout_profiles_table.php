@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('investor_payout_profiles')) {
+            return;
+        }
+
         Schema::create('investor_payout_profiles', function (Blueprint $table): void {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->unique()->constrained()->cascadeOnDelete();
