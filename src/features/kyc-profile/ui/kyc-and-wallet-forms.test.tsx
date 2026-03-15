@@ -4,6 +4,8 @@ import { vi } from 'vitest';
 import { DepositFundsForm } from '@/features/deposit-funds/ui/deposit-funds-form';
 import { KycDocumentUploadForm } from '@/features/kyc-document-upload/ui/kyc-document-upload-form';
 import { KycProfileForm } from '@/features/kyc-profile/ui/kyc-profile-form';
+import { ManualDepositForm } from '@/features/manual-deposit/ui/manual-deposit-form';
+import { ManualDepositReceiptForm } from '@/features/manual-deposit/ui/manual-deposit-receipt-form';
 import { WithdrawFundsForm } from '@/features/withdraw-funds/ui/withdraw-funds-form';
 
 const mocks = vi.hoisted(() => ({
@@ -35,6 +37,20 @@ const mocks = vi.hoisted(() => ({
     isSuccess: false,
     error: null,
   },
+  manualDepositMutation: {
+    mutateAsync: vi.fn(async () => ({ data: { id: 'manual-1' } })),
+    isPending: false,
+    isError: false,
+    isSuccess: false,
+    error: null,
+  },
+  manualReceiptMutation: {
+    mutateAsync: vi.fn(async () => ({ data: { id: 'manual-1', status: 'under_review' } })),
+    isPending: false,
+    isError: false,
+    isSuccess: false,
+    error: null,
+  },
 }));
 
 vi.mock('@/entities/cabinet/api/hooks', () => ({
@@ -42,6 +58,8 @@ vi.mock('@/entities/cabinet/api/hooks', () => ({
   useUploadKycDocumentMutation: () => mocks.uploadKycMutation,
   useCreateDepositMutation: () => mocks.depositMutation,
   useCreateWithdrawalMutation: () => mocks.withdrawalMutation,
+  useCreateManualDepositMutation: () => mocks.manualDepositMutation,
+  useUploadManualDepositReceiptMutation: () => mocks.manualReceiptMutation,
 }));
 
 describe('kyc and wallet forms', () => {
@@ -114,6 +132,42 @@ describe('kyc and wallet forms', () => {
       bank_name: 'Т-Банк',
       bank_account: '2200700000000000',
       comment: 'Срочно',
+    });
+  });
+
+  it('creates manual deposit request with payer data', async () => {
+    const user = userEvent.setup();
+
+    render(<ManualDepositForm />);
+
+    await user.clear(screen.getByLabelText('Сумма перевода'));
+    await user.type(screen.getByLabelText('Сумма перевода'), '45000');
+    await user.type(screen.getByLabelText('Плательщик'), 'Investor Demo');
+    await user.type(screen.getByLabelText('Банк плательщика'), 'Т-Банк');
+    await user.type(screen.getByLabelText('Последние 4 цифры счёта'), '5501');
+    await user.click(screen.getByRole('button', { name: 'Получить реквизиты для перевода' }));
+
+    expect(mocks.manualDepositMutation.mutateAsync).toHaveBeenCalledWith({
+      amount: 45000,
+      payer_name: 'Investor Demo',
+      payer_bank: 'Т-Банк',
+      payer_account_last4: '5501',
+      comment: undefined,
+    });
+  });
+
+  it('uploads manual deposit receipt', async () => {
+    const user = userEvent.setup();
+    const file = new File(['receipt'], 'manual-topup.pdf', { type: 'application/pdf' });
+
+    render(<ManualDepositReceiptForm requestId="manual-1" />);
+
+    await user.upload(screen.getByLabelText('Подтверждение перевода'), file);
+    await user.click(screen.getByRole('button', { name: 'Отправить чек менеджеру' }));
+
+    expect(mocks.manualReceiptMutation.mutateAsync).toHaveBeenCalledWith({
+      id: 'manual-1',
+      file,
     });
   });
 });

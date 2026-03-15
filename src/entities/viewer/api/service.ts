@@ -1,5 +1,6 @@
 import { fetchJson } from '@/shared/api/http/client';
 import type {
+  AccountType,
   AuthResponse,
   AuthUser,
   EmailCodePurpose,
@@ -17,6 +18,7 @@ type RegisterPayload = {
   name: string;
   email: string;
   phone?: string;
+  account_type: AccountType;
   password: string;
   password_confirmation: string;
   device_name: string;
@@ -114,6 +116,13 @@ export async function updateInvestorPayoutProfile(
     method: 'PATCH',
     requireAuth: true,
     body: JSON.stringify(payload),
+  });
+}
+
+export async function enrollOwner() {
+  return fetchJson<AuthResponse>('/api/v1/owner/enroll', {
+    method: 'POST',
+    requireAuth: true,
   });
 }
 

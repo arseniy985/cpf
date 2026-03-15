@@ -18,6 +18,7 @@ import {
   useRequestEmailCodeMutation,
   useVerifyEmailCodeMutation,
 } from '@/entities/viewer/api/hooks';
+import type { AuthUser } from '@/entities/viewer/api/types';
 import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { applyApiFormErrors } from '@/shared/lib/forms';
 import { verifyCodeSchema } from '@/features/auth/model/schemas';
@@ -32,7 +33,7 @@ export function VerifyCodeForm({
 }: {
   context: VerificationContext;
   onBack: () => void;
-  onSuccess: (token: string) => void;
+  onSuccess: (result: { token: string; user: AuthUser }) => void;
 }) {
   const verifyCodeMutation = useVerifyEmailCodeMutation();
   const requestCodeMutation = useRequestEmailCodeMutation();
@@ -52,7 +53,10 @@ export function VerifyCodeForm({
         device_name: 'next-web',
       });
 
-      onSuccess(response.data.token);
+      onSuccess({
+        token: response.data.token,
+        user: response.data.user,
+      });
     } catch (error) {
       applyApiFormErrors(error, form.setError);
     }

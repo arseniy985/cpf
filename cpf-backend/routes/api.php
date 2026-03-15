@@ -16,14 +16,15 @@ use App\Modules\Origination\Http\Controllers\OwnerProjectDocumentController;
 use App\Modules\Origination\Http\Controllers\OwnerProjectReportController;
 use App\Modules\Origination\Http\Controllers\OwnerAccountController;
 use App\Modules\Origination\Http\Controllers\OwnerBankProfileController;
+use App\Modules\Origination\Http\Controllers\OwnerEnrollmentController;
 use App\Modules\Origination\Http\Controllers\OwnerOnboardingController;
 use App\Modules\Origination\Http\Controllers\OwnerOrganizationController;
 use App\Modules\Origination\Http\Controllers\OwnerRoundController;
 use App\Modules\Origination\Http\Controllers\OwnerWorkspaceController;
-use App\Modules\Origination\Http\Controllers\ProjectSubmissionController;
 use App\Modules\Payments\Http\Controllers\OwnerDistributionController;
 use App\Modules\Payments\Http\Controllers\CreateDepositController;
 use App\Modules\Payments\Http\Controllers\InvestorPayoutProfileController;
+use App\Modules\Payments\Http\Controllers\ManualDepositRequestController;
 use App\Modules\Payments\Http\Controllers\PaymentTransactionController;
 use App\Modules\Payments\Http\Controllers\PaymentWebhookController;
 use App\Modules\Payments\Http\Controllers\WalletTransactionController;
@@ -71,7 +72,6 @@ use Illuminate\Support\Facades\Route;
     Route::post('leads/contact', [ContactLeadController::class, 'store']);
     Route::post('leads/consultation', [ContactLeadController::class, 'store']);
     Route::post('leads/callback', [ContactLeadController::class, 'store']);
-    Route::post('project-submissions', [ProjectSubmissionController::class, 'store']);
     Route::post('payments/webhooks/yookassa', [PaymentWebhookController::class, 'handleYooKassa'])
         ->middleware('yookassa.webhook');
 
@@ -84,6 +84,7 @@ use Illuminate\Support\Facades\Route;
 
         Route::get('me', [AuthController::class, 'me']);
         Route::patch('me', [ProfileController::class, 'update']);
+        Route::post('owner/enroll', OwnerEnrollmentController::class);
         Route::post('me/kyc', [KycProfileController::class, 'store']);
         Route::get('me/kyc', [KycProfileController::class, 'show']);
         Route::get('me/payout-profile', [InvestorPayoutProfileController::class, 'show']);
@@ -117,11 +118,17 @@ use Illuminate\Support\Facades\Route;
         Route::middleware('idempotency')->group(function (): void {
             Route::post('deposits', [CreateDepositController::class, 'store'])->middleware('kyc.approved');
             Route::post('wallet/deposits', [CreateDepositController::class, 'store'])->middleware('kyc.approved');
+            Route::post('wallet/manual-deposits', [ManualDepositRequestController::class, 'store'])->middleware('kyc.approved');
             Route::post('wallet/withdrawals', [WithdrawalRequestController::class, 'store'])->middleware('kyc.approved');
         });
 
         Route::get('wallet/deposits', [PaymentTransactionController::class, 'index']);
         Route::get('wallet/deposits/{paymentTransaction}', [PaymentTransactionController::class, 'show']);
+        Route::get('wallet/manual-deposits', [ManualDepositRequestController::class, 'index']);
+        Route::get('wallet/manual-deposits/{manualDepositRequest}', [ManualDepositRequestController::class, 'show']);
+        Route::post('wallet/manual-deposits/{manualDepositRequest}/receipt', [ManualDepositRequestController::class, 'uploadReceipt'])->middleware('kyc.approved');
+        Route::get('wallet/manual-deposits/{manualDepositRequest}/receipt/download', [ManualDepositRequestController::class, 'downloadReceipt'])->name('manual-deposits.receipt.download');
+        Route::post('wallet/manual-deposits/{manualDepositRequest}/cancel', [ManualDepositRequestController::class, 'cancel']);
         Route::get('wallet/withdrawals', [WithdrawalRequestController::class, 'index']);
         Route::get('wallet/withdrawals/{withdrawalRequest}', [WithdrawalRequestController::class, 'show']);
         Route::post('wallet/withdrawals/{withdrawalRequest}/cancel', [WithdrawalRequestController::class, 'cancel']);

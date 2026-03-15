@@ -126,6 +126,38 @@ export type WithdrawalRequest = {
   cancelledAt: string | null;
 };
 
+export type ManualDepositRequest = {
+  id: string;
+  amount: number;
+  currency: string;
+  status: 'awaiting_transfer' | 'under_review' | 'awaiting_user_clarification' | 'approved' | 'credited' | 'rejected' | 'cancelled' | 'expired' | string;
+  referenceCode: string;
+  recipientName: string;
+  bankName: string;
+  bankAccount: string;
+  bankBik: string | null;
+  correspondentAccount: string | null;
+  paymentPurpose: string;
+  managerName: string | null;
+  managerEmail: string | null;
+  managerPhone: string | null;
+  managerTelegram: string | null;
+  payerName: string;
+  payerBank: string | null;
+  payerAccountLast4: string | null;
+  comment: string | null;
+  reviewNote: string | null;
+  receiptDownloadUrl: string | null;
+  createdAt: string;
+  submittedAt: string | null;
+  receiptUploadedAt: string | null;
+  reviewedAt: string | null;
+  approvedAt: string | null;
+  creditedAt: string | null;
+  cancelledAt: string | null;
+  expiresAt: string | null;
+};
+
 export type CabinetNotification = {
   id: string;
   type: string;
@@ -145,6 +177,7 @@ export type DashboardSummary = {
   distributionsAmount: number;
   walletBalance: number;
   pendingWithdrawals: number;
+  pendingManualDeposits: number;
   unreadNotifications: number;
   kycStatus: string | null;
 };
@@ -159,6 +192,7 @@ export type DashboardResponse = {
     transactions: PaymentTransaction[];
     walletTransactions: WalletTransaction[];
     withdrawals: WithdrawalRequest[];
+    manualDepositRequests: ManualDepositRequest[];
   };
 };
 

@@ -13,7 +13,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ContactRequestForm } from '@/features/contact-request/ui/contact-request-form';
-import { ProjectSubmissionForm } from '@/features/project-submission/ui/project-submission-form';
 
 export default function GlobalModal() {
   const pathname = usePathname();
@@ -69,7 +68,7 @@ export default function GlobalModal() {
               <p className="mt-4 text-base leading-relaxed text-slate-600">
                 {type === 'invest'
                   ? 'Наш менеджер свяжется с вами и поможет подобрать подходящий проект.'
-                  : 'Команда ЦПФ свяжется с вами для разбора параметров объекта и структуры сделки.'}
+                  : 'Команда ЦПФ свяжется с вами, чтобы ответить на вопросы по платформе и следующему шагу.'}
               </p>
               <Button className="mt-8" width="full" onClick={() => setIsOpen(false)}>
                 Закрыть
@@ -82,29 +81,26 @@ export default function GlobalModal() {
                   {type === 'invest' ? 'Investor intake' : 'Origination intake'}
                 </Badge>
                 <DialogTitle>
-                  {type === 'invest' ? 'Начать инвестировать' : 'Привлечь капитал под объект'}
+                  {type === 'invest' ? 'Начать инвестировать' : 'Запросить консультацию'}
                 </DialogTitle>
                 <DialogDescription>
                   {type === 'invest'
                     ? 'Оставьте контакты, и мы свяжемся с вами для подбора проектов и старта на платформе.'
-                    : 'Заполните короткую анкету по объекту, и мы оценим возможность размещения на платформе.'}
+                    : 'Оставьте контакты, и команда платформы поможет с навигацией по сервисам и кабинетам.'}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="mt-8">
-                {type === 'invest' ? (
-                  <ContactRequestForm
-                    className="grid gap-4"
-                    source="global-modal"
-                    subject="Инвесторская консультация"
-                    defaultMessage={prefillMessage}
-                    showMessageField
-                    successMessage="Заявка отправлена. Мы свяжемся с вами в ближайшее время."
-                    submitLabel="Получить предложения"
-                  />
-                ) : (
-                  <ProjectSubmissionForm onSuccess={() => setIsSubmitted(true)} />
-                )}
+                <ContactRequestForm
+                  className="grid gap-4"
+                  source="global-modal"
+                  subject={type === 'invest' ? 'Инвесторская консультация' : 'Консультация по платформе'}
+                  defaultMessage={prefillMessage}
+                  showMessageField
+                  successMessage="Заявка отправлена. Мы свяжемся с вами в ближайшее время."
+                  submitLabel={type === 'invest' ? 'Получить предложения' : 'Отправить запрос'}
+                  onSuccess={() => setIsSubmitted(true)}
+                />
 
                 <p className="mt-4 text-center text-xs leading-relaxed text-slate-400">
                   Нажимая на кнопку, вы даете согласие на обработку{' '}

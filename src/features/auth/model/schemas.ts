@@ -4,6 +4,7 @@ import type { AuthMode } from './auth-flow';
 const passwordRule = z.string().min(8, 'Минимум 8 символов.');
 
 export const authCredentialsBaseSchema = z.object({
+  account_type: z.enum(['investor', 'owner']).default('investor'),
   name: z.string().optional(),
   phone: z.string().optional(),
   password_confirmation: z.string().optional(),
@@ -11,7 +12,7 @@ export const authCredentialsBaseSchema = z.object({
   password: passwordRule,
 });
 
-export type AuthCredentialsFormValues = z.infer<typeof authCredentialsBaseSchema>;
+export type AuthCredentialsFormValues = z.input<typeof authCredentialsBaseSchema>;
 
 export function getCredentialsSchema(mode: AuthMode) {
   return authCredentialsBaseSchema.superRefine((value, context) => {

@@ -8,6 +8,7 @@ use App\Modules\Investing\Data\InvestorAllocationData;
 use App\Modules\Investing\Data\InvestmentApplicationData;
 use App\Modules\Investing\Data\InvestorDashboardData;
 use App\Modules\Payments\Data\DistributionLineData;
+use App\Modules\Payments\Data\ManualDepositRequestData;
 use App\Modules\Payments\Data\PaymentTransactionData;
 use App\Modules\Payments\Data\WalletTransactionData;
 use App\Modules\Payments\Data\WithdrawalRequestData;
@@ -29,6 +30,7 @@ class InvestorDashboardController extends Controller
             'paymentTransactions',
             'walletTransactions',
             'withdrawalRequests',
+            'manualDepositRequests',
             'notifications',
             'kycProfile',
         ]);
@@ -47,6 +49,9 @@ class InvestorDashboardController extends Controller
             ),
             'withdrawals' => WithdrawalRequestData::collect(
                 $user->withdrawalRequests->sortByDesc('created_at')->values(),
+            ),
+            'manualDepositRequests' => ManualDepositRequestData::collect(
+                $user->manualDepositRequests->sortByDesc('created_at')->values(),
             ),
         ]);
     }

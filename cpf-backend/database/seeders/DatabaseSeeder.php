@@ -26,7 +26,7 @@ use App\Modules\Origination\Domain\Models\OwnerMember;
 use App\Modules\Origination\Domain\Models\OwnerOnboarding;
 use App\Modules\Origination\Domain\Models\OwnerOrganization;
 use App\Modules\Origination\Domain\Models\ProjectReport;
-use App\Modules\Origination\Domain\Models\ProjectSubmission;
+use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
 use App\Modules\Payments\Domain\Models\WalletTransaction;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ],
         );
-        $projectOwner->syncRoles(['project_owner']);
+        $projectOwner->syncRoles(['investor', 'project_owner']);
 
         $ownerAccount = OwnerAccount::query()->updateOrCreate(
             ['slug' => 'owner-demo-desk'],
@@ -335,20 +335,6 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        ProjectSubmission::query()->updateOrCreate(
-            ['email' => 'submission-owner@cpf.local'],
-            [
-                'full_name' => 'Игорь Собственник',
-                'phone' => '+7 999 000 00 04',
-                'company_name' => 'ООО Актив',
-                'project_name' => 'Торговая галерея Юг',
-                'asset_type' => 'commercial_real_estate',
-                'target_amount' => 55000000,
-                'message' => 'Ищем капитал под выкуп объекта и обновление арендаторов.',
-                'status' => 'new',
-            ],
-        );
-
         PaymentTransaction::query()->updateOrCreate(
             ['external_id' => 'demo-yookassa-payment'],
             [
@@ -391,6 +377,40 @@ class DatabaseSeeder extends Seeder
                 'bank_name' => 'Т-Банк',
                 'comment' => 'Тестовая заявка на вывод.',
                 'idempotency_key' => 'seed-withdrawal-request',
+            ],
+        );
+
+        Storage::disk('private')->put('manual-deposit-receipts/demo/manual-topup.pdf', 'demo receipt');
+
+        ManualDepositRequest::query()->updateOrCreate(
+            ['reference_code' => 'MD-SEED01'],
+            [
+                'user_id' => $investor->id,
+                'amount' => 120000,
+                'currency' => 'RUB',
+                'status' => 'under_review',
+                'recipient_name' => config('manual_deposits.bank.recipient_name'),
+                'bank_name' => config('manual_deposits.bank.bank_name'),
+                'bank_account' => config('manual_deposits.bank.bank_account'),
+                'bank_bik' => config('manual_deposits.bank.bank_bik'),
+                'correspondent_account' => config('manual_deposits.bank.correspondent_account'),
+                'payment_purpose' => 'Пополнение кошелька, заявка MD-SEED01',
+                'manager_name' => config('manual_deposits.manager.name'),
+                'manager_email' => config('manual_deposits.manager.email'),
+                'manager_phone' => config('manual_deposits.manager.phone'),
+                'manager_telegram' => config('manual_deposits.manager.telegram'),
+                'payer_name' => 'Investor Demo',
+                'payer_bank' => 'Т-Банк',
+                'payer_account_last4' => '1002',
+                'comment' => 'Перевод по реквизитам кабинета.',
+                'receipt_disk' => 'private',
+                'receipt_path' => 'manual-deposit-receipts/demo/manual-topup.pdf',
+                'receipt_original_name' => 'manual-topup.pdf',
+                'receipt_mime_type' => 'application/pdf',
+                'receipt_size' => 1024,
+                'submitted_at' => now()->subHours(5),
+                'receipt_uploaded_at' => now()->subHours(4),
+                'expires_at' => now()->addDays(2),
             ],
         );
 

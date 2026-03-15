@@ -136,26 +136,4 @@ class PublicApiTest extends TestCase
         ]);
     }
 
-    public function test_project_submission_can_be_created(): void
-    {
-        $response = $this->postJson('/api/v1/project-submissions', [
-            'full_name' => 'Игорь Проект',
-            'email' => 'owner@example.com',
-            'phone' => '+7 999 555 44 11',
-            'company_name' => 'ООО Актив',
-            'project_name' => 'Бизнес-центр Север',
-            'asset_type' => 'commercial_real_estate',
-            'target_amount' => 25000000,
-            'message' => 'Ищем соинвесторов.',
-        ]);
-
-        $response
-            ->assertCreated()
-            ->assertJsonPath('data.status', 'new');
-
-        $this->assertDatabaseHas('project_submissions', [
-            'email' => 'owner@example.com',
-            'status' => 'new',
-        ]);
-    }
 }

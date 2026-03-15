@@ -6,6 +6,7 @@ import type {
   InvestmentApplication,
   KycDocument,
   KycProfile,
+  ManualDepositRequest,
   PaymentTransaction,
   WalletTransaction,
   WithdrawalRequest,
@@ -167,6 +168,52 @@ export async function createWithdrawal(
 
 export async function cancelWithdrawal(id: string) {
   return fetchJson<{ data: WithdrawalRequest }>(`/api/v1/wallet/withdrawals/${id}/cancel`, {
+    method: 'POST',
+    requireAuth: true,
+  });
+}
+
+export async function fetchManualDepositRequests() {
+  return fetchJson<{ data: ManualDepositRequest[] }>('/api/v1/wallet/manual-deposits', {
+    requireAuth: true,
+  });
+}
+
+export async function createManualDeposit(
+  payload: {
+    amount: number;
+    payer_name: string;
+    payer_bank?: string;
+    payer_account_last4?: string;
+    comment?: string;
+  },
+) {
+  return fetchJson<{ data: ManualDepositRequest }>('/api/v1/wallet/manual-deposits', {
+    method: 'POST',
+    requireAuth: true,
+    idempotencyKey: createIdempotencyKey(),
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function uploadManualDepositReceipt(
+  payload: {
+    id: string;
+    file: File;
+  },
+) {
+  const formData = new FormData();
+  formData.set('file', payload.file);
+
+  return fetchJson<{ data: ManualDepositRequest }>(`/api/v1/wallet/manual-deposits/${payload.id}/receipt`, {
+    method: 'POST',
+    requireAuth: true,
+    body: formData,
+  });
+}
+
+export async function cancelManualDeposit(id: string) {
+  return fetchJson<{ data: ManualDepositRequest }>(`/api/v1/wallet/manual-deposits/${id}/cancel`, {
     method: 'POST',
     requireAuth: true,
   });

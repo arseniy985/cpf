@@ -3,11 +3,13 @@
 namespace Tests\Feature\Api;
 
 use App\Models\User;
+use App\Modules\Origination\Domain\Models\OwnerAccount;
 use App\Modules\Identity\Notifications\EmailCodeNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class AuthApiTest extends TestCase
@@ -52,6 +54,51 @@ class AuthApiTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'email' => 'api-investor@example.com',
+        ]);
+    }
+
+    public function test_owner_can_register_and_verify_email_code_to_receive_owner_ready_profile(): void
+    {
+        Notification::fake();
+
+        $response = $this->postJson('/api/v1/auth/register', [
+            'name' => 'API Owner',
+            'email' => 'api-owner@example.com',
+            'phone' => '+7 999 123 45 68',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'device_name' => 'phpunit',
+            'account_type' => 'owner',
+        ]);
+
+        $response
+            ->assertCreated()
+            ->assertJsonPath('data.email', 'api-owner@example.com')
+            ->assertJsonPath('data.purpose', 'verify_email');
+
+        $user = User::query()->where('email', 'api-owner@example.com')->firstOrFail();
+
+        Notification::assertSentTo($user, EmailCodeNotification::class);
+
+        $verifyResponse = $this->postJson('/api/v1/auth/verify-email-code', [
+            'email' => 'api-owner@example.com',
+            'code' => '123456',
+            'purpose' => 'verify_email',
+            'device_name' => 'phpunit',
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.user.email', 'api-owner@example.com')
+            ->assertJsonPath('data.user.ownerAccount.displayName', 'API Owner');
+
+        $roles = $verifyResponse->json('data.user.roles');
+
+        $this->assertContains('investor', $roles);
+        $this->assertContains('project_owner', $roles);
+
+        $this->assertDatabaseHas('owner_accounts', [
+            'primary_user_id' => $user->id,
+            'display_name' => 'API Owner',
+            'status' => 'account_created',
         ]);
     }
 
@@ -174,6 +221,49 @@ class AuthApiTest extends TestCase
             ->assertJsonPath('data.email', 'direct-investor@example.com');
     }
 
+    public function test_owner_can_register_without_email_code_when_feature_flag_is_disabled(): void
+    {
+        Notification::fake();
+        Config::set('cpf.auth.register_with_email_code', false);
+
+        $response = $this->postJson('/api/v1/auth/register', [
+            'name' => 'Direct Owner',
+            'email' => 'direct-owner@example.com',
+            'phone' => '+7 999 321 45 68',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'device_name' => 'phpunit',
+            'account_type' => 'owner',
+        ]);
+
+        $token = $response->json('data.token');
+        $roles = $response->json('data.user.roles');
+
+        $response
+            ->assertCreated()
+            ->assertJsonPath('data.user.email', 'direct-owner@example.com')
+            ->assertJsonPath('data.user.ownerAccount.displayName', 'Direct Owner');
+
+        $this->assertContains('investor', $roles);
+        $this->assertContains('project_owner', $roles);
+        Notification::assertNothingSent();
+
+        $owner = User::query()->where('email', 'direct-owner@example.com')->firstOrFail();
+
+        $this->assertDatabaseHas('owner_accounts', [
+            'primary_user_id' => $owner->id,
+            'display_name' => 'Direct Owner',
+        ]);
+
+        $this->assertNotEmpty($token);
+
+        $this->withToken($token)
+            ->getJson('/api/v1/auth/me')
+            ->assertOk()
+            ->assertJsonPath('data.email', 'direct-owner@example.com')
+            ->assertJsonPath('data.ownerAccount.displayName', 'Direct Owner');
+    }
+
     public function test_investor_can_login_without_email_code_when_feature_flag_is_disabled(): void
     {
         Notification::fake();
@@ -200,6 +290,54 @@ class AuthApiTest extends TestCase
             ->getJson('/api/v1/auth/me')
             ->assertOk()
             ->assertJsonPath('data.email', 'investor@cpf.local');
+    }
+
+    public function test_authenticated_investor_can_enroll_into_owner_workspace(): void
+    {
+        $investor = User::query()->where('email', 'investor@cpf.local')->firstOrFail();
+
+        Sanctum::actingAs($investor);
+
+        $response = $this->postJson('/api/v1/owner/enroll')
+            ->assertOk()
+            ->assertJsonPath('data.email', 'investor@cpf.local')
+            ->assertJsonPath('data.ownerAccount.displayName', 'Investor Demo');
+
+        $roles = $response->json('data.roles');
+
+        $this->assertContains('investor', $roles);
+        $this->assertContains('project_owner', $roles);
+
+        $account = OwnerAccount::query()
+            ->where('primary_user_id', $investor->id)
+            ->first();
+
+        $this->assertNotNull($account);
+
+        $this->assertDatabaseHas('owner_members', [
+            'owner_account_id' => $account?->id,
+            'user_id' => $investor->id,
+            'role' => 'owner',
+        ]);
+    }
+
+    public function test_owner_enrollment_is_idempotent_for_existing_owner(): void
+    {
+        $owner = User::query()->where('email', 'owner@cpf.local')->firstOrFail();
+        $initialOwnerAccountId = OwnerAccount::query()
+            ->where('primary_user_id', $owner->id)
+            ->value('id');
+
+        Sanctum::actingAs($owner);
+
+        $response = $this->postJson('/api/v1/owner/enroll')
+            ->assertOk()
+            ->assertJsonPath('data.ownerAccount.id', $initialOwnerAccountId);
+
+        $roles = $response->json('data.roles');
+
+        $this->assertContains('project_owner', $roles);
+        $this->assertDatabaseCount('owner_accounts', 1);
     }
 
     public function test_email_code_verification_stops_after_max_attempts(): void

@@ -4,6 +4,7 @@ namespace Tests\Feature\Filament;
 
 use App\Filament\Resources\KycDocuments\Pages\ManageKycDocuments;
 use App\Filament\Resources\KycProfiles\Pages\ManageKycProfiles;
+use App\Filament\Resources\ManualDepositRequests\Pages\ManageManualDepositRequests;
 use App\Filament\Resources\ProjectDocuments\Pages\ManageProjectDocuments;
 use App\Filament\Resources\Projects\Pages\ManageProjects;
 use App\Filament\Resources\StaticPages\Pages\ManageStaticPages;
@@ -11,6 +12,7 @@ use App\Filament\Resources\WithdrawalRequests\Pages\ManageWithdrawalRequests;
 use App\Modules\Catalog\Domain\Models\Project;
 use App\Modules\Compliance\Domain\Models\KycDocument;
 use App\Modules\Identity\Domain\Models\KycProfile;
+use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
 use Filament\Actions\CreateAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -108,12 +110,13 @@ class ResourceActionsTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_update_kyc_and_withdrawal_statuses_from_filament_tables(): void
+    public function test_admin_can_update_kyc_withdrawal_and_manual_deposit_statuses_from_filament_tables(): void
     {
         $this->actingAsAdmin();
 
         $kycProfile = KycProfile::query()->where('status', 'pending_review')->firstOrFail();
         $withdrawalRequest = WithdrawalRequest::query()->where('status', 'pending_review')->firstOrFail();
+        $manualDepositRequest = ManualDepositRequest::query()->where('status', 'under_review')->firstOrFail();
 
         Livewire::test(ManageKycProfiles::class)
             ->callTableAction('approve', $kycProfile)
@@ -122,6 +125,12 @@ class ResourceActionsTest extends TestCase
         Livewire::test(ManageWithdrawalRequests::class)
             ->callTableAction('mark_paid', $withdrawalRequest, data: [
                 'review_note' => 'Платеж проведен бухгалтером.',
+            ])
+            ->assertHasNoTableActionErrors();
+
+        Livewire::test(ManageManualDepositRequests::class)
+            ->callTableAction('credit', $manualDepositRequest, data: [
+                'review_note' => 'Входящий перевод подтвержден по выписке.',
             ])
             ->assertHasNoTableActionErrors();
 
@@ -141,6 +150,11 @@ class ResourceActionsTest extends TestCase
         $this->assertDatabaseHas('withdrawal_requests', [
             'id' => $withdrawalRequest->id,
             'status' => 'paid',
+        ]);
+
+        $this->assertDatabaseHas('manual_deposit_requests', [
+            'id' => $manualDepositRequest->id,
+            'status' => 'credited',
         ]);
 
         $this->assertDatabaseHas('kyc_documents', [

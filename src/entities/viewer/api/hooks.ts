@@ -7,6 +7,7 @@ import {
   forgotPassword,
   login,
   logout,
+  enrollOwner,
   refreshToken,
   register,
   requestEmailCode,
@@ -100,6 +101,18 @@ export function useUpdateInvestorPayoutProfileMutation() {
 export function useRefreshTokenMutation() {
   return useMutation({
     mutationFn: ({ deviceName }: { deviceName: string }) => refreshToken(deviceName),
+  });
+}
+
+export function useEnrollOwnerMutation() {
+  const queryClient = useQueryClient();
+  const token = useAuthToken();
+
+  return useMutation({
+    mutationFn: enrollOwner,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: authKeys.me(token) });
+    },
   });
 }
 

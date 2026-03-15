@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { ArrowRight, BriefcaseBusiness, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Form,
   FormControl,
@@ -14,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useLoginMutation, useRegisterMutation } from '@/entities/viewer/api/hooks';
-import type { AuthUser, EmailCodePurpose } from '@/entities/viewer/api/types';
+import type { AccountType, AuthUser, EmailCodePurpose } from '@/entities/viewer/api/types';
 import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { isLoginCodeRequired, isRegistrationCodeRequired } from '@/shared/config/auth';
 import { applyApiFormErrors } from '@/shared/lib/forms';
@@ -38,6 +40,7 @@ type AuthSuccessResult =
 
 type CredentialsFormProps = {
   mode: AuthMode;
+  intent?: AccountType;
   alternateHref: string;
   alternateLabel: string;
   submitLabel: string;
@@ -47,6 +50,7 @@ type CredentialsFormProps = {
 
 export function CredentialsForm({
   mode,
+  intent = 'investor',
   alternateHref,
   alternateLabel,
   submitLabel,
@@ -62,6 +66,7 @@ export function CredentialsForm({
   const form = useForm<AuthCredentialsFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
+      account_type: intent,
       name: '',
       phone: '',
       email: mode === 'login' ? 'investor@cpf.local' : '',
@@ -74,6 +79,7 @@ export function CredentialsForm({
     try {
       const response = mode === 'register'
         ? await registerMutation.mutateAsync({
+          account_type: values.account_type ?? intent,
           name: values.name ?? '',
           email: values.email,
           phone: values.phone || undefined,
@@ -112,6 +118,73 @@ export function CredentialsForm({
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        {mode === 'register' ? (
+          <FormField
+            control={form.control}
+            name="account_type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Какой кабинет нужен?</FormLabel>
+                <FormControl>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {[
+                      {
+                        value: 'investor',
+                        title: 'Инвестор',
+                        text: 'Сделки, портфель, документы и выплаты в одном контуре.',
+                        icon: BriefcaseBusiness,
+                        tone: 'from-[#16345d] via-[#1d4b77] to-[#0f233f]',
+                      },
+                      {
+                        value: 'owner',
+                        title: 'Владелец объекта',
+                        text: 'Профиль компании, KYB, проекты, раунды и owner payouts.',
+                        icon: Building2,
+                        tone: 'from-[#6e321d] via-[#8b421d] to-[#4e1f10]',
+                      },
+                    ].map((option) => {
+                      const isActive = field.value === option.value;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => field.onChange(option.value)}
+                          className={`group relative overflow-hidden rounded-[28px] border p-4 text-left transition-all duration-300 ${
+                            isActive
+                              ? 'border-slate-900 bg-slate-950 text-white shadow-[0_18px_45px_rgba(15,23,42,0.16)]'
+                              : 'border-slate-200 bg-white text-slate-900 hover:border-slate-400 hover:bg-slate-50'
+                          }`}
+                        >
+                          <div className={`absolute inset-0 bg-gradient-to-br ${option.tone} transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
+                          <div className="relative z-10 flex min-h-32 flex-col justify-between gap-5">
+                            <div className="flex items-center justify-between gap-3">
+                              <Badge
+                                variant="outline"
+                                className={isActive
+                                  ? 'border-white/20 bg-white/10 text-white'
+                                  : 'border-slate-200 bg-slate-50 text-slate-600'}
+                              >
+                                Сценарий входа
+                              </Badge>
+                              <option.icon className={isActive ? 'h-5 w-5 text-white' : 'h-5 w-5 text-slate-700'} />
+                            </div>
+                            <div>
+                              <p className="text-lg font-black tracking-tight">{option.title}</p>
+                              <p className={isActive ? 'mt-2 text-sm text-white/78' : 'mt-2 text-sm text-slate-600'}>{option.text}</p>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : null}
+
         {mode === 'register' ? (
           <>
             <FormField
@@ -219,9 +292,10 @@ export function CredentialsForm({
 
         <Link
           href={alternateHref}
-          className="block text-center text-sm font-bold text-slate-600 hover:text-indigo-700"
+          className="inline-flex w-full items-center justify-center gap-2 text-center text-sm font-bold text-slate-600 hover:text-indigo-700"
         >
           {alternateLabel}
+          <ArrowRight className="h-4 w-4" />
         </Link>
       </form>
     </Form>

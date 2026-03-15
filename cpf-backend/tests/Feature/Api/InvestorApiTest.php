@@ -9,6 +9,7 @@ use App\Modules\Investing\Domain\Models\InvestmentApplication;
 use App\Modules\Origination\Domain\Models\OfferingRound;
 use App\Modules\Identity\Domain\Models\KycProfile;
 use App\Modules\Payments\Contracts\PaymentGateway;
+use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,9 +45,11 @@ class InvestorApiTest extends TestCase
                 ->where('data.summary.portfolioAmount', 0)
                 ->where('data.summary.approvedAmount', 150000)
                 ->where('data.summary.pendingAmount', 50000)
+                ->where('data.summary.pendingManualDeposits', 120000)
                 ->has('data.applications', 2)
                 ->has('data.allocations', 0)
                 ->has('data.transactions', 1)
+                ->has('data.manualDepositRequests', 1)
                 ->etc());
     }
 
@@ -233,6 +236,51 @@ class InvestorApiTest extends TestCase
         $this->postJson("/api/v1/wallet/withdrawals/{$withdrawal->id}/cancel")
             ->assertOk()
             ->assertJsonPath('data.status', 'cancelled');
+    }
+
+    public function test_investor_can_create_manual_deposit_request_and_upload_receipt(): void
+    {
+        Storage::fake('private');
+
+        $investor = User::query()->where('email', 'investor@cpf.local')->firstOrFail();
+        Sanctum::actingAs($investor);
+
+        $createResponse = $this->withHeader('Idempotency-Key', 'manual-deposit-key')
+            ->postJson('/api/v1/wallet/manual-deposits', [
+                'amount' => 45000,
+                'payer_name' => 'Investor Demo',
+                'payer_bank' => 'Т-Банк',
+                'payer_account_last4' => '5501',
+                'comment' => 'Отправлю банковским переводом.',
+            ]);
+
+        $createResponse
+            ->assertCreated()
+            ->assertJsonPath('data.status', 'awaiting_transfer')
+            ->assertJsonPath('data.payerName', 'Investor Demo');
+
+        $manualDepositRequest = ManualDepositRequest::query()
+            ->where('user_id', $investor->id)
+            ->where('amount', 45000)
+            ->firstOrFail();
+
+        $receipt = UploadedFile::fake()->create('manual-topup.pdf', 256, 'application/pdf');
+
+        $this->postJson("/api/v1/wallet/manual-deposits/{$manualDepositRequest->id}/receipt", [
+            'file' => $receipt,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.status', 'under_review')
+            ->assertJsonPath('data.receiptDownloadUrl', route('manual-deposits.receipt.download', $manualDepositRequest));
+
+        $this->getJson('/api/v1/wallet/manual-deposits')
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.status', 'under_review');
+
+        $this->postJson("/api/v1/wallet/manual-deposits/{$manualDepositRequest->id}/cancel")
+            ->assertUnprocessable()
+            ->assertJsonPath('code', 'manual_deposit_cannot_be_cancelled');
     }
 
     public function test_investor_can_upload_kyc_document_and_payment_webhook_creates_wallet_credit(): void

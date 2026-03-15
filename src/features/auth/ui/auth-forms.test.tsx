@@ -138,6 +138,7 @@ describe('auth forms', () => {
     await user.click(screen.getByRole('button', { name: 'Продолжить' }));
 
     expect(mocks.registerMutation.mutateAsync).toHaveBeenCalledWith({
+      account_type: 'investor',
       name: 'Иван Иванов',
       email: 'new@cpf.local',
       phone: undefined,
@@ -208,6 +209,39 @@ describe('auth forms', () => {
     });
   });
 
+  it('submits owner registration payload when owner flow is selected', async () => {
+    const user = userEvent.setup();
+    const onSuccess = vi.fn();
+
+    render(
+      <CredentialsForm
+        mode="register"
+        intent="owner"
+        alternateHref="/login"
+        alternateLabel="Вход"
+        submitLabel="Создать owner-кабинет"
+        onRecovery={vi.fn()}
+        onSuccess={onSuccess}
+      />,
+    );
+
+    await user.type(screen.getByLabelText('Имя и фамилия'), 'Owner Иванов');
+    await user.type(screen.getByLabelText('Email'), 'owner@cpf.local');
+    await user.type(screen.getByLabelText('Пароль'), 'password1');
+    await user.type(screen.getByLabelText('Повторите пароль'), 'password1');
+    await user.click(screen.getByRole('button', { name: 'Создать owner-кабинет' }));
+
+    expect(mocks.registerMutation.mutateAsync).toHaveBeenCalledWith({
+      account_type: 'owner',
+      name: 'Owner Иванов',
+      email: 'owner@cpf.local',
+      phone: undefined,
+      password: 'password1',
+      password_confirmation: 'password1',
+      device_name: 'next-web',
+    });
+  });
+
   it('verifies code and allows resending code', async () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();
@@ -232,7 +266,20 @@ describe('auth forms', () => {
       purpose: 'login',
       device_name: 'next-web',
     });
-    expect(onSuccess).toHaveBeenCalledWith('verified-token');
+    expect(onSuccess).toHaveBeenCalledWith({
+      token: 'verified-token',
+      user: {
+        id: '1',
+        name: 'User',
+        email: 'a@b.c',
+        phone: null,
+        emailVerifiedAt: null,
+        kycStatus: null,
+        roles: [],
+        ownerAccount: null,
+        investorPayoutProfile: null,
+      },
+    });
     expect(mocks.requestCodeMutation.mutateAsync).toHaveBeenCalledWith({
       email: 'investor@cpf.local',
       purpose: 'login',

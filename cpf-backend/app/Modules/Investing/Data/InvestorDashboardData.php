@@ -17,6 +17,7 @@ class InvestorDashboardData extends Data
         public int $distributionsAmount,
         public int $walletBalance,
         public int $pendingWithdrawals,
+        public int $pendingManualDeposits,
         public int $unreadNotifications,
         public ?string $kycStatus,
     ) {}
@@ -37,6 +38,12 @@ class InvestorDashboardData extends Data
             distributionsAmount: (int) $distributionLines->sum('amount'),
             walletBalance: $walletBalance,
             pendingWithdrawals: (int) $user->withdrawalRequests->whereIn('status', ['pending_review', 'approved', 'processing_manual_payout'])->sum('amount'),
+            pendingManualDeposits: (int) $user->manualDepositRequests->whereIn('status', [
+                'awaiting_transfer',
+                'under_review',
+                'awaiting_user_clarification',
+                'approved',
+            ])->sum('amount'),
             unreadNotifications: $user->notifications->whereNull('read_at')->count(),
             kycStatus: $user->kycProfile?->status,
         );

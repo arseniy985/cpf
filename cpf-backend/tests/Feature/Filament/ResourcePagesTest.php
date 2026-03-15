@@ -11,13 +11,13 @@ use App\Filament\Resources\InvestmentApplications\Pages\ManageInvestmentApplicat
 use App\Filament\Resources\KycDocuments\Pages\ManageKycDocuments;
 use App\Filament\Resources\KycProfiles\Pages\ManageKycProfiles;
 use App\Filament\Resources\LegalDocuments\Pages\ManageLegalDocuments;
+use App\Filament\Resources\ManualDepositRequests\Pages\ManageManualDepositRequests;
 use App\Filament\Resources\Notifications\Pages\ManageNotifications;
 use App\Filament\Resources\PaymentTransactions\Pages\ManagePaymentTransactions;
 use App\Filament\Resources\ProjectDocuments\Pages\ManageProjectDocuments;
 use App\Filament\Resources\ProjectFaqItems\Pages\ManageProjectFaqItems;
 use App\Filament\Resources\ProjectReports\Pages\ManageProjectReports;
 use App\Filament\Resources\Projects\Pages\ManageProjects;
-use App\Filament\Resources\ProjectSubmissions\Pages\ManageProjectSubmissions;
 use App\Filament\Resources\Reviews\Pages\ManageReviews;
 use App\Filament\Resources\StaticPages\Pages\ManageStaticPages;
 use App\Filament\Resources\Users\Pages\ManageUsers;
@@ -39,8 +39,8 @@ use App\Modules\Engagement\Domain\Models\Notification;
 use App\Modules\Identity\Domain\Models\KycProfile;
 use App\Modules\Investing\Domain\Models\InvestmentApplication;
 use App\Modules\Origination\Domain\Models\ProjectReport;
-use App\Modules\Origination\Domain\Models\ProjectSubmission;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
+use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -82,10 +82,6 @@ class ResourcePagesTest extends TestCase
             ->assertOk()
             ->assertCanSeeTableRecords(ContactLead::query()->get());
 
-        Livewire::test(ManageProjectSubmissions::class)
-            ->assertOk()
-            ->assertCanSeeTableRecords(ProjectSubmission::query()->get());
-
         Livewire::test(ManageInvestmentApplications::class)
             ->assertOk()
             ->assertCanSeeTableRecords(InvestmentApplication::query()->get());
@@ -113,6 +109,10 @@ class ResourcePagesTest extends TestCase
         Livewire::test(ManagePaymentTransactions::class)
             ->assertOk()
             ->assertCanSeeTableRecords(PaymentTransaction::query()->get());
+
+        Livewire::test(ManageManualDepositRequests::class)
+            ->assertOk()
+            ->assertCanSeeTableRecords(ManualDepositRequest::query()->get());
 
         Livewire::test(ManageWithdrawalRequests::class)
             ->assertOk()

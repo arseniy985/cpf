@@ -4,7 +4,7 @@
             ['label' => 'KYC профили', 'value' => $pendingKycProfiles],
             ['label' => 'KYC документы', 'value' => $pendingKycDocuments],
             ['label' => 'Выводы', 'value' => $pendingWithdrawals],
-            ['label' => 'Заявки по проектам', 'value' => $pendingProjectSubmissions],
+            ['label' => 'Ручные пополнения', 'value' => $pendingManualDeposits],
             ['label' => 'Платежи', 'value' => $pendingPayments],
         ] as $card)
             <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-gray-900">

@@ -4,9 +4,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthToken } from '@/shared/lib/auth/use-auth-token';
 import {
   cancelWithdrawal,
+  cancelManualDeposit,
   confirmInvestment,
   createDeposit,
   createInvestmentApplication,
+  createManualDeposit,
   createWithdrawal,
   fetchCabinetDocuments,
   fetchDashboard,
@@ -14,12 +16,14 @@ import {
   fetchInvestments,
   fetchKycDocuments,
   fetchKycProfile,
+  fetchManualDepositRequests,
   fetchNotifications,
   fetchPaymentTransactions,
   fetchWalletTransactions,
   fetchWithdrawals,
   markNotificationAsRead,
   upsertKycProfile,
+  uploadManualDepositReceipt,
   uploadKycDocument,
 } from './service';
 
@@ -34,6 +38,7 @@ export const cabinetKeys = {
   paymentTransactions: (token: string | null) => [...cabinetKeys.all, 'payment-transactions', token] as const,
   walletTransactions: (token: string | null) => [...cabinetKeys.all, 'wallet-transactions', token] as const,
   withdrawals: (token: string | null) => [...cabinetKeys.all, 'withdrawals', token] as const,
+  manualDeposits: (token: string | null) => [...cabinetKeys.all, 'manual-deposits', token] as const,
 };
 
 export function useDashboardQuery(token?: string | null) {
@@ -132,6 +137,17 @@ export function useWithdrawalsQuery(token?: string | null) {
   return useQuery({
     queryKey: cabinetKeys.withdrawals(currentToken),
     queryFn: () => fetchWithdrawals(),
+    enabled: Boolean(currentToken),
+  });
+}
+
+export function useManualDepositsQuery(token?: string | null) {
+  const authToken = useAuthToken();
+  const currentToken = token ?? authToken;
+
+  return useQuery({
+    queryKey: cabinetKeys.manualDeposits(currentToken),
+    queryFn: () => fetchManualDepositRequests(),
     enabled: Boolean(currentToken),
   });
 }
@@ -275,6 +291,72 @@ export function useCreateWithdrawalMutation() {
         queryClient.invalidateQueries({ queryKey: cabinetKeys.dashboard(token) }),
         queryClient.invalidateQueries({ queryKey: cabinetKeys.withdrawals(token) }),
         queryClient.invalidateQueries({ queryKey: cabinetKeys.walletTransactions(token) }),
+      ]);
+    },
+  });
+}
+
+export function useCreateManualDepositMutation() {
+  const queryClient = useQueryClient();
+  const token = useAuthToken();
+
+  return useMutation({
+    mutationFn: ({
+      amount,
+      payer_name,
+      payer_bank,
+      payer_account_last4,
+      comment,
+    }: {
+      amount: number;
+      payer_name: string;
+      payer_bank?: string;
+      payer_account_last4?: string;
+      comment?: string;
+    }) =>
+      createManualDeposit({
+        amount,
+        payer_name,
+        payer_bank,
+        payer_account_last4,
+        comment,
+      }),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.dashboard(token) }),
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.manualDeposits(token) }),
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.notifications(token) }),
+      ]);
+    },
+  });
+}
+
+export function useUploadManualDepositReceiptMutation() {
+  const queryClient = useQueryClient();
+  const token = useAuthToken();
+
+  return useMutation({
+    mutationFn: ({ id, file }: { id: string; file: File }) =>
+      uploadManualDepositReceipt({ id, file }),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.dashboard(token) }),
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.manualDeposits(token) }),
+      ]);
+    },
+  });
+}
+
+export function useCancelManualDepositMutation() {
+  const queryClient = useQueryClient();
+  const token = useAuthToken();
+
+  return useMutation({
+    mutationFn: ({ id }: { id: string }) => cancelManualDeposit(id),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.dashboard(token) }),
+        queryClient.invalidateQueries({ queryKey: cabinetKeys.manualDeposits(token) }),
       ]);
     },
   });

@@ -31,6 +31,7 @@ type ContactRequestFormProps = {
   showMessageField?: boolean;
   successMessage?: string;
   className?: string;
+  onSuccess?: () => void;
 };
 
 export function ContactRequestForm({
@@ -41,6 +42,7 @@ export function ContactRequestForm({
   showMessageField = false,
   successMessage = 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.',
   className,
+  onSuccess,
 }: ContactRequestFormProps) {
   const mutation = useContactLeadMutation();
   const form = useForm<ContactRequestFormValues>({
@@ -71,6 +73,7 @@ export function ContactRequestForm({
         email: '',
         message: defaultMessage ?? '',
       });
+      onSuccess?.();
     } catch (error) {
       applyApiFormErrors(error, form.setError);
     }
@@ -79,7 +82,7 @@ export function ContactRequestForm({
   return (
     <Form {...form}>
       <form className={className} onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="full_name"

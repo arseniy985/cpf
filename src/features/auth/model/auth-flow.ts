@@ -1,26 +1,46 @@
-import type { EmailCodePurpose } from '@/entities/viewer/api/types';
+import type { AccountType, AuthUser, EmailCodePurpose } from '@/entities/viewer/api/types';
 import { isLoginCodeRequired, isRegistrationCodeRequired } from '@/shared/config/auth';
 
 export type AuthMode = 'login' | 'register';
 export type AuthStep = 'credentials' | 'code' | 'recovery';
+export type AuthIntent = AccountType;
 
 export type VerificationContext = {
   email: string;
   purpose: EmailCodePurpose;
 };
 
-export function getAuthPageCopy(mode: AuthMode) {
+export function getPostAuthRedirect(user: AuthUser, intent?: AuthIntent) {
+  if (intent === 'owner' || user.roles.includes('project_owner')) {
+    return '/owner';
+  }
+
+  return '/dashboard';
+}
+
+export function getAuthPageCopy(mode: AuthMode, intent: AuthIntent = 'investor') {
   if (mode === 'register') {
     const registerRequiresCode = isRegistrationCodeRequired();
+    const isOwner = intent === 'owner';
 
     return {
-      title: 'Создайте кабинет инвестора',
+      title: isOwner ? 'Запустите кабинет владельца' : 'Создайте кабинет инвестора',
       subtitle: registerRequiresCode
-        ? 'После регистрации отправим код подтверждения на email. После проверки откроется доступ к кабинету.'
-        : 'Заполните данные, чтобы сразу создать кабинет и перейти в рабочую зону платформы.',
+        ? isOwner
+          ? 'После регистрации подтвердите email и сразу перейдете в owner workspace: профиль компании, KYB и запуск первого объекта.'
+          : 'После регистрации отправим код подтверждения на email. После проверки откроется доступ к кабинету.'
+        : isOwner
+          ? 'Заполните данные, чтобы сразу открыть кабинет владельца, заполнить профиль компании и перейти к первому объекту.'
+          : 'Заполните данные, чтобы сразу создать кабинет и перейти в рабочую зону платформы.',
       alternateHref: '/login',
       alternateLabel: 'Уже есть кабинет? Войти',
-      submitLabel: registerRequiresCode ? 'Продолжить и получить код' : 'Создать кабинет',
+      submitLabel: registerRequiresCode
+        ? isOwner
+          ? 'Создать owner-кабинет и получить код'
+          : 'Продолжить и получить код'
+        : isOwner
+          ? 'Создать owner-кабинет'
+          : 'Создать кабинет',
     };
   }
 

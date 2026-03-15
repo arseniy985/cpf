@@ -1,5 +1,7 @@
 import type { OwnerAccountSummary } from '@/entities/owner-account/api/types';
 
+export type AccountType = 'investor' | 'owner';
+
 export type AuthUser = {
   id: string;
   name: string;

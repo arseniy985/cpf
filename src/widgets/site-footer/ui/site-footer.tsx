@@ -28,11 +28,13 @@ export default function Footer() {
               Центр Партнёрского Финансирования. Инновационная платформа коллективных инвестиций в коммерческую недвижимость и готовый бизнес.
             </p>
             <Button
+              asChild
               variant="link"
-              onClick={() => window.dispatchEvent(new CustomEvent('open-modal', { detail: { type: 'consult' } }))}
               className="h-auto px-0 py-0 text-teal-400 hover:text-teal-300"
             >
-              Бесплатная консультация <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <Link href="/register?intent=owner">
+                Стать владельцем объекта <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
           </div>
 

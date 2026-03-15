@@ -5,6 +5,7 @@ namespace App\Modules\Identity\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Identity\Data\AuthUserData;
+use App\Modules\Identity\Enums\RegistrationAccountType;
 use App\Modules\Identity\Http\Requests\ForgotPasswordRequest;
 use App\Modules\Identity\Http\Requests\LoginRequest;
 use App\Modules\Identity\Http\Requests\RegisterRequest;
@@ -12,6 +13,7 @@ use App\Modules\Identity\Http\Requests\RequestEmailCodeRequest;
 use App\Modules\Identity\Http\Requests\ResetPasswordWithCodeRequest;
 use App\Modules\Identity\Http\Requests\VerifyEmailCodeRequest;
 use App\Modules\Identity\Services\EmailCodeService;
+use App\Modules\Identity\Services\RegistrationService;
 use App\Support\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,13 +24,15 @@ class AuthController extends Controller
 {
     public function __construct(
         private readonly EmailCodeService $emailCodeService,
+        private readonly RegistrationService $registrationService,
     ) {}
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = User::query()->create($request->safe()->only(['name', 'email', 'phone', 'password']));
-        $user->assignRole('investor');
-        $user->load('kycProfile');
+        $user = $this->registrationService->register(
+            $request->safe()->only(['name', 'email', 'phone', 'password']),
+            $request->enum('account_type', RegistrationAccountType::class) ?? RegistrationAccountType::Investor,
+        );
 
         if (! config('cpf.auth.register_with_email_code', true)) {
             $user->forceFill(['email_verified_at' => now(), 'last_login_at' => now()])->save();

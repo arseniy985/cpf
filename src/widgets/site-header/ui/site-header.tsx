@@ -38,6 +38,16 @@ export default function Header() {
   const [search, setSearch] = useState('');
   const session = useSession();
 
+  const ownerLink = useMemo(
+    () =>
+      session.user
+        ? session.user.roles.includes('project_owner')
+          ? { href: '/owner', label: 'Кабинет владельца' }
+          : { href: '/dashboard/settings?intent=owner', label: 'Стать владельцем' }
+        : { href: '/register?intent=owner', label: 'Стать владельцем' },
+    [session.user],
+  );
+
   const accountLink = useMemo(
     () =>
       session.user
@@ -47,10 +57,6 @@ export default function Header() {
         : { href: '/login', label: 'Вход' },
     [session.user],
   );
-
-  const openModal = (type: 'invest' | 'consult') => {
-    window.dispatchEvent(new CustomEvent('open-modal', { detail: { type } }));
-  };
 
   async function handleLogout() {
     await session.logout();
@@ -114,8 +120,10 @@ export default function Header() {
         </div>
 
         <div className="hidden lg:flex items-center gap-3 shrink-0">
-          <Button variant="outline" className="h-13 px-6" onClick={() => openModal('consult')}>
-            Привлечь инвестиции
+          <Button asChild variant="outline" className="h-13 px-6">
+            <Link href={ownerLink.href}>
+              {ownerLink.label}
+            </Link>
           </Button>
           <Button asChild className="h-13 px-6">
             <Link href={accountLink.href} className="flex items-center gap-2">
@@ -183,8 +191,10 @@ export default function Header() {
             <Separator className="my-6 bg-indigo-800" />
 
             <div className="grid gap-3">
-              <Button variant="outline" className="border-indigo-700 bg-transparent text-white hover:bg-white/10 hover:text-white" onClick={() => { setIsMobileMenuOpen(false); openModal('consult'); }}>
-                Привлечь инвестиции
+              <Button asChild variant="outline" className="border-indigo-700 bg-transparent text-white hover:bg-white/10 hover:text-white">
+                <Link href={ownerLink.href} onClick={() => setIsMobileMenuOpen(false)}>
+                  {ownerLink.label}
+                </Link>
               </Button>
               <Button asChild>
                 <Link href={accountLink.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">

@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Modules\Compliance\Domain\Models\KycDocument;
 use App\Modules\Identity\Domain\Models\KycProfile;
-use App\Modules\Origination\Domain\Models\ProjectSubmission;
+use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
 use App\Modules\Payments\Domain\Models\WithdrawalRequest;
 use BackedEnum;
@@ -27,7 +27,7 @@ class OperationsQueue extends Page
             'pendingKycProfiles' => KycProfile::query()->where('status', 'pending_review')->count(),
             'pendingKycDocuments' => KycDocument::query()->where('status', 'pending_review')->count(),
             'pendingWithdrawals' => WithdrawalRequest::query()->where('status', 'pending_review')->count(),
-            'pendingProjectSubmissions' => ProjectSubmission::query()->where('status', 'new')->count(),
+            'pendingManualDeposits' => ManualDepositRequest::query()->whereIn('status', ['under_review', 'approved', 'awaiting_user_clarification'])->count(),
             'pendingPayments' => PaymentTransaction::query()->whereIn('status', ['pending', 'waiting_for_capture'])->count(),
         ];
     }

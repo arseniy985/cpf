@@ -12,6 +12,7 @@ use App\Modules\Origination\Domain\Models\OwnerAccount;
 use App\Modules\Origination\Domain\Models\OwnerMember;
 use App\Modules\Payments\Domain\Models\DistributionLine;
 use App\Modules\Payments\Domain\Models\InvestorPayoutProfile;
+use App\Modules\Payments\Domain\Models\ManualDepositRequest;
 use App\Modules\Payments\Domain\Models\PayoutInstruction;
 use App\Modules\Payments\Domain\Models\PaymentTransaction;
 use App\Modules\Payments\Domain\Models\WalletTransaction;
@@ -98,6 +99,11 @@ class User extends Authenticatable implements FilamentUser
     public function withdrawalRequests(): HasMany
     {
         return $this->hasMany(WithdrawalRequest::class);
+    }
+
+    public function manualDepositRequests(): HasMany
+    {
+        return $this->hasMany(ManualDepositRequest::class);
     }
 
     public function walletTransactions(): HasMany
