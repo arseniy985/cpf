@@ -1,21 +1,7 @@
-import { Cormorant_Garamond, Manrope } from 'next/font/google';
 import ChatWidget from '@/widgets/chat-widget';
 import GlobalModal from '@/widgets/global-modal';
 import Providers from './providers';
 import './globals.css';
-
-const sansFont = Manrope({
-  subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  variable: '--font-sans',
-});
-
-const displayFont = Cormorant_Garamond({
-  subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  variable: '--font-display',
-  weight: ['500', '600', '700'],
-});
 
 export const metadata = {
   title: 'ЦПФ | Центр Партнёрского Финансирования',
@@ -28,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`scroll-smooth ${sansFont.variable} ${displayFont.variable}`}>
+    <html lang="ru" className="scroll-smooth">
       <body className="font-sans antialiased bg-slate-50 text-slate-900 selection:bg-indigo-600 selection:text-white">
         <a
           href="#main-content"
