@@ -24,10 +24,10 @@ export function getAuthPageCopy(mode: AuthMode, intent: AuthIntent = 'investor')
     const isOwner = intent === 'owner';
 
     return {
-      title: isOwner ? 'Запустите кабинет владельца' : 'Создайте кабинет инвестора',
+      title: isOwner ? 'Создайте кабинет владельца' : 'Создайте кабинет инвестора',
       subtitle: registerRequiresCode
         ? isOwner
-          ? 'После регистрации подтвердите email и сразу перейдете в owner workspace: профиль компании, KYB и запуск первого объекта.'
+          ? 'После регистрации подтвердите email и сразу перейдете в кабинет владельца: заполните данные компании и добавьте первый объект.'
           : 'После регистрации отправим код подтверждения на email. После проверки откроется доступ к кабинету.'
         : isOwner
           ? 'Заполните данные, чтобы сразу открыть кабинет владельца, заполнить профиль компании и перейти к первому объекту.'
@@ -36,10 +36,10 @@ export function getAuthPageCopy(mode: AuthMode, intent: AuthIntent = 'investor')
       alternateLabel: 'Уже есть кабинет? Войти',
       submitLabel: registerRequiresCode
         ? isOwner
-          ? 'Создать owner-кабинет и получить код'
+          ? 'Создать кабинет и получить код'
           : 'Продолжить и получить код'
         : isOwner
-          ? 'Создать owner-кабинет'
+          ? 'Создать кабинет владельца'
           : 'Создать кабинет',
     };
   }

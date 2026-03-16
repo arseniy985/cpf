@@ -77,12 +77,12 @@ export default function Header() {
           <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-indigo-600"/> Пн-Вс 9:00 - 21:00</span>
         </div>
         <div className="flex items-center gap-6">
-          <a href="tel:+74951369888" className="font-bold text-slate-800 hover:text-indigo-600 transition flex items-center gap-1.5">
-            <Phone className="w-3.5 h-3.5 text-indigo-600"/> +7 (495) 136-98-88
-          </a>
+            <a href="tel:+74951369888" className="font-bold text-slate-800 hover:text-indigo-600 transition flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-indigo-600"/> +7 (495) 136-98-88
+            </a>
           <div className="flex items-center gap-4">
-            <a href="#" className="flex items-center gap-1.5 hover:text-blue-500 transition"><Send className="w-3.5 h-3.5 text-blue-500"/> Telegram</a>
-            <a href="#" className="flex items-center gap-1.5 hover:text-green-500 transition"><MessageCircle className="w-3.5 h-3.5 text-green-500"/> WhatsApp</a>
+            <Link href="/contacts" className="flex items-center gap-1.5 hover:text-blue-500 transition"><Send className="w-3.5 h-3.5 text-blue-500"/> Telegram</Link>
+            <Link href="/contacts" className="flex items-center gap-1.5 hover:text-green-500 transition"><MessageCircle className="w-3.5 h-3.5 text-green-500"/> WhatsApp</Link>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function Header() {
             <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
             type="text"
-            placeholder="Поиск готового бизнеса или недвижимости..."
+            placeholder="Поиск по коммерческой недвижимости и инвестпроектам…"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             onKeyDown={(event) => {

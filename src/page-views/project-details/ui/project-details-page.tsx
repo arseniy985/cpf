@@ -119,7 +119,7 @@ export default function ProjectDetailsPage({ projectSlug }: { projectSlug: strin
                 </div>
 
                 <aside className="space-y-6 lg:col-span-4">
-                  <Card className="sticky top-24 rounded-[32px]">
+                  <Card id="invest" className="sticky top-24 rounded-[32px]">
                     <CardContent className="space-y-5 p-8">
                       <h2 className="text-2xl font-display font-black text-indigo-950">Параметры сделки</h2>
                       <Metric label="Доходность" value={formatProjectYield(project.targetYield)} icon={<TrendingUp className="h-4 w-4" />} />

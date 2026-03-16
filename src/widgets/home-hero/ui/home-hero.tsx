@@ -29,19 +29,19 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
               </span>
-              Лидеры рынка с 2014 года
+              Инвестиции от 10 000 ₽
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-indigo-950 leading-[1.1] tracking-tighter mb-6">
-              Покупка и продажа <br/>
+              Инвестиции в <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">
-                готового бизнеса
+                коммерческую недвижимость
               </span> <br/>
-              и недвижимости
+              с прозрачным входом
             </h1>
             
             <p className="text-lg text-slate-600 mb-8 max-w-lg leading-relaxed font-medium">
-              Коллективные инвестиции в проверенные коммерческие объекты. Просто, безопасно, с ежемесячными выплатами от 10 000 ₽.
+              Выбирайте проверенный проект, проходите короткий KYC, пополняйте кошелек и подтверждайте участие в сделке прямо на платформе.
             </p>
             
             {/* Trust Badges */}
@@ -50,25 +50,25 @@ export default function Hero() {
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-indigo-600">
                   <Building2 className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold text-slate-600 leading-tight">Бизнесы от собственников</span>
+                <span className="text-xs font-bold text-slate-600 leading-tight">Порог входа от 10 000 ₽</span>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-indigo-600">
                   <TrendingUp className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold text-slate-600 leading-tight">Работающие с прибылью</span>
+                <span className="text-xs font-bold text-slate-600 leading-tight">Прогноз выплат по каждому проекту</span>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-indigo-600">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold text-slate-600 leading-tight">Купите проверенный бизнес</span>
+                <span className="text-xs font-bold text-slate-600 leading-tight">KYC, документы и контроль рисков</span>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-indigo-600">
                   <Users className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold text-slate-600 leading-tight">Лучшие условия для покупки</span>
+                <span className="text-xs font-bold text-slate-600 leading-tight">Кошелек, выплаты и история операций</span>
               </div>
             </div>
 
@@ -80,7 +80,7 @@ export default function Hero() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/about">О компании</Link>
+                <Link href="/calculator">Рассчитать доход</Link>
               </Button>
             </div>
           </motion.div>
@@ -98,14 +98,14 @@ export default function Hero() {
                 Получите <span className="text-teal-500">бесплатную</span> консультацию наших экспертов
               </h3>
               <p className="text-sm text-slate-500 mb-8 font-medium">
-                Оставьте заявку, и мы подберем для вас лучшие инвестиционные предложения.
+                Оставьте заявку, если хотите подобрать проект под бюджет, срок и уровень риска.
               </p>
 
               <ContactRequestForm
                 className="space-y-4"
                 source="home-hero"
-                subject="Заявка на консультацию с главной страницы"
-                defaultMessage="Пользователь запросил подбор инвестиционных предложений."
+                subject="Заявка на консультацию инвестора с главной страницы"
+                defaultMessage="Пользователь запросил подбор инвестиционного проекта по бюджету и сроку."
                 submitLabel="Отправить заявку"
               />
 
@@ -113,7 +113,7 @@ export default function Hero() {
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-500" />
                 <p className="text-xs leading-tight text-slate-500">
                   Нажимая на кнопку, вы даете согласие на обработку{' '}
-                  <a href="#" className="underline hover:text-indigo-600">персональных данных</a>
+                  <Link href="/documents" className="underline hover:text-indigo-600">персональных данных</Link>
                 </p>
               </div>
               </CardContent>

@@ -6,30 +6,36 @@ import { ArrowRight, Check, ShieldCheck } from 'lucide-react';
 const tariffs = [
   {
     name: 'Надежный',
-    min: '[Мин. сумма]',
+    min: 'от 10 000 ₽',
     risk: 'Низкий',
-    target: 'Консервативный вход',
-    payout: 'Регламентные выплаты',
-    support: 'Базовая поддержка',
-    control: 'Стандартный отчет',
+    target: 'Первый вход в платформу',
+    payout: 'Ежемесячно или по графику проекта',
+    support: 'Стандартное сопровождение',
+    control: 'Базовый пакет отчетности',
+    exampleProject: 'Готовые арендные объекты с понятной моделью cash flow',
+    term: 'от 6 до 18 месяцев',
   },
   {
     name: 'Сбалансированный',
-    min: '[Мин. сумма]',
+    min: 'от 100 000 ₽',
     risk: 'Средний',
-    target: 'Баланс дохода и риска',
-    payout: 'Расширенный график выплат',
+    target: 'Баланс доходности и ликвидности',
+    payout: 'Ежемесячные выплаты по действующим раундам',
     support: 'Приоритетная поддержка',
-    control: 'Расширенная отчетность',
+    control: 'Расширенные отчеты и документы сделки',
+    exampleProject: 'Коммерческая недвижимость с активной арендной моделью',
+    term: 'от 12 до 24 месяцев',
   },
   {
     name: 'Повышенный доход',
-    min: '[Мин. сумма]',
+    min: 'от 500 000 ₽',
     risk: 'Повышенный',
-    target: 'Агрессивный рост',
-    payout: 'Индивидуальный график',
-    support: 'Персональный менеджер',
-    control: 'Индивидуальный контроль',
+    target: 'Ставка на рост доходности',
+    payout: 'По графику проекта и структуре раунда',
+    support: 'Персональный менеджер по сделке',
+    control: 'Индивидуальный формат коммуникации и раскрытия',
+    exampleProject: 'Более сложные сделки с активной фазой масштабирования',
+    term: 'от 18 до 36 месяцев',
   },
 ];
 
@@ -52,8 +58,8 @@ export default function TariffsPage() {
             ТАРИФЫ И <span className="text-indigo-600">УЧАСТИЕ</span>
           </h1>
           <p className="mt-6 text-lg text-slate-600 max-w-3xl leading-relaxed">
-            Тариф определяет только рамку участия. Условия финальной сделки всегда зависят от выбранного проекта и
-            фиксируются в документах.
+            Это не абстрактные пакеты, а ориентиры по размеру входа, риску и глубине сопровождения. Итоговые условия
+            всегда закрепляются в документах конкретного проекта и вашего инвестиционного сценария.
           </p>
         </section>
 
@@ -77,18 +83,32 @@ export default function TariffsPage() {
                 <div className="mt-6 space-y-3 text-sm">
                   <p><span className="font-bold">Риск:</span> {tariff.risk}</p>
                   <p><span className="font-bold">Выплаты:</span> {tariff.payout}</p>
+                  <p><span className="font-bold">Пример проекта:</span> {tariff.exampleProject}</p>
+                  <p><span className="font-bold">Срок участия:</span> {tariff.term}</p>
                   <p><span className="font-bold">Поддержка:</span> {tariff.support}</p>
                   <p><span className="font-bold">Контроль:</span> {tariff.control}</p>
                 </div>
 
-                <Link
-                  href="/contacts"
-                  className={`mt-8 inline-flex w-full items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-colors ${
-                    index === 1 ? 'bg-teal-400 text-indigo-950 hover:bg-teal-500' : 'bg-indigo-950 text-white hover:bg-indigo-800'
-                  }`}
-                >
-                  Обсудить условия <ArrowRight className="w-4 h-4" />
-                </Link>
+                <div className="mt-8 flex flex-col gap-3">
+                  <Link
+                    href="/projects"
+                    className={`inline-flex w-full items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-colors ${
+                      index === 1 ? 'bg-teal-400 text-indigo-950 hover:bg-teal-500' : 'bg-indigo-950 text-white hover:bg-indigo-800'
+                    }`}
+                  >
+                    Смотреть проекты <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    href="/calculator"
+                    className={`inline-flex w-full items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-colors ${
+                      index === 1
+                        ? 'border border-white/20 text-white hover:bg-white/10'
+                        : 'border border-slate-200 text-indigo-950 hover:border-indigo-300'
+                    }`}
+                  >
+                    Рассчитать сценарий
+                  </Link>
+                </div>
               </article>
             ))}
           </div>
@@ -109,10 +129,10 @@ export default function TariffsPage() {
                 </thead>
                 <tbody>
                   {[
-                    ['Отчетность', 'Базовая', 'Расширенная', 'Индивидуальная'],
-                    ['Формат сопровождения', 'Стандарт', 'Приоритет', 'Персональный'],
-                    ['Гибкость графика', 'Низкая', 'Средняя', 'Высокая'],
-                    ['Сложность стратегии', 'Низкая', 'Средняя', 'Высокая'],
+                    ['Мин. вход', 'от 10 000 ₽', 'от 100 000 ₽', 'от 500 000 ₽'],
+                    ['Формат выплат', 'По графику проекта', 'Ежемесячно / по раунду', 'Индивидуально по сделке'],
+                    ['Отчетность', 'Базовая', 'Расширенная', 'Расширенная + персональная'],
+                    ['Тип сделки', 'Понятный cash flow', 'Баланс роста и стабильности', 'Повышенная доходность'],
                   ].map((row) => (
                     <tr key={row[0]} className="border-b border-slate-100">
                       <td className="py-3 font-medium text-slate-700">{row[0]}</td>
@@ -127,7 +147,7 @@ export default function TariffsPage() {
           </article>
 
           <article className="lg:col-span-5 bg-indigo-950 text-white rounded-[32px] p-8">
-            <h3 className="text-2xl font-display font-bold">Перед выбором тарифа проверьте</h3>
+            <h3 className="text-2xl font-display font-bold">Перед входом в сделку проверьте</h3>
             <div className="mt-6 space-y-3">
               {checklist.map((item) => (
                 <div key={item} className="flex items-start gap-3 bg-indigo-900/60 border border-indigo-800 rounded-2xl p-4">
@@ -139,7 +159,7 @@ export default function TariffsPage() {
             <div className="mt-7 p-4 rounded-2xl bg-indigo-900/60 border border-indigo-800 flex gap-3">
               <ShieldCheck className="w-5 h-5 text-teal-400 mt-0.5" />
               <p className="text-sm text-indigo-200 leading-relaxed">
-                Итоговые параметры подтверждаются в документах выбранного проекта и согласуются до входа в сделку.
+                Подходящий тариф не заменяет due diligence. Сначала проверьте проект, затем пройдите KYC и подтвердите участие через кабинет.
               </p>
             </div>
           </article>

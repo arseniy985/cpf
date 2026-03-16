@@ -19,6 +19,7 @@ use App\Modules\Content\Domain\Models\FaqItem;
 use App\Modules\Content\Domain\Models\LegalDocument;
 use App\Modules\Content\Domain\Models\Review;
 use App\Modules\Content\Domain\Models\StaticPage;
+use App\Modules\Content\Support\PublicContentDefaults;
 use App\Modules\Investing\Domain\Models\InvestmentApplication;
 use App\Support\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -34,11 +35,19 @@ class PublicContentController extends Controller
             ->limit(3)
             ->get();
 
+        $stats = [
+            'projectsCount' => Project::query()->published()->count(),
+            'investorsCount' => InvestmentApplication::query()->distinct('user_id')->count('user_id'),
+            'totalInvested' => (int) InvestmentApplication::query()->sum('amount'),
+        ];
+
+        $defaultStats = PublicContentDefaults::homeStats();
+
         return ApiResponse::success([
             'stats' => [
-                'projectsCount' => Project::query()->published()->count(),
-                'investorsCount' => InvestmentApplication::query()->distinct('user_id')->count('user_id'),
-                'totalInvested' => (int) InvestmentApplication::query()->sum('amount'),
+                'projectsCount' => $stats['projectsCount'] > 0 ? $stats['projectsCount'] : $defaultStats['projectsCount'],
+                'investorsCount' => $stats['investorsCount'] > 0 ? $stats['investorsCount'] : $defaultStats['investorsCount'],
+                'totalInvested' => $stats['totalInvested'] > 0 ? $stats['totalInvested'] : $defaultStats['totalInvested'],
             ],
             'featuredProjects' => ProjectData::collect($featuredProjects),
         ]);
@@ -52,7 +61,7 @@ class PublicContentController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        return ApiResponse::success(FaqItemData::collect($items));
+        return ApiResponse::success($items->isEmpty() ? PublicContentDefaults::faqs() : FaqItemData::collect($items));
     }
 
     public function legalDocuments(): JsonResponse
@@ -97,7 +106,7 @@ class PublicContentController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        return ApiResponse::success(ReviewData::collect($reviews));
+        return ApiResponse::success($reviews->isEmpty() ? PublicContentDefaults::reviews() : ReviewData::collect($reviews));
     }
 
     public function caseStudies(): JsonResponse

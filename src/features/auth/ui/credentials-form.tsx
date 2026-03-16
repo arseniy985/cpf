@@ -1,11 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { ArrowRight, BriefcaseBusiness, Building2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Form,
   FormControl,
@@ -75,6 +75,18 @@ export function CredentialsForm({
     },
   });
 
+  useEffect(() => {
+    if (mode !== 'register') {
+      return;
+    }
+
+    form.setValue('account_type', intent, {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+  }, [form, intent, mode]);
+
   async function onSubmit(values: AuthCredentialsFormValues) {
     try {
       const response = mode === 'register'
@@ -119,73 +131,6 @@ export function CredentialsForm({
     <Form {...form}>
       <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
         {mode === 'register' ? (
-          <FormField
-            control={form.control}
-            name="account_type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Какой кабинет нужен?</FormLabel>
-                <FormControl>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {[
-                      {
-                        value: 'investor',
-                        title: 'Инвестор',
-                        text: 'Сделки, портфель, документы и выплаты в одном контуре.',
-                        icon: BriefcaseBusiness,
-                        tone: 'from-[#16345d] via-[#1d4b77] to-[#0f233f]',
-                      },
-                      {
-                        value: 'owner',
-                        title: 'Владелец объекта',
-                        text: 'Профиль компании, KYB, проекты, раунды и owner payouts.',
-                        icon: Building2,
-                        tone: 'from-[#6e321d] via-[#8b421d] to-[#4e1f10]',
-                      },
-                    ].map((option) => {
-                      const isActive = field.value === option.value;
-
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          onClick={() => field.onChange(option.value)}
-                          className={`group relative overflow-hidden rounded-[28px] border p-4 text-left transition-all duration-300 ${
-                            isActive
-                              ? 'border-slate-900 bg-slate-950 text-white shadow-[0_18px_45px_rgba(15,23,42,0.16)]'
-                              : 'border-slate-200 bg-white text-slate-900 hover:border-slate-400 hover:bg-slate-50'
-                          }`}
-                        >
-                          <div className={`absolute inset-0 bg-gradient-to-br ${option.tone} transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
-                          <div className="relative z-10 flex min-h-32 flex-col justify-between gap-5">
-                            <div className="flex items-center justify-between gap-3">
-                              <Badge
-                                variant="outline"
-                                className={isActive
-                                  ? 'border-white/20 bg-white/10 text-white'
-                                  : 'border-slate-200 bg-slate-50 text-slate-600'}
-                              >
-                                Сценарий входа
-                              </Badge>
-                              <option.icon className={isActive ? 'h-5 w-5 text-white' : 'h-5 w-5 text-slate-700'} />
-                            </div>
-                            <div>
-                              <p className="text-lg font-black tracking-tight">{option.title}</p>
-                              <p className={isActive ? 'mt-2 text-sm text-white/78' : 'mt-2 text-sm text-slate-600'}>{option.text}</p>
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ) : null}
-
-        {mode === 'register' ? (
           <>
             <FormField
               control={form.control}
@@ -194,7 +139,7 @@ export function CredentialsForm({
                 <FormItem>
                   <FormLabel>Имя и фамилия</FormLabel>
                   <FormControl>
-                    <Input placeholder="Иван Иванов" {...field} />
+                    <Input autoComplete="name" placeholder="Иван Иванов…" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -207,7 +152,7 @@ export function CredentialsForm({
                 <FormItem>
                   <FormLabel>Телефон</FormLabel>
                   <FormControl>
-                    <Input placeholder="+7 999 000 00 00" {...field} />
+                    <Input autoComplete="tel" inputMode="tel" placeholder="+7 999 000 00 00…" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -223,7 +168,14 @@ export function CredentialsForm({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="investor@cpf.local" {...field} />
+                <Input
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  spellCheck={false}
+                  placeholder="name@company.ru…"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -237,7 +189,7 @@ export function CredentialsForm({
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
+                <Input type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder="Минимум 8 символов…" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -249,13 +201,13 @@ export function CredentialsForm({
             control={form.control}
             name="password_confirmation"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Повторите пароль</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                <FormItem>
+                  <FormLabel>Повторите пароль</FormLabel>
+                  <FormControl>
+                    <Input type="password" autoComplete="new-password" placeholder="Повторите пароль…" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
             )}
           />
         ) : null}

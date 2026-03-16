@@ -219,21 +219,21 @@ describe('auth forms', () => {
         intent="owner"
         alternateHref="/login"
         alternateLabel="Вход"
-        submitLabel="Создать owner-кабинет"
+        submitLabel="Создать кабинет владельца"
         onRecovery={vi.fn()}
         onSuccess={onSuccess}
       />,
     );
 
-    await user.type(screen.getByLabelText('Имя и фамилия'), 'Owner Иванов');
+    await user.type(screen.getByLabelText('Имя и фамилия'), 'Иван Петров');
     await user.type(screen.getByLabelText('Email'), 'owner@cpf.local');
     await user.type(screen.getByLabelText('Пароль'), 'password1');
     await user.type(screen.getByLabelText('Повторите пароль'), 'password1');
-    await user.click(screen.getByRole('button', { name: 'Создать owner-кабинет' }));
+    await user.click(screen.getByRole('button', { name: 'Создать кабинет владельца' }));
 
     expect(mocks.registerMutation.mutateAsync).toHaveBeenCalledWith({
       account_type: 'owner',
-      name: 'Owner Иванов',
+      name: 'Иван Петров',
       email: 'owner@cpf.local',
       phone: undefined,
       password: 'password1',

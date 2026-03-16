@@ -1,51 +1,50 @@
 'use client';
 
+import Link from 'next/link';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const tariffs = [
   {
-    name: 'Надёжный',
-    description: 'Идеально для старта и знакомства с платформой',
-    minAmount: '10 000 ₽',
-    yield: 'до 18%',
+    name: 'Надежный',
+    description: 'Для первого входа и прозрачного старта с понятной сделкой',
+    minAmount: 'от 10 000 ₽',
+    yield: 'до 16%',
     risk: 'Низкий',
     features: [
-      'Доступ к базовым проектам',
-      'Ежеквартальные выплаты',
-      'Базовая аналитика',
-      'Поддержка в рабочее время',
+      'Проекты с прогнозируемым cash flow',
+      'Порог входа от 10 000 ₽',
+      'Документы и базовая отчетность',
+      'Подтверждение участия через кабинет',
     ],
     popular: false,
   },
   {
     name: 'Сбалансированный',
-    description: 'Оптимальное соотношение риска и высокой доходности',
-    minAmount: '300 000 ₽',
-    yield: 'до 22%',
+    description: 'Оптимальный сценарий для регулярных инвестиций на платформе',
+    minAmount: 'от 100 000 ₽',
+    yield: 'до 20%',
     risk: 'Средний',
     features: [
-      'Доступ ко всем проектам',
-      'Ежемесячные выплаты',
-      'Расширенная аналитика',
+      'Ежемесячные выплаты по активным раундам',
+      'Расширенный пакет раскрытия',
       'Приоритетная поддержка',
-      'Автоинвестирование',
+      'Подходит для повторных инвестиций',
     ],
     popular: true,
   },
   {
     name: 'Повышенный доход',
-    description: 'Для опытных инвесторов с крупным капиталом',
-    minAmount: '1 500 000 ₽',
-    yield: 'до 28%',
-    risk: 'Выше среднего',
+    description: 'Для пользователей, которые готовы к более сложным сделкам',
+    minAmount: 'от 500 000 ₽',
+    yield: 'до 24%',
+    risk: 'Повышенный',
     features: [
-      'Закрытые pre-sale проекты',
-      'Индивидуальный график выплат',
-      'Персональный менеджер',
-      'Участие в совете директоров',
-      'Юридический консалтинг',
+      'Более высокий риск-профиль проекта',
+      'Индивидуальная структура участия',
+      'Персональное сопровождение',
+      'Более длинный горизонт сделки',
     ],
     popular: false,
   },
@@ -61,7 +60,7 @@ export default function Tariffs() {
             ТАРИФЫ И УЧАСТИЕ
           </h2>
           <p className="text-xl text-slate-600 font-medium leading-relaxed">
-            Выберите подходящий формат инвестирования в зависимости от ваших целей и капитала.
+            Выберите удобный диапазон входа, затем подберите конкретный проект и подтвердите участие в кабинете.
           </p>
         </div>
 
@@ -79,10 +78,10 @@ export default function Tariffs() {
             >
               {tariff.popular && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-teal-400 text-indigo-950 px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase shadow-lg shadow-teal-400/20">
-                  Выбор инвесторов
+                  Основной сценарий
                 </div>
               )}
-              
+
               <div className="mb-8 text-center">
                 <h3 className="text-3xl font-display font-bold text-indigo-950 mb-3">{tariff.name}</h3>
                 <p className="text-slate-500 text-sm h-10 font-medium">{tariff.description}</p>
@@ -90,7 +89,7 @@ export default function Tariffs() {
 
               <div className="mb-10 p-8 bg-slate-50 rounded-3xl border border-slate-100 text-center">
                 <div className="mb-6">
-                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">От</p>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Мин. вход</p>
                   <p className="text-4xl font-display font-black text-indigo-950">{tariff.minAmount}</p>
                 </div>
                 <div className="flex justify-between items-center pt-6 border-t border-slate-200">
@@ -116,19 +115,14 @@ export default function Tariffs() {
                 ))}
               </ul>
 
-              <Button
-                onClick={() => window.dispatchEvent(new CustomEvent('open-modal', { detail: { type: 'invest' } }))}
-                width="full"
-                size="lg"
-                variant={tariff.popular ? 'default' : 'secondary'}
-                className={`text-lg ${
-                  tariff.popular 
-                    ? 'shadow-xl shadow-teal-400/20' 
-                    : ''
-                }`}
-              >
-                Выбрать тариф
-              </Button>
+              <div className="flex flex-col gap-3">
+                <Button asChild width="full" size="lg" variant={tariff.popular ? 'default' : 'secondary'} className={tariff.popular ? 'shadow-xl shadow-teal-400/20' : ''}>
+                  <Link href="/projects">Смотреть проекты</Link>
+                </Button>
+                <Button asChild width="full" size="lg" variant="outline">
+                  <Link href="/tariffs">Подробнее о тарифах</Link>
+                </Button>
+              </div>
             </motion.div>
           ))}
         </div>

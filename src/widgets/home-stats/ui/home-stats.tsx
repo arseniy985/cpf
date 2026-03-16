@@ -26,7 +26,7 @@ export default function Stats() {
               за себя
             </h2>
             <p className="text-indigo-200 text-lg max-w-md leading-relaxed mb-8">
-              Мы строим прозрачную экосистему, где каждый инвестор видит реальный результат своей работы с нами. Никаких скрытых комиссий — только чистая прибыль.
+              Публичная витрина, кабинет инвестора и прозрачные документы собраны в одном продукте, чтобы путь от выбора проекта до выплаты был коротким и понятным.
             </p>
             <div className="flex items-center gap-4">
               <div className="flex -space-x-4">
@@ -43,7 +43,7 @@ export default function Stats() {
                 ))}
               </div>
               <div className="text-sm font-medium text-indigo-300">
-                Присоединяйтесь к <br/><span className="text-white font-bold">15,000+ инвесторам</span>
+                Следите за цифрами по сделкам <br/><span className="text-white font-bold">без скрытых этапов</span>
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@ export default function Stats() {
               className="sm:col-span-2 bg-indigo-900/40 backdrop-blur-sm p-8 md:p-10 rounded-[40px] border border-indigo-800 flex flex-col md:flex-row items-start md:items-center justify-between group hover:bg-indigo-900/60 transition-colors"
             >
               <div>
-                <p className="text-indigo-300 text-sm font-bold uppercase tracking-widest mb-3">Выплачено дохода</p>
+                <p className="text-indigo-300 text-sm font-bold uppercase tracking-widest mb-3">Капитал на платформе</p>
                 <p className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter">
                   {stats ? (
                     <>
@@ -78,7 +78,7 @@ export default function Stats() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
               className="bg-indigo-900/40 backdrop-blur-sm p-8 md:p-10 rounded-[40px] border border-indigo-800 hover:bg-indigo-900/60 transition-colors flex flex-col justify-between min-h-[200px]"
             >
-              <p className="text-indigo-300 text-sm font-bold uppercase tracking-widest mb-4">Активных проектов</p>
+              <p className="text-indigo-300 text-sm font-bold uppercase tracking-widest mb-4">Проектов на витрине</p>
               <p className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">
                 {stats?.projectsCount ?? 42}<span className="text-teal-400">+</span>
               </p>
@@ -88,7 +88,7 @@ export default function Stats() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
               className="bg-teal-400 p-8 md:p-10 rounded-[40px] border border-teal-300 text-indigo-950 hover:bg-teal-300 transition-colors flex flex-col justify-between min-h-[200px] shadow-xl shadow-teal-400/10"
             >
-              <p className="text-indigo-900/70 text-sm font-bold uppercase tracking-widest mb-4">Активных инвесторов</p>
+              <p className="text-indigo-900/70 text-sm font-bold uppercase tracking-widest mb-4">Инвесторов в системе</p>
               <p className="text-5xl md:text-6xl font-display font-black tracking-tighter">
                 {stats?.investorsCount ?? 21}
                 <span className="text-3xl md:text-4xl">+</span>
