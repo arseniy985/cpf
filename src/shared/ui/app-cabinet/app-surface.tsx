@@ -23,11 +23,11 @@ export function AppSurface({
   return (
     <section
       className={cn(
-        'border px-5 py-5 sm:px-6 sm:py-6',
+        'rounded-2xl border px-5 py-5 sm:px-7 sm:py-7',
         tone === 'dark'
           ? 'border-app-cabinet-primary bg-app-cabinet-dark-surface text-white'
           : tone === 'secondary'
-            ? 'border-app-cabinet-border bg-app-cabinet-secondary/45'
+            ? 'border-app-cabinet-border bg-app-cabinet-secondary/55'
             : 'border-app-cabinet-border bg-app-cabinet-surface',
         className,
       )}

@@ -4,7 +4,7 @@ import { cn } from '@/shared/lib/classnames';
 type AppKpiCardProps = {
   label: string;
   value: string;
-  hint: string;
+  hint?: string;
   icon?: LucideIcon;
   tone?: 'default' | 'accent' | 'success' | 'warning';
 };
@@ -19,9 +19,9 @@ export function AppKpiCard({
   return (
     <div
       className={cn(
-        'border px-4 py-4 sm:px-5 sm:py-5',
+        'rounded-2xl border px-4 py-4 sm:px-5 sm:py-5',
         tone === 'accent'
-          ? 'border-app-cabinet-accent/25 bg-app-cabinet-secondary'
+          ? 'border-app-cabinet-accent/30 bg-app-cabinet-secondary'
           : tone === 'success'
             ? 'border-app-cabinet-success/20 bg-app-cabinet-success/5'
             : tone === 'warning'
@@ -37,10 +37,10 @@ export function AppKpiCard({
           <p className="mt-3 text-2xl font-semibold tracking-tight text-app-cabinet-text sm:text-3xl">
             {value}
           </p>
-          <p className="mt-3 text-sm leading-6 text-app-cabinet-muted">{hint}</p>
+          {hint ? <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{hint}</p> : null}
         </div>
         {Icon ? (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-app-cabinet-border bg-app-cabinet-surface text-app-cabinet-primary">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-app-cabinet-border bg-app-cabinet-surface text-app-cabinet-primary">
             <Icon className="h-4 w-4" aria-hidden="true" />
           </span>
         ) : null}

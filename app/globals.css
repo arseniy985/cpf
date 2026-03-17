@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #f5f9ff;
-  --foreground: #152449;
+  --background: #f4f8ff;
+  --foreground: #13213d;
   --card: #ffffff;
   --card-foreground: #152449;
   --popover: #ffffff;
@@ -14,44 +14,44 @@
   --primary-foreground: #152449;
   --secondary: #152449;
   --secondary-foreground: #ffffff;
-  --muted: #edf3fb;
-  --muted-foreground: #4e6789;
-  --accent: #dceaff;
-  --accent-foreground: #152449;
+  --muted: #edf4ff;
+  --muted-foreground: #506280;
+  --accent: #deebff;
+  --accent-foreground: #13213d;
   --destructive: #e11d48;
-  --border: #dce7f5;
-  --input: #dce7f5;
-  --ring: #2158d8;
+  --border: #d5e3f5;
+  --input: #d5e3f5;
+  --ring: #2b63de;
   --radius: 0.75rem;
-  --cabinet-primary: #0e2a47;
-  --cabinet-canvas: #f7fafd;
+  --cabinet-primary: #1f4d96;
+  --cabinet-canvas: #f4f8ff;
   --cabinet-surface: #ffffff;
-  --cabinet-panel: #eef5fb;
+  --cabinet-panel: #eef4ff;
   --cabinet-panel-strong: #ffffff;
-  --cabinet-panel-muted: #eaf3fb;
-  --cabinet-border: #c9d7e4;
-  --cabinet-ink: #102033;
-  --cabinet-muted-ink: #5b6b7c;
-  --cabinet-accent: #5faee3;
-  --cabinet-accent-strong: #2f78ae;
-  --cabinet-accent-soft: #eaf3fb;
+  --cabinet-panel-muted: #e8f1ff;
+  --cabinet-border: #d4e1f2;
+  --cabinet-ink: #12213c;
+  --cabinet-muted-ink: #5a6d8d;
+  --cabinet-accent: #7fb4ff;
+  --cabinet-accent-strong: #2f6fe0;
+  --cabinet-accent-soft: #e9f2ff;
   --cabinet-success: #1f8a5b;
   --cabinet-warning: #c58a1c;
   --cabinet-error: #c94242;
-  --app-cabinet-background: #f7fafd;
+  --app-cabinet-background: #f4f8ff;
   --app-cabinet-surface: #ffffff;
-  --app-cabinet-secondary: #eaf3fb;
-  --app-cabinet-accent: #5faee3;
-  --app-cabinet-primary: #0e2a47;
-  --app-cabinet-primary-strong: #091e33;
-  --app-cabinet-text: #102033;
-  --app-cabinet-muted: #5b6b7c;
-  --app-cabinet-border: #d5e1ec;
+  --app-cabinet-secondary: #edf4ff;
+  --app-cabinet-accent: #7fb4ff;
+  --app-cabinet-primary: #1f4d96;
+  --app-cabinet-primary-strong: #173d78;
+  --app-cabinet-text: #12213c;
+  --app-cabinet-muted: #5a6d8d;
+  --app-cabinet-border: #d7e3f3;
   --app-cabinet-success: #1f8a5b;
   --app-cabinet-warning: #c58a1c;
   --app-cabinet-danger: #c94242;
-  --app-cabinet-sidebar: #f1f6fb;
-  --app-cabinet-dark-surface: #0f2740;
+  --app-cabinet-sidebar: #eff5ff;
+  --app-cabinet-dark-surface: #163764;
 }
 
 @theme inline {
@@ -198,8 +198,8 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(circle at top left, rgba(47, 109, 246, 0.1), transparent 20rem),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(238, 243, 251, 0.9));
+      radial-gradient(circle at top left, rgba(61, 125, 240, 0.12), transparent 20rem),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(241, 246, 255, 0.96));
   }
 
   [data-cpf-app-shell='true'] {
