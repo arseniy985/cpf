@@ -4,21 +4,18 @@ set -euo pipefail
 TARGET_HOST="${1:-sshtest}"
 TARGET_DIR="${2:-/opt/cpf/app}"
 BRANCH="${3:-main}"
-REPO_URL="${DEPLOY_REPO_URL:-$(git config --get remote.origin.url 2>/dev/null || true)}"
+REPO_URL="${DEPLOY_REPO_URL:-https://github.com/arseniy985/cpf.git}"
 SSH_COMMAND="${DEPLOY_SSH_COMMAND:-ssh}"
 BACKUP_ROOT="${DEPLOY_BACKUP_ROOT:-$(dirname "${TARGET_DIR}")/backups}"
-
-if [[ -z "${REPO_URL}" ]]; then
-  echo "Unable to determine repository URL. Set DEPLOY_REPO_URL or configure origin."
-  exit 1
-fi
 
 run_remote() {
   local remote_command="$1"
 
   if bash -ic "source ~/.bashrc >/dev/null 2>&1; alias ${TARGET_HOST}" >/dev/null 2>&1; then
-    bash -ic "source ~/.bashrc >/dev/null 2>&1; ${TARGET_HOST} ${remote_command@Q}"
-    return
+    if bash -ic "source ~/.bashrc >/dev/null 2>&1; ${TARGET_HOST} ${remote_command@Q}"; then
+      return
+    fi
+    echo "Alias '${TARGET_HOST}' failed, trying DEPLOY_SSH_COMMAND fallback..."
   fi
 
   ${SSH_COMMAND} "${TARGET_HOST}" "${remote_command}"

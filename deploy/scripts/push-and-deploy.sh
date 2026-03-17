@@ -7,6 +7,7 @@ cd "${ROOT_DIR}"
 BRANCH="${DEPLOY_BRANCH:-main}"
 TARGET_HOST="${DEPLOY_TARGET_HOST:-sshtest}"
 TARGET_DIR="${DEPLOY_TARGET_DIR:-/opt/cpf/app}"
+REPO_URL="${DEPLOY_REPO_URL:-https://github.com/arseniy985/cpf.git}"
 COMMIT_MESSAGE="${1:-chore(deploy): sync $(date -u +%Y-%m-%dT%H:%M:%SZ)}"
 
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
@@ -33,4 +34,4 @@ else
 fi
 
 git push origin "${BRANCH}"
-bash deploy/scripts/deploy-remote.sh "${TARGET_HOST}" "${TARGET_DIR}" "${BRANCH}"
+DEPLOY_REPO_URL="${REPO_URL}" bash deploy/scripts/deploy-remote.sh "${TARGET_HOST}" "${TARGET_DIR}" "${BRANCH}"
