@@ -40,7 +40,6 @@ export type EmailCodeResponse = {
 
 export type AuthResponse = {
   data: {
-    token: string;
     user: AuthUser;
   };
 };

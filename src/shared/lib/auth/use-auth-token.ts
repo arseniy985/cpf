@@ -9,7 +9,8 @@ export function useAuthTokenState() {
 
   useEffect(() => {
     const syncToken = () => {
-      setToken(getAuthToken());
+      const nextToken = getAuthToken();
+      setToken(nextToken);
       setIsReady(true);
     };
 

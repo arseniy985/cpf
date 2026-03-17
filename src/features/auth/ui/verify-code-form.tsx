@@ -33,7 +33,7 @@ export function VerifyCodeForm({
 }: {
   context: VerificationContext;
   onBack: () => void;
-  onSuccess: (result: { token: string; user: AuthUser }) => void;
+  onSuccess: (result: { user: AuthUser }) => void;
 }) {
   const verifyCodeMutation = useVerifyEmailCodeMutation();
   const requestCodeMutation = useRequestEmailCodeMutation();
@@ -54,7 +54,6 @@ export function VerifyCodeForm({
       });
 
       onSuccess({
-        token: response.data.token,
         user: response.data.user,
       });
     } catch (error) {

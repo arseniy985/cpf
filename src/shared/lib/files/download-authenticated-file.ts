@@ -1,5 +1,13 @@
 import { buildApiUrl } from '@/shared/api/http/client';
-import { getAuthToken } from '@/shared/lib/auth/token-storage';
+
+function normalizeDownloadUrl(url: string) {
+  if (url.startsWith('http')) {
+    const parsed = new URL(url);
+    return `${parsed.pathname}${parsed.search}`;
+  }
+
+  return url;
+}
 
 export async function downloadAuthenticatedFile({
   url,
@@ -8,17 +16,9 @@ export async function downloadAuthenticatedFile({
   url: string;
   filename: string;
 }) {
-  const token = getAuthToken();
-
-  if (!token) {
-    throw new Error('Требуется авторизация.');
-  }
-
-  const targetUrl = url.startsWith('http') ? url : buildApiUrl(url);
+  const targetUrl = buildApiUrl(normalizeDownloadUrl(url));
   const response = await fetch(targetUrl, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    credentials: 'include',
   });
 
   if (!response.ok) {

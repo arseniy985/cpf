@@ -34,7 +34,6 @@ type AuthSuccessResult =
     }
   | {
       kind: 'authenticated';
-      token: string;
       user: AuthUser;
     };
 
@@ -105,10 +104,9 @@ export function CredentialsForm({
           device_name: 'next-web',
         });
 
-      if ('token' in response.data) {
+      if ('user' in response.data) {
         onSuccess({
           kind: 'authenticated',
-          token: response.data.token,
           user: response.data.user,
         });
         return;

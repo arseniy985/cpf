@@ -3,10 +3,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { useRequireSession } from '@/features/session/model/use-session';
+import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { getAppRouteMeta, type WorkspaceMode } from '../model/navigation';
 import { AppSidebar } from './app-sidebar';
+import { AppShellSkeleton } from './app-shell-skeleton';
 import { AppTopbar } from './app-topbar';
 
 type AppShellProps = {
@@ -39,14 +42,45 @@ export function AppShell({ children }: AppShellProps) {
     }
   }, [ownerAvailable, pathname, router, session.user]);
 
-  if (!session.user || session.isLoading) {
+  if (session.isLoading || (session.hasToken && !session.user && !session.isError)) {
+    return <AppShellSkeleton />;
+  }
+
+  if (session.isError) {
     return (
       <main id="main-content" className="min-h-screen bg-cabinet-canvas px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-[1440px] border border-cabinet-border bg-cabinet-surface p-6 text-sm text-cabinet-muted-ink">
-          Загружаем кабинет…
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-4 border border-cabinet-border bg-cabinet-surface p-6">
+          <div className="space-y-2">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-cabinet-muted-ink">Ошибка сессии</p>
+            <h1 className="text-2xl font-semibold text-cabinet-ink">Не удалось загрузить кабинет</h1>
+            <p className="max-w-2xl text-sm leading-6 text-cabinet-muted-ink">
+              {getApiErrorMessage(session.error, 'Профиль пользователя не загрузился. Проверьте `NEXT_PUBLIC_API_BASE_URL` и доступность `/api/v1/auth/me`.')}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Button type="button" className="rounded-none" onClick={() => router.refresh()}>
+              Обновить страницу
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-none"
+              onClick={async () => {
+                await session.logout();
+                router.replace('/login');
+              }}
+            >
+              Сбросить сессию
+            </Button>
+          </div>
         </div>
       </main>
     );
+  }
+
+  if (!session.user) {
+    return null;
   }
 
   return (

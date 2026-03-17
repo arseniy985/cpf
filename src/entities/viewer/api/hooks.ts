@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthToken } from '@/shared/lib/auth/use-auth-token';
+import type { AuthUser } from './types';
 import {
   fetchMe,
   forgotPassword,
@@ -45,8 +46,8 @@ export function useVerifyEmailCodeMutation() {
 
   return useMutation({
     mutationFn: verifyEmailCode,
-    onSuccess: async (response) => {
-      await queryClient.invalidateQueries({ queryKey: authKeys.me(response.data.token) });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: authKeys.all });
     },
   });
 }
@@ -63,13 +64,14 @@ export function useResetPasswordMutation() {
   });
 }
 
-export function useMeQuery(token?: string | null) {
+export function useMeQuery(token?: string | null, initialUser?: AuthUser | null) {
   const authToken = useAuthToken();
 
   return useQuery({
     queryKey: authKeys.me(token ?? authToken),
     queryFn: () => fetchMe(),
     enabled: Boolean(token ?? authToken),
+    initialData: initialUser ? { data: initialUser } : undefined,
     retry: false,
   });
 }

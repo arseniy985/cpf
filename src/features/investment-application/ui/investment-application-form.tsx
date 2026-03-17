@@ -45,7 +45,7 @@ export function InvestmentApplicationForm({
   });
 
   async function onSubmit(values: FormValues) {
-    if (!session.token) {
+    if (!session.hasToken) {
       onRequireAuth();
       return;
     }
@@ -124,7 +124,7 @@ export function InvestmentApplicationForm({
         ) : null}
 
         <Button type="submit" width="full" size="lg" disabled={mutation.isPending}>
-          {session.token
+          {session.hasToken
             ? mutation.isPending ? 'Отправляем заявку...' : 'Подать заявку'
             : 'Войти и инвестировать'}
         </Button>

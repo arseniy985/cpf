@@ -13,20 +13,6 @@ export class ApiClientError extends Error {
   }
 }
 
-function trimTrailingSlash(value: string) {
-  return value.replace(/\/+$/, '');
-}
-
-export function getApiBaseUrl() {
-  const value = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
-
-  if (!value) {
-    return null;
-  }
-
-  return trimTrailingSlash(value);
-}
-
 type ApiErrorPayload = {
   code?: string;
   message?: string;
@@ -51,13 +37,11 @@ function shouldSetJsonContentType(body: BodyInit | FormData | null | undefined) 
 }
 
 export function buildApiUrl(path: string) {
-  const baseUrl = getApiBaseUrl();
-
-  if (!baseUrl) {
-    throw new ApiClientError('API base URL is not configured.');
+  if (!path.startsWith('/')) {
+    throw new ApiClientError('API path must start with "/".');
   }
 
-  return `${baseUrl}${path}`;
+  return path;
 }
 
 export async function fetchJson<T>(path: string, init?: ApiRequestInit): Promise<T> {
@@ -67,12 +51,10 @@ export async function fetchJson<T>(path: string, init?: ApiRequestInit): Promise
 
   headers.set('Accept', 'application/json');
 
-  if (init?.requireAuth && !authToken) {
+  if (init?.authToken) {
+    headers.set('Authorization', `Bearer ${init.authToken}`);
+  } else if (init?.requireAuth && !authToken) {
     throw new ApiClientError('Authentication required.', 401);
-  }
-
-  if (authToken) {
-    headers.set('Authorization', `Bearer ${authToken}`);
   }
 
   if (init?.idempotencyKey) {
@@ -87,6 +69,7 @@ export async function fetchJson<T>(path: string, init?: ApiRequestInit): Promise
     ...init,
     headers,
     cache: 'no-store',
+    credentials: 'include',
   });
 
   if (!response.ok) {

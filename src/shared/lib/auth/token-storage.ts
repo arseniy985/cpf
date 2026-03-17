@@ -1,4 +1,5 @@
-const TOKEN_KEY = 'cpf.auth.token';
+import { AUTH_PRESENCE_COOKIE } from '@/shared/config/session';
+
 const TOKEN_EVENT = 'cpf:auth-token-change';
 
 function emitTokenChange() {
@@ -9,29 +10,57 @@ function emitTokenChange() {
   window.dispatchEvent(new Event(TOKEN_EVENT));
 }
 
-export function getAuthToken() {
-  if (typeof window === 'undefined') {
+function buildCookieAttributes(maxAge: number) {
+  const secure = typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; Secure' : '';
+
+  return `Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}`;
+}
+
+function getCookieValue(name: string) {
+  if (typeof document === 'undefined') {
     return null;
   }
 
-  return window.localStorage.getItem(TOKEN_KEY);
+  const encodedName = `${name}=`;
+  const match = document.cookie
+    .split('; ')
+    .find((cookie) => cookie.startsWith(encodedName));
+
+  return match ? decodeURIComponent(match.slice(encodedName.length)) : null;
 }
 
-export function setAuthToken(token: string) {
-  if (typeof window === 'undefined') {
+function setAuthPresenceCookie(isPresent: boolean) {
+  if (typeof document === 'undefined') {
     return;
   }
 
-  window.localStorage.setItem(TOKEN_KEY, token);
+  if (isPresent) {
+    document.cookie = `${AUTH_PRESENCE_COOKIE}=1; ${buildCookieAttributes(60 * 60 * 24 * 365)}`;
+    return;
+  }
+
+  document.cookie = `${AUTH_PRESENCE_COOKIE}=; ${buildCookieAttributes(0)}`;
+}
+
+export function getAuthToken() {
+  return getCookieValue(AUTH_PRESENCE_COOKIE);
+}
+
+export function setAuthToken(_token: string) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  setAuthPresenceCookie(true);
   emitTokenChange();
 }
 
 export function clearAuthToken() {
-  if (typeof window === 'undefined') {
+  if (typeof document === 'undefined') {
     return;
   }
 
-  window.localStorage.removeItem(TOKEN_KEY);
+  setAuthPresenceCookie(false);
   emitTokenChange();
 }
 

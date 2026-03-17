@@ -24,6 +24,8 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const session = useSession();
+  const nextHref = searchParams.get('next');
+  const postAuthHref = nextHref?.startsWith('/app') ? nextHref : null;
   const urlIntent = mode === 'register' && searchParams.get('intent') === 'owner' ? 'owner' : 'investor';
   const [manualIntent, setManualIntent] = useState<AuthIntent | null>(null);
   const intent = mode === 'register' ? (manualIntent ?? urlIntent) : 'investor';
@@ -34,9 +36,9 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
 
   useEffect(() => {
     if (session.user) {
-      router.replace(getPostAuthRedirect(session.user));
+      router.replace(postAuthHref ?? getPostAuthRedirect(session.user));
     }
-  }, [router, session.user]);
+  }, [postAuthHref, router, session.user]);
 
   const handleIntentChange = (nextIntent: AuthIntent) => {
     setManualIntent(nextIntent);
@@ -102,8 +104,8 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
                   onRecovery={() => setStep('recovery')}
                   onSuccess={(result) => {
                     if (result.kind === 'authenticated') {
-                      session.setToken(result.token);
-                      router.replace(getPostAuthRedirect(result.user, mode === 'register' ? intent : undefined));
+                      session.setToken('session');
+                      router.replace(postAuthHref ?? getPostAuthRedirect(result.user, mode === 'register' ? intent : undefined));
                       return;
                     }
 
@@ -121,9 +123,9 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
                 <VerifyCodeForm
                   context={verificationContext}
                   onBack={() => setStep('credentials')}
-                  onSuccess={({ token, user }) => {
-                    session.setToken(token);
-                    router.replace(getPostAuthRedirect(user, mode === 'register' ? intent : undefined));
+                  onSuccess={({ user }) => {
+                    session.setToken('session');
+                    router.replace(postAuthHref ?? getPostAuthRedirect(user, mode === 'register' ? intent : undefined));
                   }}
                 />
               ) : null}
