@@ -12,9 +12,11 @@ import { useSession } from '@/features/session/model/use-session';
 import { profileSettingsSchema, type ProfileSettingsFormValues } from '@/features/profile-settings/model/schema';
 import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { applyApiFormErrors } from '@/shared/lib/forms/apply-api-form-errors';
+import { normalizePhoneNumber } from '@/shared/lib/forms/phone';
 import { AppPageHeader } from '@/shared/ui/app-cabinet/app-page-header';
 import { AppStatusBadge } from '@/shared/ui/app-cabinet/app-status-badge';
 import { AppSurface } from '@/shared/ui/app-cabinet/app-surface';
+import { PhoneInput } from '@/shared/ui/phone-input';
 
 export default function SharedSettingsPage() {
   const session = useSession();
@@ -40,7 +42,7 @@ export default function SharedSettingsPage() {
     try {
       await updateProfileMutation.mutateAsync({
         name: values.name,
-        phone: values.phone || undefined,
+        phone: normalizePhoneNumber(values.phone ?? '') || undefined,
         notification_preferences: {
           email: values.notifications_email,
           sms: values.notifications_sms,
@@ -98,7 +100,7 @@ export default function SharedSettingsPage() {
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-app-cabinet-text">Телефон</FormLabel>
                     <FormControl>
-                      <Input {...field} name="phone" type="tel" autoComplete="tel" placeholder="+7 900 000-00-00…" className="rounded-none border-app-cabinet-border shadow-none" />
+                      <PhoneInput {...field} name="phone" className="rounded-none border-app-cabinet-border shadow-none" />
                     </FormControl>
                     <FormDescription className="text-app-cabinet-muted">Нужен для связи по заявкам и проверкам.</FormDescription>
                     <FormMessage />

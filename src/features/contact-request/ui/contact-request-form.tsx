@@ -17,6 +17,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { applyApiFormErrors } from '@/shared/lib/forms';
+import { normalizePhoneNumber } from '@/shared/lib/forms/phone';
+import { PhoneInput } from '@/shared/ui/phone-input';
 import { useContactLeadMutation } from '@/features/contact-request/api/contact-request';
 import {
   contactRequestSchema,
@@ -63,6 +65,7 @@ export function ContactRequestForm({
     try {
       await mutation.mutateAsync({
         ...values,
+        phone: normalizePhoneNumber(values.phone),
         subject,
         source,
         message: values.message || defaultMessage,
@@ -103,7 +106,7 @@ export function ContactRequestForm({
               <FormItem>
                 <FormLabel>Номер телефона</FormLabel>
                 <FormControl>
-                  <Input placeholder="+7 (___) ___-__-__" {...field} />
+                  <PhoneInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -20,6 +20,8 @@ import type { AccountType, AuthUser, EmailCodePurpose } from '@/entities/viewer/
 import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
 import { isLoginCodeRequired, isRegistrationCodeRequired } from '@/shared/config/auth';
 import { applyApiFormErrors } from '@/shared/lib/forms';
+import { normalizePhoneNumber } from '@/shared/lib/forms/phone';
+import { PhoneInput } from '@/shared/ui/phone-input';
 import {
   type AuthCredentialsFormValues,
   getCredentialsSchema,
@@ -93,7 +95,7 @@ export function CredentialsForm({
           account_type: values.account_type ?? intent,
           name: values.name ?? '',
           email: values.email,
-          phone: values.phone || undefined,
+          phone: normalizePhoneNumber(values.phone ?? '') || undefined,
           password: values.password,
           password_confirmation: values.password_confirmation ?? '',
           device_name: 'next-web',
@@ -150,7 +152,7 @@ export function CredentialsForm({
                 <FormItem>
                   <FormLabel>Телефон</FormLabel>
                   <FormControl>
-                    <Input autoComplete="tel" inputMode="tel" placeholder="+7 999 000 00 00…" {...field} />
+                    <PhoneInput {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

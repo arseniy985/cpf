@@ -132,16 +132,20 @@ describe('auth forms', () => {
     );
 
     await user.type(screen.getByLabelText('Имя и фамилия'), 'Иван Иванов');
+    await user.type(screen.getByLabelText('Телефон'), '9990000000');
     await user.type(screen.getByLabelText('Email'), 'new@cpf.local');
     await user.type(screen.getByLabelText('Пароль'), 'password1');
     await user.type(screen.getByLabelText('Повторите пароль'), 'password1');
+
+    expect(screen.getByLabelText('Телефон')).toHaveValue('+7 (999) 000-00-00');
+
     await user.click(screen.getByRole('button', { name: 'Продолжить' }));
 
     expect(mocks.registerMutation.mutateAsync).toHaveBeenCalledWith({
       account_type: 'investor',
       name: 'Иван Иванов',
       email: 'new@cpf.local',
-      phone: undefined,
+      phone: '+79990000000',
       password: 'password1',
       password_confirmation: 'password1',
       device_name: 'next-web',

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { hasCompletePhoneNumber } from '@/shared/lib/forms/phone';
 import type { AuthMode } from './auth-flow';
 
 const passwordRule = z.string().min(8, 'Минимум 8 символов.');
@@ -6,7 +7,9 @@ const passwordRule = z.string().min(8, 'Минимум 8 символов.');
 export const authCredentialsBaseSchema = z.object({
   account_type: z.enum(['investor', 'owner']).default('investor'),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  phone: z.string().optional().refine((value) => !value || hasCompletePhoneNumber(value), {
+    message: 'Введите телефон полностью.',
+  }),
   password_confirmation: z.string().optional(),
   email: z.string().email('Введите корректный email.'),
   password: passwordRule,

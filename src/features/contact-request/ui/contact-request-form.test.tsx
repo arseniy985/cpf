@@ -34,8 +34,11 @@ describe('lead forms', () => {
     );
 
     await user.type(screen.getByLabelText('Ваше имя'), 'Иван Иванов');
-    await user.type(screen.getByLabelText('Номер телефона'), '+79990000000');
+    await user.type(screen.getByLabelText('Номер телефона'), '9990000000');
     await user.type(screen.getByLabelText('Email'), 'ivan@example.com');
+
+    expect(screen.getByLabelText('Номер телефона')).toHaveValue('+7 (999) 000-00-00');
+
     await user.click(screen.getByRole('button', { name: 'Отправить заявку' }));
 
     expect(mocks.contactMutation.mutateAsync).toHaveBeenCalledWith({
