@@ -57,20 +57,20 @@ export default function DashboardOverviewPage() {
     session.user.kycStatus !== 'approved'
       ? {
         title: 'Завершить проверку профиля',
-        description: 'Заполните анкету и загрузите документы, чтобы открыть все операции в кабинете.',
+        description: 'Заполните анкету и добавьте документы, чтобы открыть полный доступ к операциям.',
         href: '/dashboard/kyc',
       }
       : null,
     dashboard.summary.walletBalance < 10000
       ? {
-        title: 'Пополнить кошелек',
-        description: 'Пополните кошелек, чтобы подтвердить участие в выбранном проекте.',
+        title: 'Пополнить кошелёк',
+        description: 'Добавьте средства, чтобы быстро подтвердить участие в выбранном проекте.',
         href: '/dashboard/wallet',
       }
       : null,
     {
-      title: 'Посмотреть новые проекты',
-      description: 'Откройте каталог и выберите проект для первой или следующей инвестиции.',
+      title: 'Открыть каталог проектов',
+      description: 'Проверьте новые размещения и выберите проект для первой или следующей инвестиции.',
       href: '/projects',
     },
   ].filter(Boolean) as Array<{ title: string; description: string; href: string }>;
@@ -79,14 +79,14 @@ export default function DashboardOverviewPage() {
     <div className="space-y-7">
       <CabinetPageHeader
         eyebrow="Кабинет инвестора"
-        title="Кабинет без визуального шума"
-        description="Сначала ориентиры и обязательные шаги, затем рабочие списки по сделкам, событиям и движению средств."
+        title={<>Личный кабинет с фокусом на <span className="text-cabinet-accent-strong">деньги</span>, статус и действия</>}
+        description="Сначала ключевые показатели и обязательные шаги, затем заявки, события и последние движения по кошельку."
         actions={(
           <>
-            <Button asChild variant="outline" className="rounded-full border-cabinet-border bg-cabinet-panel-strong text-cabinet-ink">
+            <Button asChild variant="outline" className="rounded-[14px] border-cabinet-border bg-cabinet-panel-strong text-cabinet-ink">
               <Link href="/projects">Каталог проектов</Link>
             </Button>
-            <Button asChild className="rounded-full bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92">
+            <Button asChild className="rounded-[14px] bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92">
               <Link href="/dashboard/wallet">Пополнить кошелёк</Link>
             </Button>
           </>
@@ -100,24 +100,24 @@ export default function DashboardOverviewPage() {
 
       <div className="grid gap-4 md:grid-cols-3">
         <CabinetStatCard
-          label="Заявок в работе"
+          label={<>Заявки <span className="text-cabinet-accent-strong">в работе</span></>}
           value={String(dashboard.summary.applicationsCount)}
           hint="Черновики, рассмотрение и подтверждение участия"
-          accent={<IconAccent icon={Landmark} tone="bg-cabinet-accent-soft text-cabinet-accent-strong" />}
+          accent={<IconAccent icon={Landmark} tone="border-cabinet-accent/15 bg-cabinet-accent-soft text-cabinet-accent-strong" />}
           variant="quiet"
         />
         <CabinetStatCard
-          label="Подтверждено в портфеле"
+          label={<>Подтверждено в <span className="text-cabinet-accent-strong">портфеле</span></>}
           value={formatMoney(dashboard.summary.approvedAmount)}
           hint="Капитал, который уже закреплён за сделками"
-          accent={<IconAccent icon={BriefcaseBusiness} tone="bg-emerald-50 text-cabinet-success" />}
+          accent={<IconAccent icon={BriefcaseBusiness} tone="border-emerald-200 bg-emerald-50 text-cabinet-success" />}
           variant="quiet"
         />
         <CabinetStatCard
-          label="Последнее движение"
+          label={<>Последнее <span className="text-cabinet-accent-strong">движение</span></>}
           value={latestWalletEntry ? formatMoney(latestWalletEntry.amount) : 'Нет данных'}
-          hint={latestWalletEntry ? formatDateTime(latestWalletEntry.occurredAt) : 'После первой операции здесь появится якорь по движению средств'}
-          accent={<IconAccent icon={History} tone="bg-cabinet-panel-muted text-cabinet-ink" />}
+          hint={latestWalletEntry ? formatDateTime(latestWalletEntry.occurredAt) : 'После первой операции здесь появится последняя запись по движению средств'}
+          accent={<IconAccent icon={History} tone="border-cabinet-border/80 bg-cabinet-panel-muted text-cabinet-ink" />}
           variant="quiet"
         />
       </div>
@@ -125,15 +125,15 @@ export default function DashboardOverviewPage() {
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <CabinetSurface
           eyebrow="Заявки"
-          title="Последние заявки"
-          description="Свежие движения по проектам, которые уже вошли или входят в ваш портфель."
+          title={<>Последние <span className="text-cabinet-accent-strong">заявки</span></>}
+          description="Актуальные заявки по проектам, которые уже находятся в работе или входят в ваш портфель."
         >
           {dashboard.applications.length === 0 ? (
             <CabinetEmptyState
               title="Портфель пока пуст"
               description="Выберите проект в каталоге и отправьте первую инвестиционную заявку."
               action={(
-                <Button asChild className="rounded-full bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92">
+                <Button asChild className="rounded-[14px] bg-cabinet-ink text-cabinet-panel-strong hover:bg-cabinet-ink/92">
                   <Link href="/projects">Смотреть проекты</Link>
                 </Button>
               )}
@@ -143,7 +143,7 @@ export default function DashboardOverviewPage() {
               {dashboard.applications.slice(0, 4).map((application) => (
                 <div
                   key={application.id}
-                  className="rounded-[24px] border border-cabinet-border bg-cabinet-panel p-4"
+                  className="rounded-[16px] border border-cabinet-border/80 bg-cabinet-panel p-4"
                 >
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
@@ -166,8 +166,8 @@ export default function DashboardOverviewPage() {
 
         <CabinetSurface
           eyebrow="События"
-          title="Последние события"
-          description="Только операционные изменения по проверкам, платежам и заявкам."
+          title={<>Операционные <span className="text-cabinet-accent-strong">события</span></>}
+          description="Изменения по проверке профиля, платежам, сделкам и статусам заявок."
           variant="subtle"
         >
           {notificationsQuery.isError ? (
@@ -183,7 +183,7 @@ export default function DashboardOverviewPage() {
           ) : (
             <div className="space-y-3">
               {notifications.slice(0, 4).map((notification) => (
-                <div key={notification.id} className="rounded-[22px] border border-cabinet-border bg-cabinet-panel-strong px-4 py-4">
+                <div key={notification.id} className="rounded-[16px] border border-cabinet-border/80 bg-cabinet-panel-strong px-4 py-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-sm font-semibold text-cabinet-ink">{notification.title}</p>
@@ -208,8 +208,8 @@ export default function DashboardOverviewPage() {
       <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
         <CabinetSurface
           eyebrow="Готовность"
-          title="Статусы доступа"
-          description="Короткая проверка, всё ли готово для работы с деньгами и документами."
+          title={<>Статусы <span className="text-cabinet-accent-strong">доступа</span></>}
+          description="Короткая проверка по ключевым условиям: подтверждение, кошелёк и новые уведомления."
           variant="subtle"
         >
           <div className="grid gap-3">
@@ -222,8 +222,8 @@ export default function DashboardOverviewPage() {
 
         <CabinetSurface
           eyebrow="Кошелёк"
-          title="Последние проводки"
-          description="Быстрый обзор последних движений средств по кошельку."
+          title={<>Последние <span className="text-cabinet-accent-strong">проводки</span></>}
+          description="Последние движения средств по кошельку: пополнения, подтверждения участия и вывод."
           variant="subtle"
         >
           {dashboard.walletTransactions.length === 0 ? (
@@ -234,7 +234,7 @@ export default function DashboardOverviewPage() {
           ) : (
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {dashboard.walletTransactions.slice(0, 6).map((entry) => (
-                <div key={entry.id} className="rounded-[22px] border border-cabinet-border bg-cabinet-panel p-4">
+                <div key={entry.id} className="rounded-[16px] border border-cabinet-border/80 bg-cabinet-panel p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold text-cabinet-ink">{entry.description ?? entry.type}</p>
@@ -267,7 +267,7 @@ function IconAccent({
   tone: string;
 }) {
   return (
-    <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tone}`}>
+    <div className={`flex h-11 w-11 items-center justify-center rounded-[12px] border ${tone}`}>
       <Icon className="h-4 w-4" />
     </div>
   );
@@ -277,7 +277,7 @@ function StatusTile({ label, status }: { label: string; status: string }) {
   const isProblem = status === 'draft' || status === 'pending';
 
   return (
-    <div className="rounded-[22px] border border-cabinet-border bg-cabinet-panel px-4 py-4">
+    <div className="rounded-[16px] border border-cabinet-border/80 bg-cabinet-panel px-4 py-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-muted-ink">{label}</p>
         {isProblem ? <Clock3 className="h-4 w-4 text-cabinet-warning" /> : <CheckCircle2 className="h-4 w-4 text-cabinet-success" />}

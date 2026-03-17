@@ -1,15 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 
 const tones: Record<string, string> = {
-  pending: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
-  pending_review: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
-  awaiting_transfer: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
+  pending: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
+  pending_review: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
+  awaiting_transfer: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
   awaiting_user_clarification: 'border-amber-200 bg-amber-50 text-amber-700',
   account_created: 'border-cabinet-border bg-cabinet-panel-muted text-cabinet-muted-ink',
-  kyb_in_progress: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
-  kyb_under_review: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
-  ready_for_review: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
-  ready: 'border-cabinet-warning/20 bg-cabinet-accent-soft text-cabinet-warning',
+  kyb_in_progress: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
+  kyb_under_review: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
+  ready_for_review: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
+  ready: 'border-cabinet-accent/20 bg-cabinet-accent-soft text-cabinet-accent-strong',
   approved: 'border-cabinet-accent/15 bg-cabinet-accent-soft text-cabinet-accent-strong',
   approved_for_payout: 'border-cabinet-accent/15 bg-cabinet-accent-soft text-cabinet-accent-strong',
   posted: 'border-cabinet-accent/15 bg-cabinet-accent-soft text-cabinet-accent-strong',

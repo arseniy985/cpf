@@ -22,19 +22,19 @@
   --border: #dce7f5;
   --input: #dce7f5;
   --ring: #2158d8;
-  --radius: 1rem;
-  --cabinet-canvas: #f3efe6;
-  --cabinet-panel: #fbf8f2;
-  --cabinet-panel-strong: #fffdf9;
-  --cabinet-panel-muted: #f0e8db;
-  --cabinet-border: #d9cebd;
-  --cabinet-ink: #1f3242;
-  --cabinet-muted-ink: #6c7a86;
-  --cabinet-accent: #b56a36;
-  --cabinet-accent-strong: #8e4d20;
-  --cabinet-accent-soft: #f3e2d4;
-  --cabinet-success: #2e6a59;
-  --cabinet-warning: #956a16;
+  --radius: 0.75rem;
+  --cabinet-canvas: #eef3fb;
+  --cabinet-panel: #f7faff;
+  --cabinet-panel-strong: #ffffff;
+  --cabinet-panel-muted: #e6eef9;
+  --cabinet-border: #c8d4e6;
+  --cabinet-ink: #11233f;
+  --cabinet-muted-ink: #5f7391;
+  --cabinet-accent: #2f6df6;
+  --cabinet-accent-strong: #1d4dc4;
+  --cabinet-accent-soft: #e8f0ff;
+  --cabinet-success: #0b7a6a;
+  --cabinet-warning: #b7791f;
 }
 
 @theme inline {
@@ -164,7 +164,7 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(circle at top left, rgba(53, 194, 255, 0.1), transparent 24rem),
-      radial-gradient(circle at top right, rgba(29, 70, 177, 0.08), transparent 28rem);
+      radial-gradient(circle at top left, rgba(47, 109, 246, 0.1), transparent 20rem),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(238, 243, 251, 0.9));
   }
 }

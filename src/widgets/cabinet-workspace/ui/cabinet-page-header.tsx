@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { cn } from '@/shared/lib/classnames';
 
 type CabinetPageHeaderProps = {
-  eyebrow?: string;
-  title: string;
-  description?: string;
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
   actions?: ReactNode;
   className?: string;
 };
@@ -24,11 +24,11 @@ export function CabinetPageHeader({
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-cabinet-ink text-balance sm:text-[38px] sm:leading-[1.05]">
+        <h2 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-cabinet-ink text-balance sm:text-[38px] sm:leading-[1.05]">
           {title}
         </h2>
         {description ? (
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-cabinet-muted-ink sm:text-[15px]">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-cabinet-muted-ink text-pretty sm:text-[15px]">
             {description}
           </p>
         ) : null}

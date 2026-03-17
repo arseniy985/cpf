@@ -31,9 +31,9 @@ export function CabinetShell({
     return (
       <main className="min-h-screen bg-cabinet-canvas p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl">
-          <Card className="rounded-[28px] border-cabinet-border bg-cabinet-panel-strong shadow-[0_20px_60px_rgba(31,50,66,0.08)]">
+          <Card className="rounded-[18px] border-cabinet-border bg-cabinet-panel-strong shadow-[0_16px_34px_rgba(17,35,63,0.05)]">
             <CardContent className="p-10 text-sm text-cabinet-muted-ink">
-              Загружаем рабочее пространство...
+              Загружаем рабочее пространство…
             </CardContent>
           </Card>
         </div>

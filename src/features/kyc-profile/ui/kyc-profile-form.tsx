@@ -77,7 +77,12 @@ export function KycProfileForm({
             <FormItem>
               <FormLabel>ФИО как в документе</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  autoComplete="name"
+                  placeholder="Иванов Иван Иванович…"
+                  className="rounded-[12px] border-cabinet-border bg-cabinet-panel"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,7 +95,12 @@ export function KycProfileForm({
             <FormItem>
               <FormLabel>Дата рождения</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input
+                  type="date"
+                  autoComplete="bday"
+                  className="rounded-[12px] border-cabinet-border bg-cabinet-panel"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,7 +113,14 @@ export function KycProfileForm({
             <FormItem>
               <FormLabel>ИНН</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder="123456789012…"
+                  className="rounded-[12px] border-cabinet-border bg-cabinet-panel"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -116,7 +133,13 @@ export function KycProfileForm({
             <FormItem>
               <FormLabel>Номер документа</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder="Серия и номер…"
+                  className="rounded-[12px] border-cabinet-border bg-cabinet-panel"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -129,7 +152,12 @@ export function KycProfileForm({
             <FormItem className="md:col-span-2">
               <FormLabel>Адрес</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  autoComplete="street-address"
+                  placeholder="Город, улица, дом, квартира…"
+                  className="rounded-[12px] border-cabinet-border bg-cabinet-panel"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,7 +170,12 @@ export function KycProfileForm({
             <FormItem className="md:col-span-2">
               <FormLabel>Комментарий для менеджера</FormLabel>
               <FormControl>
-                <Textarea rows={4} {...field} />
+                <Textarea
+                  rows={4}
+                  placeholder="Укажите детали, которые помогут проверить документы быстрее…"
+                  className="rounded-[12px] border-cabinet-border bg-cabinet-panel"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -156,8 +189,8 @@ export function KycProfileForm({
         ) : null}
 
         <div className="md:col-span-2">
-          <Button type="submit" size="lg" disabled={mutation.isPending}>
-            {mutation.isPending ? 'Сохраняем...' : 'Сохранить анкету'}
+          <Button type="submit" size="lg" className="rounded-[12px]" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Сохраняем…' : 'Сохранить анкету'}
           </Button>
         </div>
       </form>

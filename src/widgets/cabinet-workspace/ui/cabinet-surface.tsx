@@ -3,9 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { cn } from '@/shared/lib/classnames';
 
 type CabinetSurfaceProps = {
-  eyebrow?: string;
-  title: string;
-  description?: string;
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
   action?: ReactNode;
   children: ReactNode;
   className?: string;
@@ -25,25 +25,25 @@ export function CabinetSurface({
 }: CabinetSurfaceProps) {
   const variants = {
     panel: {
-      card: 'rounded-[28px] border-cabinet-border/70 bg-cabinet-panel-strong shadow-[0_20px_60px_rgba(31,50,66,0.08)]',
-      header: 'border-b border-cabinet-border/65 px-6 py-5',
-      title: 'text-xl font-semibold tracking-tight text-cabinet-ink',
-      description: 'mt-2 text-sm leading-relaxed text-cabinet-muted-ink',
-      content: 'px-6 pb-6',
+      card: 'rounded-[18px] border-cabinet-border/85 bg-cabinet-panel-strong shadow-[0_16px_34px_rgba(17,35,63,0.05)]',
+      header: 'border-b border-cabinet-border/80 px-6 py-5',
+      title: 'text-xl font-semibold tracking-tight text-cabinet-ink text-balance',
+      description: 'mt-2 max-w-3xl text-sm leading-relaxed text-cabinet-muted-ink text-pretty',
+      content: 'px-6 pt-5 pb-6',
     },
     subtle: {
-      card: 'rounded-[24px] border-cabinet-border/65 bg-cabinet-panel shadow-none',
-      header: 'border-b border-cabinet-border/55 px-5 py-4',
-      title: 'text-lg font-semibold tracking-tight text-cabinet-ink',
-      description: 'mt-1.5 text-sm leading-relaxed text-cabinet-muted-ink',
-      content: 'px-5 pb-5',
+      card: 'rounded-[16px] border-cabinet-border/80 bg-cabinet-panel shadow-none',
+      header: 'border-b border-cabinet-border/70 px-5 py-4',
+      title: 'text-lg font-semibold tracking-tight text-cabinet-ink text-balance',
+      description: 'mt-1.5 max-w-3xl text-sm leading-relaxed text-cabinet-muted-ink text-pretty',
+      content: 'px-5 pt-4 pb-5',
     },
     hero: {
-      card: 'rounded-[32px] border-cabinet-border bg-[linear-gradient(135deg,rgba(255,253,249,0.98),rgba(243,226,212,0.72))] shadow-[0_24px_70px_rgba(31,50,66,0.09)]',
+      card: 'rounded-[20px] border-cabinet-border/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(237,244,255,0.92))] shadow-[0_18px_44px_rgba(17,35,63,0.06)]',
       header: 'border-b border-cabinet-border/70 px-6 py-6',
-      title: 'text-[26px] font-semibold tracking-tight text-cabinet-ink sm:text-[30px]',
-      description: 'mt-2 text-sm leading-relaxed text-cabinet-muted-ink',
-      content: 'px-6 pb-6',
+      title: 'text-[26px] font-semibold tracking-tight text-cabinet-ink text-balance sm:text-[30px]',
+      description: 'mt-2 max-w-3xl text-sm leading-relaxed text-cabinet-muted-ink text-pretty',
+      content: 'px-6 pt-5 pb-6',
     },
   } as const;
 
@@ -55,7 +55,7 @@ export function CabinetSurface({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             {eyebrow ? (
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-accent-strong">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cabinet-accent-strong">
                 {eyebrow}
               </p>
             ) : null}

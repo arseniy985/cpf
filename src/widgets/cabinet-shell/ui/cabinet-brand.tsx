@@ -13,10 +13,10 @@ export function CabinetBrand({ className, onClick }: CabinetBrandProps) {
   return (
     <Link
       href="/"
-      className={cn('flex items-center gap-3 rounded-2xl px-1 py-1.5 transition-[transform,opacity] hover:-translate-y-0.5 hover:opacity-90', className)}
+      className={cn('flex items-center gap-3 rounded-[14px] px-1 py-1.5 transition-[transform,opacity] hover:-translate-y-0.5 hover:opacity-90', className)}
       onClick={onClick}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cabinet-ink text-cabinet-panel-strong shadow-[0_12px_30px_rgba(31,50,66,0.16)]">
+      <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-cabinet-ink text-cabinet-panel-strong shadow-[0_12px_24px_rgba(17,35,63,0.18)]">
         <Building2 className="h-5 w-5" />
       </div>
       <div className="flex min-w-0 flex-col">
