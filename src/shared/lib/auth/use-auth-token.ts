@@ -1,8 +1,20 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 import { getAuthToken, subscribeAuthToken } from './token-storage';
 
 export function useAuthToken() {
-  return useSyncExternalStore(subscribeAuthToken, getAuthToken, () => null);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const syncToken = () => {
+      setToken(getAuthToken());
+    };
+
+    syncToken();
+
+    return subscribeAuthToken(syncToken);
+  }, []);
+
+  return token;
 }
