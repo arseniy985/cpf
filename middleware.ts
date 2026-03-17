@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import {
+  AUTH_CLIENT_TOKEN_COOKIE,
   AUTH_TOKEN_COOKIE,
   PROTECTED_ROUTE_PREFIXES,
 } from '@/shared/config/session';
@@ -16,7 +17,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasSession = Boolean(request.cookies.get(AUTH_TOKEN_COOKIE)?.value);
+  const hasSession = Boolean(
+    request.cookies.get(AUTH_TOKEN_COOKIE)?.value
+    ?? request.cookies.get(AUTH_CLIENT_TOKEN_COOKIE)?.value,
+  );
 
   if (hasSession) {
     return NextResponse.next();
