@@ -104,7 +104,7 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
                   onRecovery={() => setStep('recovery')}
                   onSuccess={(result) => {
                     if (result.kind === 'authenticated') {
-                      session.setToken('session');
+                      session.setToken(result.token);
                       router.replace(postAuthHref ?? getPostAuthRedirect(result.user, mode === 'register' ? intent : undefined));
                       return;
                     }
@@ -123,8 +123,8 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
                 <VerifyCodeForm
                   context={verificationContext}
                   onBack={() => setStep('credentials')}
-                  onSuccess={({ user }) => {
-                    session.setToken('session');
+                  onSuccess={({ token, user }) => {
+                    session.setToken(token);
                     router.replace(postAuthHref ?? getPostAuthRedirect(user, mode === 'register' ? intent : undefined));
                   }}
                 />

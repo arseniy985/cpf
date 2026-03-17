@@ -1,4 +1,4 @@
-import { AUTH_PRESENCE_COOKIE } from '@/shared/config/session';
+import { AUTH_CLIENT_TOKEN_COOKIE, AUTH_PRESENCE_COOKIE } from '@/shared/config/session';
 
 const TOKEN_EVENT = 'cpf:auth-token-change';
 
@@ -42,15 +42,37 @@ function setAuthPresenceCookie(isPresent: boolean) {
   document.cookie = `${AUTH_PRESENCE_COOKIE}=; ${buildCookieAttributes(0)}`;
 }
 
-export function getAuthToken() {
-  return getCookieValue(AUTH_PRESENCE_COOKIE);
-}
-
-export function setAuthToken(_token: string) {
+function setClientAuthTokenCookie(token: string | null) {
   if (typeof document === 'undefined') {
     return;
   }
 
+  if (token) {
+    document.cookie = `${AUTH_CLIENT_TOKEN_COOKIE}=${encodeURIComponent(token)}; ${buildCookieAttributes(60 * 60 * 24 * 30)}`;
+    return;
+  }
+
+  document.cookie = `${AUTH_CLIENT_TOKEN_COOKIE}=; ${buildCookieAttributes(0)}`;
+}
+
+export function getClientAuthToken() {
+  return getCookieValue(AUTH_CLIENT_TOKEN_COOKIE);
+}
+
+export function getAuthSessionMarker() {
+  return getClientAuthToken() ?? getCookieValue(AUTH_PRESENCE_COOKIE);
+}
+
+export function hasAuthSession() {
+  return Boolean(getAuthSessionMarker());
+}
+
+export function setAuthToken(token?: string | null) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  setClientAuthTokenCookie(token ?? null);
   setAuthPresenceCookie(true);
   emitTokenChange();
 }
@@ -60,6 +82,7 @@ export function clearAuthToken() {
     return;
   }
 
+  setClientAuthTokenCookie(null);
   setAuthPresenceCookie(false);
   emitTokenChange();
 }

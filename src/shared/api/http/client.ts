@@ -1,4 +1,4 @@
-import { getAuthToken } from '@/shared/lib/auth/token-storage';
+import { getClientAuthToken, hasAuthSession } from '@/shared/lib/auth/token-storage';
 
 export class ApiClientError extends Error {
   constructor(
@@ -47,13 +47,16 @@ export function buildApiUrl(path: string) {
 export async function fetchJson<T>(path: string, init?: ApiRequestInit): Promise<T> {
   const url = buildApiUrl(path);
   const headers = new Headers(init?.headers);
-  const authToken = init?.authToken ?? (init?.requireAuth ? getAuthToken() : null);
+  const authToken = init?.authToken ?? (init?.requireAuth ? getClientAuthToken() : null);
+  const hasSession = init?.requireAuth ? (hasAuthSession() || Boolean(init?.authToken)) : false;
 
   headers.set('Accept', 'application/json');
 
   if (init?.authToken) {
     headers.set('Authorization', `Bearer ${init.authToken}`);
-  } else if (init?.requireAuth && !authToken) {
+  } else if (init?.requireAuth && authToken) {
+    headers.set('Authorization', `Bearer ${authToken}`);
+  } else if (init?.requireAuth && !hasSession) {
     throw new ApiClientError('Authentication required.', 401);
   }
 

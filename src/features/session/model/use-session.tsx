@@ -17,7 +17,7 @@ type SessionValue = {
   isLoading: boolean;
   isError: boolean;
   error: unknown;
-  setToken: (token: string) => void;
+  setToken: (token?: string | null) => void;
   clearToken: () => void;
   logout: () => Promise<void>;
 };

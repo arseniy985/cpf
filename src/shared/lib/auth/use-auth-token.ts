@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAuthToken, subscribeAuthToken } from './token-storage';
+import { getAuthSessionMarker, subscribeAuthToken } from './token-storage';
 
 export function useAuthTokenState() {
   const [token, setToken] = useState<string | null>(null);
@@ -9,7 +9,7 @@ export function useAuthTokenState() {
 
   useEffect(() => {
     const syncToken = () => {
-      const nextToken = getAuthToken();
+      const nextToken = getAuthSessionMarker();
       setToken(nextToken);
       setIsReady(true);
     };

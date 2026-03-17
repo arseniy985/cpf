@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getBackendApiOrigin } from '@/shared/api/http/backend-url';
-import { AUTH_PRESENCE_COOKIE, AUTH_TOKEN_COOKIE } from '@/shared/config/session';
+import { AUTH_CLIENT_TOKEN_COOKIE, AUTH_PRESENCE_COOKIE, AUTH_TOKEN_COOKIE } from '@/shared/config/session';
 
 const TOKEN_ISSUING_PATHS = new Set([
   '/api/v1/auth/login',
@@ -46,6 +46,13 @@ function applyAuthCookies(response: NextResponse, request: NextRequest, token: s
       maxAge: 60 * 60 * 24 * 30,
       ...baseOptions,
     });
+    response.cookies.set({
+      name: AUTH_CLIENT_TOKEN_COOKIE,
+      value: '',
+      httpOnly: false,
+      maxAge: 0,
+      ...baseOptions,
+    });
     return;
   }
 
@@ -58,6 +65,13 @@ function applyAuthCookies(response: NextResponse, request: NextRequest, token: s
   });
   response.cookies.set({
     name: AUTH_PRESENCE_COOKIE,
+    value: '',
+    httpOnly: false,
+    maxAge: 0,
+    ...baseOptions,
+  });
+  response.cookies.set({
+    name: AUTH_CLIENT_TOKEN_COOKIE,
     value: '',
     httpOnly: false,
     maxAge: 0,
@@ -79,7 +93,7 @@ function createForwardHeaders(request: NextRequest) {
   const contentType = request.headers.get('content-type');
   const accept = request.headers.get('accept');
   const idempotencyKey = request.headers.get('idempotency-key');
-  const authToken = request.cookies.get(AUTH_TOKEN_COOKIE)?.value;
+  const authToken = request.cookies.get(AUTH_TOKEN_COOKIE)?.value ?? request.cookies.get(AUTH_CLIENT_TOKEN_COOKIE)?.value;
 
   if (contentType) {
     headers.set('content-type', contentType);

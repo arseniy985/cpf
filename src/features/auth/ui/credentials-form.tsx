@@ -36,6 +36,7 @@ type AuthSuccessResult =
     }
   | {
       kind: 'authenticated';
+      token?: string;
       user: AuthUser;
     };
 
@@ -109,6 +110,7 @@ export function CredentialsForm({
       if ('user' in response.data) {
         onSuccess({
           kind: 'authenticated',
+          token: response.data.token,
           user: response.data.user,
         });
         return;
