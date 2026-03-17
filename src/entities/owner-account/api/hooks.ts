@@ -15,14 +15,14 @@ export const ownerWorkspaceKeys = {
   workspace: (token: string | null) => [...ownerWorkspaceKeys.all, 'workspace', token] as const,
 };
 
-export function useOwnerWorkspaceQuery(token?: string | null) {
+export function useOwnerWorkspaceQuery(token?: string | null, enabled: boolean = true) {
   const authToken = useAuthToken();
   const currentToken = token ?? authToken;
 
   return useQuery({
     queryKey: ownerWorkspaceKeys.workspace(currentToken),
     queryFn: () => fetchOwnerWorkspace(),
-    enabled: Boolean(currentToken),
+    enabled: Boolean(currentToken) && enabled,
   });
 }
 

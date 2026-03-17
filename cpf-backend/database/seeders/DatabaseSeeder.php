@@ -465,14 +465,14 @@ class DatabaseSeeder extends Seeder
                 'type' => 'investment',
                 'title' => 'Заявка подтверждена',
                 'body' => 'Ваше участие в проекте "Торговый центр Галерея" подтверждено.',
-                'action_url' => '/dashboard',
+                'action_url' => '/app/investor',
             ],
             [
                 'user_id' => $projectOwner->id,
                 'type' => 'owner_project',
                 'title' => 'Проект ожидает модерации',
                 'body' => 'Заявка по проекту передана менеджеру платформы.',
-                'action_url' => '/owner/projects',
+                'action_url' => '/app/owner/projects',
             ],
         ] as $notification) {
             Notification::query()->updateOrCreate(

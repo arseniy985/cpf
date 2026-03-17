@@ -10,6 +10,11 @@ export type AuthUser = {
   emailVerifiedAt: string | null;
   kycStatus: string | null;
   roles: string[];
+  notificationPreferences: {
+    email?: boolean;
+    sms?: boolean;
+    marketing?: boolean;
+  } | null;
   ownerAccount: OwnerAccountSummary | null;
   investorPayoutProfile: InvestorPayoutProfile | null;
 };

@@ -1,5 +1,5 @@
-import DashboardKycPage from '@/pages/dashboard-kyc/ui/dashboard-kyc-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardKycPage />;
+  redirect('/app/investor/verification');
 }

@@ -102,7 +102,7 @@ class OwnerWorkspaceService
                 title: 'Профиль кабинета',
                 description: 'Укажите название кабинета, сайт и короткое описание вашей компании.',
                 completed: filled($account->display_name) && filled($account->website_url) && filled($account->overview),
-                href: '/owner/organization',
+                href: '/app/owner/organization',
             ),
             new OwnerChecklistItemData(
                 key: 'organization',
@@ -113,7 +113,7 @@ class OwnerWorkspaceService
                     && filled($organization?->registration_number)
                     && filled($organization?->tax_id)
                     && filled($organization?->signatory_name),
-                href: '/owner/organization',
+                href: '/app/owner/organization',
             ),
             new OwnerChecklistItemData(
                 key: 'bank_profile',
@@ -124,14 +124,14 @@ class OwnerWorkspaceService
                     && filled($bankProfile?->bank_bik)
                     && filled($bankProfile?->bank_account)
                     && filled($bankProfile?->correspondent_account),
-                href: '/owner/organization',
+                href: '/app/owner/organization',
             ),
             new OwnerChecklistItemData(
                 key: 'first_project',
                 title: 'Первый черновик проекта',
                 description: 'Подготовьте карточку проекта заранее, чтобы после проверки сразу перейти к публикации.',
                 completed: $projectsCount > 0,
-                href: '/owner/projects',
+                href: '/app/owner/projects',
             ),
         ]);
     }
@@ -157,7 +157,7 @@ class OwnerWorkspaceService
                 key: 'review_window',
                 title: 'Проверьте готовность проекта к проверке',
                 description: 'Когда профиль и реквизиты заполнены, можно собрать документы и отправить проект на проверку.',
-                href: '/owner/projects',
+                href: '/app/owner/projects',
                 tone: 'neutral',
             ));
         }

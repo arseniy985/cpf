@@ -1,5 +1,5 @@
-import DashboardDocumentsPage from '@/pages/dashboard-documents/ui/dashboard-documents-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardDocumentsPage />;
+  redirect('/app/investor/documents');
 }

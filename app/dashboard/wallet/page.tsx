@@ -1,5 +1,5 @@
-import DashboardWalletPage from '@/pages/dashboard-wallet/ui/dashboard-wallet-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardWalletPage />;
+  redirect('/app/investor/wallet');
 }

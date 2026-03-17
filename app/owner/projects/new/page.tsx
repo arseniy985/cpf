@@ -1,5 +1,5 @@
-import OwnerProjectNewPage from '@/pages/owner-project-new/ui/owner-project-new-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <OwnerProjectNewPage />;
+  redirect('/app/owner/projects?dialog=create');
 }

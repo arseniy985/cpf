@@ -20,7 +20,10 @@ export default function GlobalModal() {
   const [type, setType] = useState<'invest' | 'consult'>('consult');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
-  const isCabinetRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/owner');
+  const isCabinetRoute =
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/owner') ||
+    pathname.startsWith('/app');
 
   useEffect(() => {
     if (isCabinetRoute) {

@@ -1,5 +1,5 @@
-import DashboardSettingsPage from '@/pages/dashboard-settings/ui/dashboard-settings-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardSettingsPage />;
+  redirect('/app/settings');
 }

@@ -1,5 +1,5 @@
-import OwnerOverviewPage from '@/pages/owner-overview/ui/owner-overview-page';
+import { redirect } from 'next/navigation';
 
 export default function OwnerPage() {
-  return <OwnerOverviewPage />;
+  redirect('/app/owner');
 }

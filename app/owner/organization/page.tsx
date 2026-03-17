@@ -1,5 +1,5 @@
-import OwnerOrganizationPage from '@/pages/owner-organization/ui/owner-organization-page';
+import { redirect } from 'next/navigation';
 
 export default function OwnerOrganizationRoute() {
-  return <OwnerOrganizationPage />;
+  redirect('/app/owner/organization');
 }

@@ -3,11 +3,12 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, Building2, MapPin, Clock, Send, MessageCircle, Search, Phone, User } from 'lucide-react';
+import { Menu, MapPin, Clock, Send, MessageCircle, Search, Phone, User } from 'lucide-react';
 import { useSession } from '@/features/session/model/use-session';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { CPFBrand } from '@/shared/ui/cpf-brand';
 import {
   Sheet,
   SheetContent,
@@ -29,7 +30,7 @@ const navLinks = [
   { name: 'FAQ', href: '/faq' },
   { name: 'Блог', href: '/blog' },
   { name: 'Контакты', href: '/contacts' },
-  { name: 'Кабинет', href: '/dashboard' },
+  { name: 'Кабинет', href: '/app' },
 ];
 
 export default function Header() {
@@ -42,8 +43,8 @@ export default function Header() {
     () =>
       session.user
         ? session.user.roles.includes('project_owner')
-          ? { href: '/owner', label: 'Кабинет владельца' }
-          : { href: '/dashboard/settings?intent=owner', label: 'Стать владельцем' }
+          ? { href: '/app/owner', label: 'Кабинет владельца' }
+          : { href: '/app/settings', label: 'Стать владельцем' }
         : { href: '/register?intent=owner', label: 'Стать владельцем' },
     [session.user],
   );
@@ -52,8 +53,8 @@ export default function Header() {
     () =>
       session.user
         ? session.user.roles.includes('project_owner')
-          ? { href: '/owner/projects', label: 'Кабинет' }
-          : { href: '/dashboard', label: 'Кабинет' }
+          ? { href: '/app/owner', label: 'Кабинет' }
+          : { href: '/app/investor', label: 'Кабинет' }
         : { href: '/login', label: 'Вход' },
     [session.user],
   );
@@ -88,15 +89,7 @@ export default function Header() {
       </div>
 
       <div className="flex justify-between items-center px-4 lg:px-8 py-4 gap-8">
-        <Link href="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white group-hover:bg-indigo-700 transition-colors transform group-hover:scale-105 duration-300">
-            <Building2 className="w-7 h-7" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-2xl leading-none text-indigo-950 uppercase tracking-wider">ЦПФ</span>
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Инвестиции</span>
-          </div>
-        </Link>
+        <CPFBrand className="shrink-0" />
 
         <div className="hidden lg:flex flex-1 max-w-2xl items-center gap-3">
           <div className="relative flex-1">

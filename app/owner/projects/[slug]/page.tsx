@@ -1,4 +1,4 @@
-import OwnerProjectDetailsPage from '@/pages/owner-project-details/ui/owner-project-details-page';
+import { redirect } from 'next/navigation';
 
 export default async function Page({
   params,
@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const { slug } = await params;
 
-  return <OwnerProjectDetailsPage slug={slug} />;
+  redirect(`/app/owner/projects/${slug}`);
 }

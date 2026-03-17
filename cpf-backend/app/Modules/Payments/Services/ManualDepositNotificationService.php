@@ -62,7 +62,7 @@ class ManualDepositNotificationService
             'type' => $type,
             'title' => $title,
             'body' => $body,
-            'action_url' => '/dashboard/wallet',
+            'action_url' => '/app/investor/wallet',
             'payload' => [
                 'manualDepositRequestId' => $request->id,
                 'referenceCode' => $request->reference_code,

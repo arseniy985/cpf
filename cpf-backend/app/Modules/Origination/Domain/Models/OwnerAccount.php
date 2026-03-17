@@ -10,11 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class OwnerAccount extends Model
 {
     use HasFactory;
     use HasUlids;
+    use LogsActivity;
 
     protected $table = 'owner_accounts';
 
@@ -56,5 +59,12 @@ class OwnerAccount extends Model
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['slug', 'display_name', 'status', 'overview', 'website_url'])
+            ->logOnlyDirty();
     }
 }

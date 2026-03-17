@@ -23,6 +23,7 @@
     "paths": {
       "@/*": ["./*"],
       "@/pages/*": ["./src/page-views/*"],
+      "@/page-views/*": ["./src/page-views/*"],
       "@/widgets/*": ["./src/widgets/*"],
       "@/entities/*": ["./src/entities/*"],
       "@/features/*": ["./src/features/*"],

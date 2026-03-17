@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class OwnerOnboarding extends Model
 {
     use HasFactory;
     use HasUlids;
+    use LogsActivity;
 
     protected $table = 'owner_onboardings';
 
@@ -40,5 +43,20 @@ class OwnerOnboarding extends Model
     public function ownerAccount(): BelongsTo
     {
         return $this->belongsTo(OwnerAccount::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'status',
+                'invited_at',
+                'account_created_at',
+                'submitted_at',
+                'reviewed_at',
+                'activated_at',
+                'rejection_reason',
+            ])
+            ->logOnlyDirty();
     }
 }

@@ -16,7 +16,11 @@ export default function ChatWidget() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/owner')) {
+  if (
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/owner') ||
+    pathname.startsWith('/app')
+  ) {
     return null;
   }
 

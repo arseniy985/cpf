@@ -1,4 +1,4 @@
-import OwnerRoundDetailsPage from '@/pages/owner-round-details/ui/owner-round-details-page';
+import { redirect } from 'next/navigation';
 
 export default async function OwnerRoundDetailsRoute({
   params,
@@ -7,5 +7,5 @@ export default async function OwnerRoundDetailsRoute({
 }) {
   const { slug } = await params;
 
-  return <OwnerRoundDetailsPage slug={slug} />;
+  redirect(`/app/owner/rounds/${slug}`);
 }

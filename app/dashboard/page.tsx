@@ -1,5 +1,5 @@
-import DashboardOverviewPage from '@/pages/dashboard-overview/ui/dashboard-overview-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardOverviewPage />;
+  redirect('/app/investor');
 }

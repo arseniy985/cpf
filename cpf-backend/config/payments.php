@@ -13,7 +13,7 @@ return [
         'secret_key' => env('YOOKASSA_SECRET_KEY'),
         'currency' => env('YOOKASSA_CURRENCY', 'RUB'),
         'capture' => (bool) env('YOOKASSA_CAPTURE', true),
-        'return_url' => env('YOOKASSA_RETURN_URL', env('FRONTEND_URL', 'http://localhost:3000').'/dashboard'),
+        'return_url' => env('YOOKASSA_RETURN_URL', env('FRONTEND_URL', 'http://localhost:3000').'/app/investor/wallet'),
         'payouts_enabled' => (bool) env('YOOKASSA_PAYOUTS_ENABLED', false),
         'verify_webhook_source' => (bool) env('YOOKASSA_VERIFY_WEBHOOK_SOURCE', true),
         'webhook_trusted_ips' => array_values(array_filter(array_map(

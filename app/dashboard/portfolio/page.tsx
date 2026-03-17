@@ -1,5 +1,5 @@
-import DashboardPortfolioPage from '@/pages/dashboard-portfolio/ui/dashboard-portfolio-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardPortfolioPage />;
+  redirect('/app/investor/portfolio');
 }

@@ -1,5 +1,5 @@
-import OwnerPayoutsPage from '@/pages/owner-payouts/ui/owner-payouts-page';
+import { redirect } from 'next/navigation';
 
 export default function OwnerPayoutsRoute() {
-  return <OwnerPayoutsPage />;
+  redirect('/app/owner/payouts');
 }

@@ -10,11 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class OfferingRound extends Model
 {
     use HasFactory;
     use HasUlids;
+    use LogsActivity;
 
     protected $table = 'offering_rounds';
 
@@ -80,5 +83,29 @@ class OfferingRound extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'project_id',
+                'owner_account_id',
+                'slug',
+                'title',
+                'status',
+                'target_amount',
+                'current_amount',
+                'min_investment',
+                'target_yield',
+                'payout_frequency',
+                'term_months',
+                'opens_at',
+                'closes_at',
+                'review_submitted_at',
+                'went_live_at',
+                'closed_at',
+            ])
+            ->logOnlyDirty();
     }
 }

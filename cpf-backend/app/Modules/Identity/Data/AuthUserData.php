@@ -18,6 +18,8 @@ class AuthUserData extends Data
         public ?string $kycStatus,
         /** @var array<int, string> */
         public array $roles,
+        /** @var array<string, bool>|null */
+        public ?array $notificationPreferences,
         public ?OwnerAccountSummaryData $ownerAccount,
         public ?InvestorPayoutProfileData $investorPayoutProfile,
     ) {}
@@ -36,6 +38,7 @@ class AuthUserData extends Data
             emailVerifiedAt: $user->email_verified_at?->toAtomString(),
             kycStatus: $user->kycProfile?->status,
             roles: $user->getRoleNames()->values()->all(),
+            notificationPreferences: $user->notification_preferences,
             ownerAccount: OwnerAccountSummaryData::fromModel($ownerAccount),
             investorPayoutProfile: InvestorPayoutProfileData::fromModel(
                 $user->relationLoaded('investorPayoutProfile')

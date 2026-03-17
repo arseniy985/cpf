@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useSession } from '@/features/session/model/use-session';
+import { CPFBrand } from '@/shared/ui/cpf-brand';
 import {
   getAuthPageCopy,
   getPostAuthRedirect,
@@ -24,19 +24,13 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const session = useSession();
-  const [intent, setIntent] = useState<AuthIntent>('investor');
+  const urlIntent = mode === 'register' && searchParams.get('intent') === 'owner' ? 'owner' : 'investor';
+  const [manualIntent, setManualIntent] = useState<AuthIntent | null>(null);
+  const intent = mode === 'register' ? (manualIntent ?? urlIntent) : 'investor';
   const pageCopy = getAuthPageCopy(mode, intent);
   const [step, setStep] = useState<AuthStep>('credentials');
   const [verificationContext, setVerificationContext] = useState<VerificationContext | null>(null);
   const [email, setEmail] = useState(mode === 'login' ? 'investor@cpf.local' : '');
-
-  useEffect(() => {
-    if (mode !== 'register') {
-      return;
-    }
-
-    setIntent(searchParams.get('intent') === 'owner' ? 'owner' : 'investor');
-  }, [mode, searchParams]);
 
   useEffect(() => {
     if (session.user) {
@@ -45,7 +39,7 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
   }, [router, session.user]);
 
   const handleIntentChange = (nextIntent: AuthIntent) => {
-    setIntent(nextIntent);
+    setManualIntent(nextIntent);
     setStep('credentials');
     setVerificationContext(null);
 
@@ -69,15 +63,7 @@ export function AuthFlow({ mode }: { mode: AuthMode }) {
 
       <section className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-5 sm:px-6 lg:px-8">
         <div className="flex items-start justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white transition-[background-color,transform] duration-300 group-hover:scale-105 group-hover:bg-indigo-700">
-              <Building2 className="h-7 w-7" aria-hidden="true" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-display text-2xl font-bold leading-none tracking-wider text-indigo-950 uppercase">ЦПФ</span>
-              <span className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Инвестиции</span>
-            </div>
-          </Link>
+          <CPFBrand className="shrink-0" />
           {mode === 'register' ? <AuthIntentSwitcher value={intent} onChange={handleIntentChange} /> : <div />}
         </div>
 

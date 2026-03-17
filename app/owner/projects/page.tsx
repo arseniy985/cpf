@@ -1,5 +1,5 @@
-import OwnerProjectsPage from '@/pages/owner-projects/ui/owner-projects-page';
+import { redirect } from 'next/navigation';
 
 export default function OwnerProjectsRoute() {
-  return <OwnerProjectsPage />;
+  redirect('/app/owner/projects');
 }

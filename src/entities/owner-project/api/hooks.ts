@@ -24,14 +24,14 @@ export const ownerKeys = {
   investments: (token: string | null, slug: string) => [...ownerKeys.all, 'investments', token, slug] as const,
 };
 
-export function useOwnerProjectsQuery(token?: string | null) {
+export function useOwnerProjectsQuery(token?: string | null, enabled: boolean = true) {
   const authToken = useAuthToken();
   const currentToken = token ?? authToken;
 
   return useQuery({
     queryKey: ownerKeys.projects(currentToken),
     queryFn: () => fetchOwnerProjects(),
-    enabled: Boolean(currentToken),
+    enabled: Boolean(currentToken) && enabled,
   });
 }
 

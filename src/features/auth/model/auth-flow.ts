@@ -12,10 +12,10 @@ export type VerificationContext = {
 
 export function getPostAuthRedirect(user: AuthUser, intent?: AuthIntent) {
   if (intent === 'owner' || user.roles.includes('project_owner')) {
-    return '/owner';
+    return '/app/owner';
   }
 
-  return '/dashboard';
+  return '/app/investor';
 }
 
 export function getAuthPageCopy(mode: AuthMode, intent: AuthIntent = 'investor') {

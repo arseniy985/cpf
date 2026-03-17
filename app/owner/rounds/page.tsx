@@ -1,5 +1,5 @@
-import OwnerRoundsPage from '@/pages/owner-rounds/ui/owner-rounds-page';
+import { redirect } from 'next/navigation';
 
 export default function OwnerRoundsRoute() {
-  return <OwnerRoundsPage />;
+  redirect('/app/owner/rounds');
 }

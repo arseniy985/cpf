@@ -25,14 +25,14 @@ export const ownerRoundKeys = {
   payouts: (token: string | null) => [...ownerRoundKeys.all, 'payouts', token] as const,
 };
 
-export function useOwnerRoundsQuery(token?: string | null) {
+export function useOwnerRoundsQuery(token?: string | null, enabled: boolean = true) {
   const authToken = useAuthToken();
   const currentToken = token ?? authToken;
 
   return useQuery({
     queryKey: ownerRoundKeys.list(currentToken),
     queryFn: () => fetchOwnerRounds(),
-    enabled: Boolean(currentToken),
+    enabled: Boolean(currentToken) && enabled,
   });
 }
 
@@ -47,14 +47,14 @@ export function useOwnerRoundQuery(token: string | null | undefined, slug: strin
   });
 }
 
-export function useOwnerPayoutsQuery(token?: string | null) {
+export function useOwnerPayoutsQuery(token?: string | null, enabled: boolean = true) {
   const authToken = useAuthToken();
   const currentToken = token ?? authToken;
 
   return useQuery({
     queryKey: ownerRoundKeys.payouts(currentToken),
     queryFn: () => fetchOwnerPayouts(),
-    enabled: Boolean(currentToken),
+    enabled: Boolean(currentToken) && enabled,
   });
 }
 

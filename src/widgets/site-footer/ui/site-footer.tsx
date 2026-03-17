@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Building2, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CPFBrand } from '@/shared/ui/cpf-brand';
 
 export default function Footer() {
   return (
@@ -15,15 +16,7 @@ export default function Footer() {
           
           {/* Brand */}
           <div className="lg:col-span-4 space-y-8">
-            <Link href="/" className="flex items-center gap-3 group text-white">
-              <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center group-hover:bg-teal-400 group-hover:text-indigo-950 transition-all duration-300 transform group-hover:-rotate-6">
-                <Building2 className="w-7 h-7" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-display font-bold text-2xl leading-none tracking-wider">ЦПФ</span>
-                <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest mt-0.5">Инвестиции</span>
-              </div>
-            </Link>
+            <CPFBrand theme="dark" className="text-white" />
             <p className="text-sm leading-relaxed text-indigo-300 max-w-sm">
               Центр Партнёрского Финансирования. Инновационная платформа коллективных инвестиций в коммерческую недвижимость и готовый бизнес.
             </p>

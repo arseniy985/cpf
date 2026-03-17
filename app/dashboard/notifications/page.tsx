@@ -1,5 +1,5 @@
-import DashboardNotificationsPage from '@/pages/dashboard-notifications/ui/dashboard-notifications-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <DashboardNotificationsPage />;
+  redirect('/app/notifications');
 }

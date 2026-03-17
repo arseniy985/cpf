@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class OwnerBankProfile extends Model
 {
     use HasFactory;
     use HasUlids;
+    use LogsActivity;
 
     protected $table = 'owner_bank_profiles';
 
@@ -30,5 +33,21 @@ class OwnerBankProfile extends Model
     public function ownerAccount(): BelongsTo
     {
         return $this->belongsTo(OwnerAccount::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'payout_method',
+                'recipient_name',
+                'bank_name',
+                'bank_bik',
+                'bank_account',
+                'correspondent_account',
+                'status',
+                'notes',
+            ])
+            ->logOnlyDirty();
     }
 }
