@@ -1,13 +1,13 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useMeQuery, useLogoutMutation } from '@/entities/viewer/api/hooks';
 import type { AuthUser } from '@/entities/viewer/api/types';
 import { ApiClientError } from '@/shared/api/http/client';
 import { clearAuthToken, setAuthToken } from '@/shared/lib/auth/token-storage';
-import { useAuthToken } from '@/shared/lib/auth/use-auth-token';
+import { useAuthTokenState } from '@/shared/lib/auth/use-auth-token';
 
 type SessionValue = {
   token: string | null;
@@ -38,14 +38,9 @@ const defaultSessionValue: SessionValue = {
 const SessionContext = createContext<SessionValue>(defaultSessionValue);
 
 export function AuthSessionProvider({ children }: { children: ReactNode }) {
-  const token = useAuthToken();
+  const { token, isReady } = useAuthTokenState();
   const meQuery = useMeQuery();
   const logoutMutation = useLogoutMutation();
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    setIsReady(true);
-  }, []);
 
   useEffect(() => {
     if (meQuery.error instanceof ApiClientError && meQuery.error.status === 401) {
