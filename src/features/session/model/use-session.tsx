@@ -21,7 +21,21 @@ type SessionValue = {
   logout: () => Promise<void>;
 };
 
-const SessionContext = createContext<SessionValue | null>(null);
+const defaultSessionValue: SessionValue = {
+  token: null,
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  isError: false,
+  error: null,
+  setToken: setAuthToken,
+  clearToken: clearAuthToken,
+  logout: async () => {
+    clearAuthToken();
+  },
+};
+
+const SessionContext = createContext<SessionValue>(defaultSessionValue);
 
 export function AuthSessionProvider({ children }: { children: ReactNode }) {
   const token = useAuthToken();
@@ -65,13 +79,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
 }
 
 export function useSession() {
-  const context = useContext(SessionContext);
-
-  if (!context) {
-    throw new Error('useSession must be used within AuthSessionProvider.');
-  }
-
-  return context;
+  return useContext(SessionContext);
 }
 
 export function useRequireSession() {
