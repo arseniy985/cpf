@@ -24,14 +24,14 @@ export default function OwnerReportingPageV2() {
         description="Регулярные отчёты, фото и медиа-обновления, фактические показатели и история версий по выбранному проекту."
       />
 
-      <AppSurface eyebrow="Выбор проекта" title="Контекст отчётности" description="Отчёты и версии всегда привязаны к конкретному проекту.">
+      <AppSurface eyebrow="Выбор проекта" title="Контекст отчётности" description="Отчёты и версии всегда привязаны к конкретному проекту." tone="secondary">
         {projects.length ? (
           <div className="max-w-md">
             <Select value={effectiveSlug ?? ''} onValueChange={setSelectedProjectSlug}>
-              <SelectTrigger className="rounded-none border-app-cabinet-border shadow-none">
+              <SelectTrigger className="rounded-2xl border-app-cabinet-border shadow-none">
                 <SelectValue placeholder="Выберите проект…" />
               </SelectTrigger>
-              <SelectContent className="rounded-none border-app-cabinet-border">
+              <SelectContent className="rounded-2xl border-app-cabinet-border">
                 {projects.map((project) => (
                   <SelectItem key={project.id} value={project.slug}>
                     {project.title}

@@ -1,19 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { HelpCircle, LifeBuoy, Settings2 } from 'lucide-react';
-import type { AuthUser } from '@/entities/viewer/api/types';
-import { Button } from '@/components/ui/button';
-import { CPFBrand } from '@/shared/ui/cpf-brand';
-import { cn } from '@/shared/lib/classnames';
 import {
-  getModeRootHref,
-  investorNavigation,
-  isNavItemActive,
-  ownerNavigation,
-  sharedNavigation,
-  type WorkspaceMode,
-} from '../model/navigation';
+  ArrowLeftRight,
+  Bell,
+  Briefcase,
+  Building2,
+  CircleDollarSign,
+  FileText,
+  LayoutDashboard,
+  PieChart,
+  Settings,
+  UserCheck,
+  Users,
+  Wallet,
+  FolderKanban,
+  BarChart3,
+} from 'lucide-react';
+import type { AuthUser } from '@/entities/viewer/api/types';
+import { cn } from '@/shared/lib/classnames';
+import { getModeRootHref, type WorkspaceMode } from '../model/navigation';
 
 type AppSidebarProps = {
   pathname: string;
@@ -22,174 +28,124 @@ type AppSidebarProps = {
   onNavigate?: () => void;
 };
 
-export function AppSidebar({
-  pathname,
-  user,
-  activeMode,
-  onNavigate,
-}: AppSidebarProps) {
-  const ownerAvailable = user.roles.includes('project_owner');
-  const currentNav = activeMode === 'owner' ? ownerNavigation : investorNavigation;
+const investorLinks = [
+  { name: 'Обзор', href: '/app/investor', icon: LayoutDashboard },
+  { name: 'Портфель', href: '/app/investor/portfolio', icon: Briefcase },
+  { name: 'Кошелек', href: '/app/investor/wallet', icon: Wallet },
+  { name: 'Выплаты и доход', href: '/app/investor/payouts', icon: PieChart },
+  { name: 'Документы', href: '/app/investor/documents', icon: FileText },
+  { name: 'Проверка профиля', href: '/app/investor/verification', icon: UserCheck },
+] as const;
+
+const ownerLinks = [
+  { name: 'Обзор', href: '/app/owner', icon: LayoutDashboard },
+  { name: 'Организация', href: '/app/owner/organization', icon: Building2 },
+  { name: 'Проекты', href: '/app/owner/projects', icon: FolderKanban },
+  { name: 'Раунды', href: '/app/owner/rounds', icon: CircleDollarSign },
+  { name: 'Аллокации', href: '/app/owner/allocations', icon: Users },
+  { name: 'Отчетность', href: '/app/owner/reporting', icon: BarChart3 },
+  { name: 'Выплаты', href: '/app/owner/payouts', icon: PieChart },
+  { name: 'Команда', href: '/app/owner/team', icon: Users },
+] as const;
+
+const sharedLinks = [
+  { name: 'Уведомления', href: '/app/notifications', icon: Bell },
+  { name: 'Настройки', href: '/app/settings', icon: Settings },
+] as const;
+
+export function AppSidebar({ pathname, user, activeMode, onNavigate }: AppSidebarProps) {
+  const ownerAvailable = user.roles.includes('project_owner') || Boolean(user.ownerAccount);
+  const links = activeMode === 'investor' ? investorLinks : ownerLinks;
+  const initials = user.name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('') || 'ЦП';
+
+  const nextMode = activeMode === 'investor' ? 'owner' : 'investor';
 
   return (
-    <div className="flex h-full flex-col border-r border-cabinet-border bg-gradient-to-b from-cabinet-panel to-cabinet-surface text-cabinet-ink">
-      <div className="border-b border-cabinet-border px-5 py-5">
-        <CPFBrand
-          href="/app"
-          onClick={onNavigate}
-          theme="light"
-          className="transition-[opacity,transform] hover:opacity-100"
-        />
+    <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r border-brand-primary bg-brand-primary md:flex">
+      <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-6">
+        <Link href="/app" className="flex items-center gap-2" onClick={onNavigate}>
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-accent text-lg font-bold text-white">
+            Ц
+          </div>
+          <span className="text-xl font-bold tracking-tight text-white">ЦПФ</span>
+        </Link>
       </div>
 
-      <div className="border-b border-cabinet-border px-5 py-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cabinet-muted-ink">Режим работы</p>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <Link
-            href={getModeRootHref('investor')}
-            onClick={onNavigate}
-            className={cn(
-              'inline-flex h-11 items-center justify-center rounded-xl border px-3 text-sm font-semibold transition-[background-color,border-color,color]',
-              activeMode === 'investor'
-                ? 'border-cabinet-accent-strong bg-cabinet-accent-strong text-white'
-                : 'border-cabinet-border bg-cabinet-surface text-cabinet-ink hover:border-cabinet-accent/45 hover:bg-cabinet-panel',
-            )}
-          >
-            Investor
-          </Link>
-          <Link
-            href={ownerAvailable ? getModeRootHref('owner') : '/app/settings'}
-            onClick={onNavigate}
-            className={cn(
-              'inline-flex h-11 items-center justify-center rounded-xl border px-3 text-sm font-semibold transition-[background-color,border-color,color]',
-              activeMode === 'owner'
-                ? 'border-cabinet-accent-strong bg-cabinet-accent-strong text-white'
-                : 'border-cabinet-border bg-cabinet-surface text-cabinet-ink hover:border-cabinet-accent/45 hover:bg-cabinet-panel',
-              !ownerAvailable && 'text-cabinet-muted-ink',
-            )}
-          >
-            Owner
-          </Link>
+      <nav className="flex-1 overflow-y-auto space-y-1 px-3 py-4">
+        <div className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+          {activeMode === 'investor' ? 'Кабинет инвестора' : 'Кабинет владельца'}
         </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-5">
-        <SidebarSection
-          label={activeMode === 'owner' ? 'Owner Workspace' : 'Investor Workspace'}
-          items={currentNav}
-          pathname={pathname}
-          onNavigate={onNavigate}
-          inverted
-        />
-        <SidebarSection
-          label="Shared"
-          items={sharedNavigation}
-          pathname={pathname}
-          onNavigate={onNavigate}
-          inverted
-          className="mt-6"
-        />
-      </div>
-
-      <div className="border-t border-cabinet-border px-4 py-4">
-        <div className="rounded-xl border border-cabinet-border bg-cabinet-surface p-4">
-          <p className="truncate text-sm font-semibold">{user.name}</p>
-          <p className="mt-1 truncate text-xs text-cabinet-muted-ink">{user.email}</p>
-          <p className="mt-2 text-xs text-cabinet-muted-ink">
-            {ownerAvailable ? 'Доступны режимы investor и owner' : 'Доступен режим investor'}
-          </p>
-        </div>
-
-        <div className="mt-3 grid gap-2">
-          <UtilityLink href="/app/settings" icon={Settings2} label="Настройки аккаунта" onNavigate={onNavigate} />
-          <UtilityLink href="/documents" icon={HelpCircle} label="Юридические документы" onNavigate={onNavigate} />
-          <UtilityLink href="/contacts" icon={LifeBuoy} label="Поддержка" onNavigate={onNavigate} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SidebarSection({
-  label,
-  items,
-  pathname,
-  onNavigate,
-  inverted = false,
-  className,
-}: {
-  label: string;
-  items: typeof investorNavigation;
-  pathname: string;
-  onNavigate?: () => void;
-  inverted?: boolean;
-  className?: string;
-}) {
-  return (
-    <section className={className}>
-      <p className={cn(
-        'px-2 text-[11px] font-semibold uppercase tracking-[0.18em]',
-        inverted ? 'text-cabinet-muted-ink' : 'text-cabinet-muted-ink',
-      )}>
-        {label}
-      </p>
-      <div className="mt-3 space-y-1.5">
-        {items.map((item) => {
-          const isActive = isNavItemActive(pathname, item);
-          const Icon = item.icon;
+        {links.map((link) => {
+          const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+          const Icon = link.icon;
 
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={link.href}
+              href={link.href}
               onClick={onNavigate}
               className={cn(
-                'group flex items-center gap-3 rounded-xl border px-3 py-3 transition-[background-color,border-color,color,transform] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-cabinet-accent/20',
-                isActive
-                  ? 'border-cabinet-accent/40 bg-cabinet-accent-soft text-cabinet-accent-strong'
-                  : 'border-transparent text-cabinet-ink hover:-translate-y-0.5 hover:border-cabinet-border hover:bg-cabinet-surface',
+                'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+                isActive ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white',
               )}
             >
-              <div className={cn(
-                'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-[background-color,color,border-color]',
-                isActive
-                  ? 'border-cabinet-accent/30 bg-white'
-                  : 'border-cabinet-border bg-cabinet-surface text-cabinet-muted-ink group-hover:border-cabinet-accent/30 group-hover:text-cabinet-accent-strong',
-              )}>
-                <Icon className="h-4 w-4" aria-hidden="true" />
-              </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold">{item.label}</p>
-              </div>
+              <Icon className={cn('h-4 w-4', isActive ? 'text-brand-accent' : 'text-slate-400')} aria-hidden="true" />
+              {link.name}
             </Link>
           );
         })}
-      </div>
-    </section>
-  );
-}
 
-function UtilityLink({
-  href,
-  icon: Icon,
-  label,
-  onNavigate,
-}: {
-  href: string;
-  icon: typeof Settings2;
-  label: string;
-  onNavigate?: () => void;
-}) {
-  return (
-    <Button
-      asChild
-      variant="ghost"
-      className="h-11 justify-start rounded-xl border border-cabinet-border bg-cabinet-surface px-3 text-cabinet-ink hover:bg-cabinet-panel hover:text-cabinet-ink"
-    >
-      <Link href={href} onClick={onNavigate}>
-        <Icon className="h-4 w-4" aria-hidden="true" />
-        {label}
-      </Link>
-    </Button>
+        <div className="mb-2 mt-8 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Общее
+        </div>
+        {sharedLinks.map((link) => {
+          const isActive = pathname === link.href;
+          const Icon = link.icon;
+
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={onNavigate}
+              className={cn(
+                'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+                isActive ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white',
+              )}
+            >
+              <Icon className={cn('h-4 w-4', isActive ? 'text-brand-accent' : 'text-slate-400')} aria-hidden="true" />
+              {link.name}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div className="space-y-4 border-t border-white/10 p-4">
+        <Link
+          href={ownerAvailable || nextMode === 'investor' ? getModeRootHref(nextMode) : '/app/settings'}
+          onClick={onNavigate}
+          className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+        >
+          <span className="flex items-center gap-2">
+            <ArrowLeftRight className="h-4 w-4 text-brand-accent" aria-hidden="true" />
+            Режим: {activeMode === 'investor' ? 'Инвестор' : 'Владелец'}
+          </span>
+        </Link>
+
+        <div className="flex items-center gap-3 px-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-accent text-sm font-medium text-white">
+            {initials}
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium leading-none text-white">{user.name}</span>
+            <span className="mt-1 text-xs text-slate-400">{user.email}</span>
+          </div>
+        </div>
+      </div>
+    </aside>
   );
 }

@@ -1,18 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { AlertCircle, Building2, FolderKanban, Landmark, NotebookTabs } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOwnerWorkspaceQuery } from '@/entities/owner-account/api/hooks';
 import { useOwnerProjectsQuery } from '@/entities/owner-project/api/hooks';
 import { useOwnerRoundsQuery } from '@/entities/owner-round/api/hooks';
-import { formatDateTime, formatMoney } from '@/shared/lib/format';
+import { formatMoney } from '@/shared/lib/format';
 import { AppEmptyState } from '@/shared/ui/app-cabinet/app-empty-state';
 import { AppKpiCard } from '@/shared/ui/app-cabinet/app-kpi-card';
-import { AppPageHeader } from '@/shared/ui/app-cabinet/app-page-header';
 import { AppStatusBadge } from '@/shared/ui/app-cabinet/app-status-badge';
-import { AppSurface } from '@/shared/ui/app-cabinet/app-surface';
-import { AppTimeline } from '@/shared/ui/app-cabinet/app-timeline';
 
 export default function OwnerOverviewPageV2() {
   const workspaceQuery = useOwnerWorkspaceQuery();
@@ -20,12 +17,7 @@ export default function OwnerOverviewPageV2() {
   const roundsQuery = useOwnerRoundsQuery();
 
   if (workspaceQuery.isPending) {
-    return (
-      <AppEmptyState
-        title="Собираем owner workspace…"
-        description="Подтягиваем onboarding, проекты, раунды, замечания платформы и ближайшие выплаты."
-      />
-    );
+    return <AppEmptyState title="Кабинет загружается" description="Подтягиваем onboarding, проекты и раунды." />;
   }
 
   const workspace = workspaceQuery.data?.data;
@@ -33,138 +25,179 @@ export default function OwnerOverviewPageV2() {
   const rounds = roundsQuery.data?.data ?? [];
 
   if (!workspace) {
-    return (
-      <AppEmptyState
-        title="Owner workspace недоступен"
-        description="Для этого аккаунта не удалось загрузить профиль владельца или он ещё не активирован."
-      />
-    );
+    return <AppEmptyState title="Owner workspace недоступен" description="Не удалось загрузить профиль owner." />;
   }
 
-  const liveRounds = rounds.filter((round) => ['live', 'ready', 'settling'].includes(round.status));
-  const nextReports = projects.filter((project) => project.status !== 'archived').slice(0, 3);
+  const liveRound = rounds.find((round) => ['live', 'ready', 'settling'].includes(round.status));
+  const latestProject = projects[0];
 
   return (
-    <div className="space-y-6">
-      <AppPageHeader
-        eyebrow="Owner workspace"
-        title="Обзор owner workspace"
-        description="Первый экран owner-режима показывает готовность организации, проекты, раунды, замечания платформы и ближайшие обязательные действия."
-        status={<AppStatusBadge status={workspace.onboarding.status} />}
-        actions={(
-          <>
-            <Button asChild variant="outline" className="h-11 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
-              <Link href="/app/owner/organization">Открыть организацию</Link>
-            </Button>
-            <Button asChild className="h-11 rounded-none bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
-              <Link href={workspace.actionItems[0]?.href ?? '/app/owner/organization'}>Выполнить следующий шаг</Link>
-            </Button>
-          </>
-        )}
-      />
-
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-        <AppKpiCard label="Onboarding" value={`${workspace.onboarding.progressPercent}%`} hint="Процент готовности профиля owner." icon={Building2} tone="accent" />
-        <AppKpiCard label="Проекты" value={String(workspace.summary.projectsCount)} hint="Всего проектов в текущем контуре owner." icon={FolderKanban} />
-        <AppKpiCard label="Активные раунды" value={String(liveRounds.length)} hint="Раунды, которые уже готовы, live или находятся в расчётах." icon={Landmark} />
-        <AppKpiCard label="Объём сбора" value={formatMoney(workspace.summary.totalRaisedAmount)} hint="Сумма подтверждённого привлечения по owner-режиму." icon={NotebookTabs} />
-      </div>
-
-      <AppSurface eyebrow="Что делать сейчас" title="Ближайшие обязательные действия" description="Показываем только действия, которые двигают owner-контур вперёд: onboarding, документы, проекты, раунды и выплаты.">
-        <div className="grid gap-4 lg:grid-cols-3">
-          {workspace.actionItems.slice(0, 3).map((item) => (
-            <Link key={item.key} href={item.href} className="border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4 transition-colors hover:border-app-cabinet-accent">
-              <p className="text-sm font-semibold text-app-cabinet-text">{item.title}</p>
-              <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{item.description}</p>
-            </Link>
-          ))}
-        </div>
-      </AppSurface>
-
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <AppSurface eyebrow="Проверка и блокеры" title="Статус onboarding и замечания платформы" description="Кабинет owner не прячет блокеры: если нужны документы или доработка, это видно сразу.">
-          <div className="space-y-3">
-            {workspace.onboarding.checklist.map((item) => (
-              <div key={item.key} className="flex flex-col gap-3 border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-app-cabinet-text">{item.title}</p>
-                  <p className="mt-1 text-sm text-app-cabinet-muted">{item.description}</p>
-                </div>
-                <AppStatusBadge status={item.completed ? 'approved' : 'documents_required'} />
-              </div>
-            ))}
-            {workspace.onboarding.rejectionReason ? (
-              <div className="border border-app-cabinet-warning/20 bg-app-cabinet-warning/10 px-4 py-4">
-                <p className="text-sm font-semibold text-app-cabinet-warning">Замечание платформы</p>
-                <p className="mt-2 text-sm leading-6 text-app-cabinet-warning">{workspace.onboarding.rejectionReason}</p>
-              </div>
-            ) : null}
+    <div className="space-y-8">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-text">Обзор владельца объектов</h1>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="text-sm text-brand-text-muted">Организация:</span>
+            <span className="text-sm font-medium text-brand-text">{workspace.organization.legalName ?? workspace.account.displayName}</span>
+            <AppStatusBadge status={workspace.onboarding.status} className="ml-2" />
           </div>
-        </AppSurface>
-
-        <AppSurface eyebrow="Timeline" title="Последние изменения по owner контуру" description="Сводная история по onboarding, проектам и раундам без лишних интерфейсных шумов.">
-          <AppTimeline
-            items={[
-              {
-                id: 'workspace-status',
-                title: 'Текущий статус owner workspace',
-                description: 'Статус обновляется по мере прохождения KYB и подготовки контуров проекта.',
-                meta: workspace.onboarding.submittedAt ? formatDateTime(workspace.onboarding.submittedAt) : 'Статус актуален сейчас',
-              },
-              ...projects.slice(0, 2).map((project) => ({
-                id: `project-${project.id}`,
-                title: project.title,
-                description: `Статус проекта: ${project.status}. Откройте карточку, чтобы посмотреть документы, раунды и замечания.`,
-                meta: project.publishedAt ? formatDateTime(project.publishedAt) : 'Дата публикации не указана',
-                tone: project.status === 'published' ? 'success' as const : 'default' as const,
-              })),
-              ...rounds.slice(0, 2).map((round) => ({
-                id: `round-${round.id}`,
-                title: round.title,
-                description: `Раунд ${round.status}. Подтверждено ${formatMoney(round.currentAmount)} из ${formatMoney(round.targetAmount)}.`,
-                meta: round.reviewSubmittedAt ? formatDateTime(round.reviewSubmittedAt) : 'Без даты отправки',
-                tone: round.status === 'live' ? 'success' as const : 'default' as const,
-              })),
-            ]}
-          />
-        </AppSurface>
+        </div>
+        <div className="flex gap-3">
+          <Button asChild variant="outline" className="h-11 border-slate-200 bg-white px-6 text-brand-primary hover:bg-brand-secondary">
+            <Link href="/app/owner/projects">Новый проект</Link>
+          </Button>
+          <Button asChild className="h-11 border border-brand-primary bg-brand-primary px-6 text-white hover:bg-brand-primary/90">
+            <Link href="/app/owner/rounds">Создать раунд</Link>
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Ближайшие отчёты" title="Что скоро потребует внимания" description="Если проекты ещё не готовы к отчётности, блок остаётся пустым и честно объясняет следующий шаг.">
-          {nextReports.length ? (
-            <div className="space-y-3">
-              {nextReports.map((project) => (
-                <div key={project.id} className="border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
-                  <p className="text-sm font-semibold text-app-cabinet-text">{project.title}</p>
-                  <p className="mt-1 text-sm text-app-cabinet-muted">Следующий шаг: обновить статус проекта, документы и контур отчётности.</p>
-                </div>
-              ))}
+      <div className="rounded-3xl border border-brand-warning/30 bg-[#FFFAF0]">
+        <div className="flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
+          <div className="flex items-start gap-4">
+            <div className="mt-1 rounded-full bg-brand-warning/10 p-2 text-brand-warning">
+              <AlertCircle className="h-5 w-5" />
             </div>
-          ) : (
-            <AppEmptyState title="Отчёты пока не сформированы" description="Когда появятся проекты и публикации, здесь отобразятся ближайшие дедлайны по отчётности." />
-          )}
-        </AppSurface>
+            <div>
+              <h3 className="mb-1 text-base font-semibold text-brand-text">
+                {workspace.actionItems[0]?.title ?? 'Требуется загрузить отчетность'}
+              </h3>
+              <p className="text-sm text-brand-text-muted">
+                {workspace.actionItems[0]?.description ?? 'По активному проекту требуется следующее обязательное действие.'}
+              </p>
+            </div>
+          </div>
+          <div className="flex w-full shrink-0 items-center gap-3 sm:w-auto">
+            <Button asChild variant="ghost" className="w-full text-brand-text hover:bg-brand-secondary hover:text-brand-primary sm:w-auto">
+              <Link href={workspace.actionItems[0]?.href ?? '/app/owner/projects'}>Перейти к проекту</Link>
+            </Button>
+            <Button asChild className="w-full border border-brand-primary bg-brand-primary text-white hover:bg-brand-primary/90 sm:w-auto">
+              <Link href={workspace.actionItems[0]?.href ?? '/app/owner/projects'}>Выполнить шаг</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
 
-        <AppSurface eyebrow="Выплаты" title="Ближайшие выплаты owner" description="Сюда выводятся ближайшие распределения и ручные операции по owner-выплатам.">
-          {liveRounds.length ? (
-            <div className="space-y-3">
-              {liveRounds.slice(0, 3).map((round) => (
-                <div key={round.id} className="border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
-                  <div className="flex items-center justify-between gap-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <AppKpiCard label="Активные проекты" value={String(workspace.summary.projectsCount)} hint="В управлении" />
+        <AppKpiCard label="Открытые раунды" value={String(rounds.filter((round) => ['live', 'ready', 'settling'].includes(round.status)).length)} hint={liveRound ? `Сбор средств: ${formatMoney(liveRound.currentAmount)}` : 'Нет открытых раундов'} />
+        <AppKpiCard label="Привлечено средств" value={formatMoney(workspace.summary.totalRaisedAmount)} hint="За все время" />
+        <AppKpiCard label="Ближайшая выплата" value={liveRound ? formatMoney(liveRound.currentAmount) : '0 ₽'} hint={liveRound ? 'Требует согласования' : 'Пока не запланирована'} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="space-y-8 lg:col-span-2">
+          <div className="cabinet-card shadow-none">
+            <div className="flex flex-row items-center justify-between border-b border-[#E2E8F0] p-6 pb-4">
+              <h2 className="text-lg font-semibold leading-none tracking-tight">Текущие раунды привлечения</h2>
+              <Button asChild variant="ghost" size="sm" className="text-brand-primary hover:text-brand-primary">
+                <Link href="/app/owner/rounds">Все раунды</Link>
+              </Button>
+            </div>
+            <div className="p-6">
+              {liveRound ? (
+                <>
+                  <div className="mb-4 flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-app-cabinet-text">{round.title}</p>
-                      <p className="mt-1 text-sm text-app-cabinet-muted">{round.projectTitle ?? 'Проект не указан'}</p>
+                      <h4 className="text-base font-semibold text-brand-text">{liveRound.projectTitle ?? 'Проект'} , {liveRound.title}</h4>
+                      <p className="mt-1 text-sm text-brand-text-muted">Цель: {formatMoney(liveRound.targetAmount)} • Срок: {liveRound.termMonths} мес.</p>
                     </div>
-                    <AppStatusBadge status={round.status} />
+                    <AppStatusBadge status={liveRound.status} className="bg-brand-success/10 text-brand-success" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium text-brand-text">{formatMoney(liveRound.currentAmount)} собрано</span>
+                      <span className="text-brand-text-muted">
+                        {liveRound.targetAmount > 0 ? Math.round((liveRound.currentAmount / liveRound.targetAmount) * 100) : 0}%
+                      </span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div
+                        className="h-full rounded-full bg-brand-primary"
+                        style={{ width: `${liveRound.targetAmount > 0 ? Math.min(100, (liveRound.currentAmount / liveRound.targetAmount) * 100) : 0}%` }}
+                      />
+                    </div>
+                    <div className="mt-2 flex justify-between text-xs text-brand-text-muted">
+                      <span>{liveRound.allocationCount} инвесторов</span>
+                      <span>Мин. вход: {formatMoney(liveRound.minInvestment)}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <Button asChild variant="outline" size="sm" className="w-full border-slate-200 bg-white text-brand-primary hover:bg-brand-secondary">
+                      <Link href={`/app/owner/rounds/${liveRound.slug}`}>Управление аллокациями</Link>
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <AppEmptyState title="Нет активных раундов" description="Создайте раунд привлечения для опубликованного проекта." />
+              )}
+            </div>
+          </div>
+
+          <div className="cabinet-card border-brand-error/20 shadow-none">
+            <div className="flex flex-row items-center justify-between border-b border-[#E2E8F0] p-6 pb-4">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-brand-error" />
+                <h2 className="text-lg font-semibold leading-none tracking-tight">Замечания платформы</h2>
+              </div>
+            </div>
+            <div>
+              <div className="p-4 transition-colors hover:bg-gray-50">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-brand-text">{workspace.actionItems[0]?.title ?? 'Обновить фин. модель'}</p>
+                    <p className="mt-1 text-xs text-brand-text-muted">Проект: {latestProject?.title ?? 'Проект не указан'}</p>
+                    <p className="mt-2 text-sm text-brand-text">{workspace.onboarding.rejectionReason ?? workspace.actionItems[0]?.description ?? 'Новых замечаний нет.'}</p>
+                  </div>
+                  <Button asChild variant="link" size="sm">
+                    <Link href={workspace.actionItems[0]?.href ?? '/app/owner/organization'}>Исправить</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          <div className="cabinet-card shadow-none">
+            <div className="p-6 pb-3">
+              <h2 className="text-base font-semibold">Календарь событий</h2>
+            </div>
+            <div className="space-y-4 p-6 pt-0">
+              {workspace.actionItems.slice(0, 2).map((item, index) => (
+                <div key={item.key} className="flex gap-3">
+                  <div className={`flex min-w-[48px] flex-col items-center justify-center rounded-sm p-2 ${index === 1 ? 'bg-brand-warning/10' : 'bg-gray-50'}`}>
+                    <span className={`text-xs ${index === 1 ? 'text-brand-warning' : 'text-brand-text-muted'}`}>Шаг</span>
+                    <span className={`text-sm font-bold ${index === 1 ? 'text-brand-warning' : 'text-brand-text'}`}>{index + 1}</span>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <p className="text-sm font-medium text-brand-text">{item.title}</p>
+                    <p className="text-xs text-brand-text-muted">{item.description}</p>
                   </div>
                 </div>
               ))}
             </div>
-          ) : (
-            <AppEmptyState title="Активных выплат пока нет" description="Когда появятся live-раунды и распределения, здесь будет короткая сводка по ближайшим выплатам." />
-          )}
-        </AppSurface>
+          </div>
+
+          <div className="rounded-3xl border border-transparent bg-brand-secondary/30">
+            <div className="space-y-2 p-4">
+              <Button asChild variant="ghost" className="w-full justify-start text-brand-text hover:text-brand-primary">
+                <Link href="/app/owner/allocations">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Реестр инвесторов
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" className="w-full justify-start text-brand-text hover:text-brand-primary">
+                <Link href="/app/owner/organization">
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Документы организации
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

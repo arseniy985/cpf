@@ -21,27 +21,25 @@ export function AppPageHeader({
   className,
 }: AppPageHeaderProps) {
   return (
-    <header className={cn('rounded-2xl border border-app-cabinet-border bg-app-cabinet-surface px-5 py-5 sm:px-7 sm:py-7', className)}>
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-app-cabinet-muted">
-              {eyebrow}
-            </p>
-            {status}
-          </div>
-          <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-app-cabinet-text sm:text-[2.1rem]">
-            {title}
-          </h1>
-          {description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-app-cabinet-muted">{description}</p> : null}
+    <header className={cn('flex flex-col justify-between gap-4 sm:flex-row sm:items-center', className)}>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-text-muted">
+            {eyebrow}
+          </p>
+          {status}
         </div>
-        {actions ? (
-          <div className="flex shrink-0 flex-wrap items-center gap-2">
-            {actions}
-          </div>
-        ) : null}
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-brand-text">
+          {title}
+        </h1>
+        {description ? <p className="mt-1 text-sm text-brand-text-muted">{description}</p> : null}
+        {summary ? <div className="mt-3 flex flex-wrap gap-2">{summary}</div> : null}
       </div>
-      {summary ? <div className="mt-4 flex flex-wrap gap-2">{summary}</div> : null}
+      {actions ? (
+        <div className="flex shrink-0 flex-wrap gap-3">
+          {actions}
+        </div>
+      ) : null}
     </header>
   );
 }

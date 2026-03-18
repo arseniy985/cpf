@@ -46,11 +46,11 @@ export default function OwnerRoundsPageV2() {
         actions={(
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
             <DialogTrigger asChild>
-              <Button className="h-11 rounded-none bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
+              <Button className="h-11 rounded-full bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
                 Новый раунд
               </Button>
             </DialogTrigger>
-            <DialogContent className="rounded-none border-app-cabinet-border p-0 sm:max-w-3xl">
+            <DialogContent className="rounded-[1.75rem] border-app-cabinet-border p-0 sm:max-w-3xl">
               <div className="bg-app-cabinet-surface p-6">
                 <DialogHeader>
                   <DialogTitle className="font-sans text-2xl font-semibold text-app-cabinet-text">Новый раунд</DialogTitle>
@@ -86,7 +86,7 @@ export default function OwnerRoundsPageV2() {
                 </div>
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button asChild className="h-10 rounded-none bg-app-cabinet-primary px-3 text-white hover:bg-app-cabinet-primary-strong">
+                <Button asChild className="h-10 rounded-full bg-app-cabinet-primary px-3 text-white hover:bg-app-cabinet-primary-strong">
                   <Link href={`/app/owner/rounds/${round.slug}`}>Открыть раунд</Link>
                 </Button>
               </div>

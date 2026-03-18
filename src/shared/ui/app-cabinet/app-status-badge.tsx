@@ -12,7 +12,7 @@ export function AppStatusBadge({ status, className }: AppStatusBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]',
+        'inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors',
         getStatusToneClasses(meta.tone),
         className,
       )}

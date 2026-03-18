@@ -49,7 +49,7 @@ export function AppShell({ children }: AppShellProps) {
   if (session.isError) {
     return (
       <main id="main-content" className="min-h-screen bg-cabinet-canvas px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-4 border border-cabinet-border bg-cabinet-surface p-6">
+        <div className="cabinet-card mx-auto flex max-w-[1440px] flex-col gap-4 p-6">
           <div className="space-y-2">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-cabinet-muted-ink">Ошибка сессии</p>
             <h1 className="text-2xl font-semibold text-cabinet-ink">Не удалось загрузить кабинет</h1>
@@ -59,13 +59,13 @@ export function AppShell({ children }: AppShellProps) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button type="button" className="rounded-none" onClick={() => router.refresh()}>
+            <Button type="button" className="h-11 rounded-full px-5" onClick={() => router.refresh()}>
               Обновить страницу
             </Button>
             <Button
               type="button"
               variant="outline"
-              className="rounded-none"
+              className="h-11 rounded-full border-cabinet-border bg-cabinet-surface px-5 text-cabinet-ink"
               onClick={async () => {
                 await session.logout();
                 router.replace('/login');
@@ -84,16 +84,16 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   return (
-    <div className="min-h-screen bg-cabinet-canvas text-cabinet-ink">
-      <div className="flex min-h-screen">
-        <aside className="hidden w-[320px] shrink-0 lg:block">
+    <div data-cpf-app-shell="true" className="min-h-screen bg-cabinet-canvas text-cabinet-ink">
+      <div className="min-h-screen bg-brand-bg md:pl-64">
+        <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 shrink-0 md:block">
           <AppSidebar pathname={pathname} user={session.user} activeMode={activeMode} />
         </aside>
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent
             side="left"
-            className="w-[92vw] max-w-[340px] border-r-0 bg-cabinet-primary p-0 text-white"
+            className="w-[92vw] max-w-64 border-r-0 bg-cabinet-primary p-0 text-white"
           >
             <AppSidebar
               pathname={pathname}
@@ -104,7 +104,7 @@ export function AppShell({ children }: AppShellProps) {
           </SheetContent>
         </Sheet>
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-h-screen min-w-0 flex-col">
           <AppTopbar
             meta={meta}
             activeMode={activeMode}
@@ -112,8 +112,8 @@ export function AppShell({ children }: AppShellProps) {
             onOpenMenu={() => setMobileOpen(true)}
             onLogout={session.logout}
           />
-          <main id="main-content" className="flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
-            <div className="mx-auto flex max-w-[1440px] flex-col gap-6">{children}</div>
+          <main id="main-content" className="flex-1">
+            <div className="mx-auto flex max-w-[1440px] flex-col gap-6 p-4 sm:p-6 lg:p-8">{children}</div>
           </main>
         </div>
       </div>

@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiClientError, fetchJson } from '@/shared/api/http/client';
 
 const tokenStorageMocks = vi.hoisted(() => ({
-  getClientAuthToken: vi.fn<() => string | null>(() => null),
-  hasAuthSession: vi.fn<() => boolean>(() => false),
+  getClientAuthToken: vi.fn((): string | null => null),
+  hasAuthSession: vi.fn((): boolean => false),
 }));
 
 vi.mock('@/shared/lib/auth/token-storage', () => ({
@@ -59,9 +59,9 @@ describe('fetchJson auth transport', () => {
   });
 
   it('throws when an authenticated request has no token and no session marker', async () => {
-    await expect(fetchJson('/api/v1/auth/me', { requireAuth: true })).rejects.toMatchObject<ApiClientError>({
+    await expect(fetchJson('/api/v1/auth/me', { requireAuth: true })).rejects.toMatchObject({
       status: 401,
       message: 'Authentication required.',
-    });
+    } satisfies Partial<ApiClientError>);
   });
 });

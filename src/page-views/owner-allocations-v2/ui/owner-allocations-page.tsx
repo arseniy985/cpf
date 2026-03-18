@@ -29,14 +29,14 @@ export default function OwnerAllocationsPageV2() {
         description="Страница собирает заявки инвесторов, подтверждённые аллокации, отмены и историю обработки по выбранному раунду."
       />
 
-      <AppSurface eyebrow="Выбор раунда" title="Контекст аллокаций" description="Так как аллокации жёстко привязаны к раунду, список переключается по выбранному раунду.">
+      <AppSurface eyebrow="Выбор раунда" title="Контекст аллокаций" description="Так как аллокации жёстко привязаны к раунду, список переключается по выбранному раунду." tone="secondary">
         {rounds.length ? (
           <div className="max-w-md">
             <Select value={effectiveSlug ?? ''} onValueChange={setSelectedRoundSlug}>
-              <SelectTrigger className="rounded-none border-app-cabinet-border shadow-none">
+              <SelectTrigger className="rounded-2xl border-app-cabinet-border shadow-none">
                 <SelectValue placeholder="Выберите раунд…" />
               </SelectTrigger>
-              <SelectContent className="rounded-none border-app-cabinet-border">
+              <SelectContent className="rounded-2xl border-app-cabinet-border">
                 {rounds.map((round) => (
                   <SelectItem key={round.id} value={round.slug}>
                     {round.title}

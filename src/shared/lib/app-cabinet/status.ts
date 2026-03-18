@@ -72,14 +72,14 @@ export function getStatusMeta(status: string | null | undefined): StatusMeta {
 export function getStatusToneClasses(tone: StatusTone) {
   switch (tone) {
     case 'success':
-      return 'border-app-cabinet-success/20 bg-app-cabinet-success/10 text-app-cabinet-success';
+      return 'border-transparent bg-brand-success/10 text-brand-success';
     case 'warning':
-      return 'border-app-cabinet-warning/25 bg-app-cabinet-warning/10 text-app-cabinet-warning';
+      return 'border-transparent bg-brand-warning/10 text-brand-warning';
     case 'danger':
-      return 'border-app-cabinet-danger/20 bg-app-cabinet-danger/10 text-app-cabinet-danger';
+      return 'border-transparent bg-brand-error/10 text-brand-error';
     case 'info':
-      return 'border-app-cabinet-accent/25 bg-app-cabinet-accent/10 text-app-cabinet-primary';
+      return 'border-transparent bg-brand-secondary text-brand-primary';
     default:
-      return 'border-app-cabinet-border bg-app-cabinet-secondary text-app-cabinet-text';
+      return 'border-slate-200 text-brand-text';
   }
 }

@@ -1,17 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
-import { BriefcaseBusiness, Clock3, FileStack, Landmark, ShieldCheck, WalletCards } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDashboardQuery, useNotificationsQuery } from '@/entities/cabinet/api/hooks';
 import { useSession } from '@/features/session/model/use-session';
-import { formatDate, formatDateTime, formatMoney } from '@/shared/lib/format';
+import { formatDate, formatDateTime, formatMoney, formatPercent } from '@/shared/lib/format';
 import { AppEmptyState } from '@/shared/ui/app-cabinet/app-empty-state';
 import { AppKpiCard } from '@/shared/ui/app-cabinet/app-kpi-card';
-import { AppPageHeader } from '@/shared/ui/app-cabinet/app-page-header';
 import { AppStatusBadge } from '@/shared/ui/app-cabinet/app-status-badge';
-import { AppSurface } from '@/shared/ui/app-cabinet/app-surface';
 
 export default function InvestorOverviewPage() {
   const session = useSession();
@@ -19,209 +16,222 @@ export default function InvestorOverviewPage() {
   const notificationsQuery = useNotificationsQuery();
 
   if (dashboardQuery.isPending) {
-    return (
-      <AppEmptyState
-        title="Собираем investor workspace…"
-        description="Подтягиваем баланс, статусы KYC, заявки, уведомления и ближайшие выплаты."
-      />
-    );
+    return <AppEmptyState title="Кабинет загружается" description="Подтягиваем баланс, заявки и уведомления." />;
   }
 
   const dashboard = dashboardQuery.data?.data;
   const notifications = notificationsQuery.data?.data ?? [];
 
-  if (!dashboard || !session.user) {
-    return (
-      <AppEmptyState
-        title="Investor workspace недоступен"
-        description="Не удалось загрузить основной набор данных для инвестора."
-      />
-    );
+  if (!dashboard) {
+    return <AppEmptyState title="Investor workspace недоступен" description="Не удалось загрузить основной набор данных для инвестора." />;
   }
 
-  const chartData = dashboard.distributionLines
-    .slice(0, 6)
-    .map((line, index) => ({
-      label: `#${index + 1}`,
-      amount: line.amount,
-    }));
-  const nextSteps = [
-    session.user.kycStatus === 'approved'
-      ? null
-      : {
-          href: '/app/investor/verification',
-          title: 'Завершить KYC',
-          description: 'Без подтверждённого профиля часть финансовых операций будет заблокирована.',
-        },
-    dashboard.summary.pendingManualDeposits > 0
-      ? {
-          href: '/app/investor/wallet',
-          title: 'Проверить заявку на пополнение',
-          description: 'Пополнение работает только через заявку. Убедитесь, что приложены все материалы.',
-        }
-      : {
-          href: '/app/investor/wallet',
-          title: 'Создать заявку на пополнение',
-          description: 'Если нужен новый баланс под сделку, отправьте заявку на пополнение заранее.',
-        },
-    dashboard.summary.applicationsCount > 0
-      ? {
-          href: '/app/investor/portfolio',
-          title: 'Открыть активные заявки',
-          description: 'Проверьте статус заявок и документы по текущим позициям.',
-        }
-      : {
-          href: '/app/investor/portfolio',
-          title: 'Создать первую заявку',
-          description: 'Если портфель пуст, начните с инвестиционной заявки по доступному проекту.',
-        },
-  ].filter((step): step is { href: string; title: string; description: string } => Boolean(step));
+  const kycPending = session.user?.kycStatus !== 'approved';
+  const operations = [
+    ...dashboard.manualDepositRequests.slice(0, 1).map((item) => ({
+      id: `deposit-${item.id}`,
+      title: 'Пополнение кошелька',
+      project: item.bankName,
+      amount: `+ ${formatMoney(item.amount, item.currency)}`,
+      status: item.status === 'credited' ? 'completed' : 'pending',
+      date: formatDateTime(item.createdAt),
+    })),
+    ...dashboard.applications.slice(0, 2).map((item) => ({
+      id: `application-${item.id}`,
+      title: 'Заявка на инвестицию',
+      project: item.project.title,
+      amount: `- ${formatMoney(item.amount)}`,
+      status: item.status === 'approved' || item.status === 'confirmed' ? 'completed' : 'pending',
+      date: formatDateTime(item.createdAt),
+    })),
+    ...dashboard.distributionLines.slice(0, 1).map((item) => ({
+      id: `distribution-${item.id}`,
+      title: 'Выплата дохода',
+      project: item.allocation.round.projectTitle,
+      amount: `+ ${formatMoney(item.amount)}`,
+      status: item.paidAt ? 'completed' : 'pending',
+      date: item.paidAt ? formatDate(item.paidAt) : 'Ожидается',
+    })),
+  ].slice(0, 3);
+
+  const activeInvestments = dashboard.allocations.slice(0, 2);
+  const nextDocuments = dashboard.applications
+    .flatMap((item) => item.project.documents.slice(0, 1).map((document) => ({
+      id: `${item.id}-${document.id}`,
+      title: document.title,
+      subtitle: item.project.title,
+      href: '/app/investor/documents',
+    })))
+    .slice(0, 2);
 
   return (
-    <div className="space-y-6">
-      <AppPageHeader
-        eyebrow="Investor workspace"
-        title="Обзор инвестора"
-        description="Первый экран отвечает на три вопроса: сколько денег доступно, что заблокировано и какой шаг нужно сделать следующим."
-        status={<AppStatusBadge status={session.user.kycStatus ?? 'draft'} />}
-        actions={(
-          <>
-            <Button asChild variant="outline" className="h-11 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
-              <Link href="/app/investor/documents">Открыть документы</Link>
-            </Button>
-            <Button asChild className="h-11 rounded-none bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
-              <Link href={nextSteps[0]?.href ?? '/app/investor/wallet'}>Выполнить следующий шаг</Link>
-            </Button>
-          </>
-        )}
-        summary={(
-          <>
-            <AppStatusBadge status={session.user.emailVerifiedAt ? 'email verified' : 'email not verified'} />
-            <AppStatusBadge status={dashboard.summary.pendingManualDeposits > 0 ? 'awaiting_transfer' : 'approved'} />
-            <AppStatusBadge status={dashboard.summary.pendingWithdrawals > 0 ? 'pending_review' : 'approved'} />
-          </>
-        )}
-      />
-
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-        <AppKpiCard label="Баланс" value={formatMoney(dashboard.summary.walletBalance)} hint="Доступно под новые заявки и подтверждения участия." icon={WalletCards} tone="accent" />
-        <AppKpiCard label="Активные заявки" value={String(dashboard.summary.applicationsCount)} hint="Черновики, ожидание проверки и подтверждения." icon={BriefcaseBusiness} />
-        <AppKpiCard label="Подтверждённые инвестиции" value={formatMoney(dashboard.summary.approvedAmount)} hint="Сумма портфеля, уже закреплённая за проектами." icon={ShieldCheck} tone="success" />
-        <AppKpiCard label="Ожидаемые выплаты" value={formatMoney(dashboard.distributionLines.filter((line) => !line.paidAt).reduce((sum, line) => sum + line.amount, 0))} hint="Начисления, которые ещё не перешли в фактическую выплату." icon={Landmark} />
-      </div>
-
-      <AppSurface eyebrow="Что делать сейчас" title="Приоритетные действия" description="Показываем только ближайшие обязательные шаги без второстепенных сценариев.">
-        <div className="grid gap-4 lg:grid-cols-3">
-          {nextSteps.map((step) => (
-            <Link key={step.title} href={step.href} className="border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4 transition-colors hover:border-app-cabinet-accent">
-              <p className="text-sm font-semibold text-app-cabinet-text">{step.title}</p>
-              <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{step.description}</p>
-            </Link>
-          ))}
+    <div className="space-y-8">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-text">Обзор инвестора</h1>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="text-sm text-brand-text-muted">Статус профиля:</span>
+            <AppStatusBadge status={kycPending ? 'pending_review' : 'approved'} className={kycPending ? 'bg-brand-warning/10 text-brand-warning' : 'bg-brand-success/10 text-brand-success'} />
+          </div>
         </div>
-      </AppSurface>
-
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <AppSurface eyebrow="Портфель" title="Мини-виджет портфеля" description="Последние заявки и инвестиции, чтобы без перехода видеть, где сейчас находится капитал.">
-          {dashboard.applications.length ? (
-            <div className="space-y-3">
-              {dashboard.applications.slice(0, 4).map((application) => (
-                <div key={application.id} className="border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-app-cabinet-text">{application.project.title}</p>
-                      <p className="mt-1 text-sm text-app-cabinet-muted">{application.round?.title ?? 'Раунд не указан'}</p>
-                      <div className="mt-3 flex flex-wrap gap-3 text-xs uppercase tracking-[0.16em] text-app-cabinet-muted">
-                        <span>{formatDateTime(application.createdAt)}</span>
-                        <span>{formatMoney(application.amount)}</span>
-                      </div>
-                    </div>
-                    <AppStatusBadge status={application.status} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <AppEmptyState title="Портфель пока пуст" description="Создайте первую инвестиционную заявку, чтобы портфель начал заполняться." />
-          )}
-        </AppSurface>
-
-        <AppSurface eyebrow="Выплаты" title="Мини-виджет выплат" description="Компактный вид по начислениям и ближайшим поступлениям.">
-          {chartData.length ? (
-            <div className="space-y-4">
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}>
-                    <CartesianGrid stroke="#D5E1EC" vertical={false} />
-                    <XAxis dataKey="label" tick={{ fill: '#5B6B7C', fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <Tooltip formatter={(value) => formatMoney(Number(value ?? 0))} />
-                    <Area type="monotone" dataKey="amount" stroke="#0E2A47" fill="#5FAEE3" fillOpacity={0.18} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="grid gap-3">
-                {dashboard.distributionLines.slice(0, 3).map((line) => (
-                  <div key={line.id} className="flex items-start justify-between gap-3 border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
-                    <div>
-                      <p className="text-sm font-semibold text-app-cabinet-text">{line.allocation.round.projectTitle}</p>
-                      <p className="mt-1 text-sm text-app-cabinet-muted">{line.allocation.round.title}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-app-cabinet-text">{formatMoney(line.amount)}</p>
-                      <p className="mt-1 text-xs uppercase tracking-[0.16em] text-app-cabinet-muted">{line.paidAt ? formatDate(line.paidAt) : 'Ожидается'}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <AppEmptyState title="Начислений пока нет" description="Когда проект перейдёт к выплатам, здесь появятся ожидаемые и завершённые начисления." />
-          )}
-        </AppSurface>
+        <div className="flex gap-3">
+          <Button asChild variant="outline" className="h-11 border-slate-200 bg-white px-6 text-brand-primary hover:bg-brand-secondary">
+            <Link href="/app/investor/wallet">Пополнить кошелек</Link>
+          </Button>
+          <Button asChild className="h-11 border border-brand-primary bg-brand-primary px-6 text-white hover:bg-brand-primary/90">
+            <Link href="/projects">Выбрать проект</Link>
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Операции" title="Последние операции" description="Последние движения средств по кошельку и подтверждения участия.">
-          {dashboard.walletTransactions.length ? (
-            <div className="space-y-3">
-              {dashboard.walletTransactions.slice(0, 4).map((entry) => (
-                <div key={entry.id} className="flex items-start justify-between gap-4 border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
-                  <div>
-                    <p className="text-sm font-semibold text-app-cabinet-text">{entry.description ?? entry.type}</p>
-                    <p className="mt-1 text-sm text-app-cabinet-muted">{formatDateTime(entry.occurredAt)}</p>
+      <div className="rounded-3xl border border-brand-warning/30 bg-[#FFFAF0]">
+        <div className="flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
+          <div className="flex items-start gap-4">
+            <div className="mt-1 rounded-full bg-brand-warning/10 p-2 text-brand-warning">
+              <Clock className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="mb-1 text-base font-semibold text-brand-text">
+                {kycPending ? 'Завершите проверку профиля (KYC)' : 'Следующий шаг по кабинету'}
+              </h3>
+              <p className="text-sm text-brand-text-muted">
+                {kycPending
+                  ? 'Для инвестирования в проекты платформы необходимо заполнить анкету и загрузить скан паспорта. Это требование законодательства.'
+                  : 'Проверьте активные заявки, документы и историю выплат по текущему портфелю.'}
+              </p>
+            </div>
+          </div>
+          <div className="flex w-full shrink-0 items-center gap-3 sm:w-auto">
+            <Button asChild variant="ghost" className="w-full text-brand-text hover:bg-brand-secondary hover:text-brand-primary sm:w-auto">
+              <Link href={kycPending ? '/app/investor/verification' : '/app/notifications'}>Подробнее</Link>
+            </Button>
+            <Button asChild className="w-full gap-2 border border-brand-primary bg-brand-primary text-white hover:bg-brand-primary/90 sm:w-auto">
+              <Link href={kycPending ? '/app/investor/verification' : '/app/investor/portfolio'}>
+                {kycPending ? 'Пройти проверку' : 'Открыть портфель'}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <AppKpiCard label="Доступный баланс" value={formatMoney(dashboard.summary.walletBalance)} hint="В кошельке платформы" />
+        <AppKpiCard label="Активные заявки" value={String(dashboard.summary.applicationsCount)} hint={`На сумму ${formatMoney(dashboard.summary.pendingAmount)}`} />
+        <AppKpiCard label="В инвестициях" value={formatMoney(dashboard.summary.approvedAmount)} hint={`В ${dashboard.summary.allocationsCount} активных проектах`} />
+        <AppKpiCard label="Ожидаемые выплаты" value={formatMoney(dashboard.summary.distributionsAmount)} hint={dashboard.distributionLines[0]?.paidAt ? `Ближайшая: ${formatDate(dashboard.distributionLines[0].paidAt)}` : 'Ближайшая выплата ожидается'} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="space-y-8 lg:col-span-2">
+          <div className="cabinet-card shadow-none">
+            <div className="flex flex-row items-center justify-between border-b border-[#E2E8F0] p-6 pb-4">
+              <h2 className="text-lg font-semibold leading-none tracking-tight">Последние операции</h2>
+              <Button asChild variant="ghost" size="sm" className="text-brand-primary hover:text-brand-primary">
+                <Link href="/app/investor/wallet">Все операции</Link>
+              </Button>
+            </div>
+            <div className="divide-y divide-[#E2E8F0]">
+              {operations.length ? operations.map((op) => (
+                <div key={op.id} className="flex items-center justify-between p-4 transition-colors hover:bg-gray-50">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5">
+                      {op.status === 'completed' ? (
+                        <CheckCircle2 className="h-5 w-5 text-brand-success" />
+                      ) : (
+                        <Clock className="h-5 w-5 text-brand-warning" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-brand-text">{op.title}</p>
+                      <p className="text-xs text-brand-text-muted">{op.project}</p>
+                    </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-app-cabinet-text">{entry.direction === 'credit' ? '+' : '-'}{formatMoney(entry.amount)}</p>
-                    <AppStatusBadge status={entry.status} className="mt-2" />
+                    <p className="text-sm font-medium text-brand-text">{op.amount}</p>
+                    <p className="text-xs text-brand-text-muted">{op.date}</p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="p-6">
+                  <AppEmptyState title="Операций пока нет" description="После первой заявки здесь появятся операции по кошельку и выплатам." />
+                </div>
+              )}
             </div>
-          ) : (
-            <AppEmptyState title="Операций пока нет" description="После первой заявки на пополнение, подтверждения участия или вывода здесь появится история." />
-          )}
-        </AppSurface>
+          </div>
 
-        <AppSurface eyebrow="Уведомления" title="Последние уведомления" description="Ближайшие изменения по заявкам, проверке профиля и движениям средств.">
-          {notifications.length ? (
-            <div className="space-y-3">
-              {notifications.slice(0, 4).map((notification) => (
-                <div key={notification.id} className="border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-sm font-semibold text-app-cabinet-text">{notification.title}</p>
-                      <p className="mt-1 text-sm leading-6 text-app-cabinet-muted">{notification.body}</p>
-                      <p className="mt-2 text-xs uppercase tracking-[0.16em] text-app-cabinet-muted">{formatDateTime(notification.createdAt)}</p>
-                    </div>
-                    {!notification.isRead ? <Clock3 className="mt-1 h-4 w-4 text-app-cabinet-warning" aria-hidden="true" /> : null}
-                  </div>
-                </div>
-              ))}
+          <div className="cabinet-card shadow-none">
+            <div className="flex flex-row items-center justify-between border-b border-[#E2E8F0] p-6 pb-4">
+              <h2 className="text-lg font-semibold leading-none tracking-tight">Активные инвестиции</h2>
+              <Button asChild variant="ghost" size="sm" className="text-brand-primary hover:text-brand-primary">
+                <Link href="/app/investor/portfolio">Весь портфель</Link>
+              </Button>
             </div>
-          ) : (
-            <AppEmptyState title="Уведомлений пока нет" description="Когда появятся изменения по операциям, заявкам или проверке, они окажутся здесь." />
-          )}
-        </AppSurface>
+            <div className="divide-y divide-[#E2E8F0]">
+              {activeInvestments.length ? activeInvestments.map((item) => (
+                <Link key={item.id} href="/app/investor/portfolio" className="flex cursor-pointer items-center justify-between p-4 transition-colors hover:bg-gray-50">
+                  <div>
+                    <p className="text-sm font-medium text-brand-text">{item.project.title}</p>
+                    <div className="mt-1 flex items-center gap-3">
+                      <span className="text-xs text-brand-text-muted">{formatPercent(item.project.targetYield)} годовых</span>
+                      <span className="text-xs text-brand-text-muted">•</span>
+                      <span className="text-xs text-brand-text-muted">до {item.round?.title ?? `${item.project.termMonths} мес.`}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 text-right">
+                    <p className="text-sm font-medium text-brand-text">{formatMoney(item.amount)}</p>
+                    <ArrowRight className="h-4 w-4 text-brand-text-muted" />
+                  </div>
+                </Link>
+              )) : (
+                <div className="p-6">
+                  <AppEmptyState title="Активных инвестиций пока нет" description="После подтверждения аллокаций здесь появятся активные позиции." />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          <div className="rounded-3xl border border-transparent bg-brand-secondary/30">
+            <div className="p-6 pb-3">
+              <h2 className="text-base font-semibold">Уведомления</h2>
+            </div>
+            <div className="space-y-4 p-6 pt-0">
+              {notifications.length ? notifications.slice(0, 2).map((notification) => (
+                <div key={notification.id} className="space-y-1">
+                  <p className="text-sm font-medium text-brand-text">{notification.title}</p>
+                  <p className="text-xs text-brand-text-muted">{notification.body}</p>
+                  <p className="mt-1 text-[10px] text-brand-text-muted">{formatDateTime(notification.createdAt)}</p>
+                </div>
+              )) : (
+                <p className="text-sm text-brand-text-muted">Нет новых уведомлений.</p>
+              )}
+              <Button asChild variant="link" className="h-auto px-0 text-xs">
+                <Link href="/app/notifications">Все уведомления</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="cabinet-card shadow-none">
+            <div className="p-6 pb-3">
+              <h2 className="text-base font-semibold">Новые документы</h2>
+            </div>
+            <div className="space-y-3 p-6 pt-0">
+              {nextDocuments.length ? nextDocuments.map((document) => (
+                <Link key={document.id} href={document.href} className="flex items-start gap-3">
+                  <FileText className="mt-0.5 h-4 w-4 text-brand-text-muted" />
+                  <div>
+                    <p className="cursor-pointer text-sm text-brand-text transition-colors hover:text-brand-primary">{document.title}</p>
+                    <p className="text-xs text-brand-text-muted">{document.subtitle}</p>
+                  </div>
+                </Link>
+              )) : (
+                <p className="text-sm text-brand-text-muted">Новые документы пока не появились.</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

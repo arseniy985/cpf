@@ -1,5 +1,5 @@
-import AppAccountOverviewPage from '@/pages/app-account-overview/ui/app-account-overview-page';
+import { redirect } from 'next/navigation';
 
 export default function AppPage() {
-  return <AppAccountOverviewPage />;
+  redirect('/app/investor');
 }

@@ -23,30 +23,30 @@ export function AppSurface({
   return (
     <section
       className={cn(
-        'rounded-2xl border px-5 py-5 sm:px-7 sm:py-7',
+        'rounded-3xl border bg-brand-surface px-6 py-6 text-brand-text shadow-lg shadow-slate-200/40',
         tone === 'dark'
-          ? 'border-app-cabinet-primary bg-app-cabinet-dark-surface text-white'
+          ? 'border-brand-primary bg-brand-primary text-white'
           : tone === 'secondary'
-            ? 'border-app-cabinet-border bg-app-cabinet-secondary/55'
-            : 'border-app-cabinet-border bg-app-cabinet-surface',
+            ? 'border-transparent bg-brand-secondary/30 shadow-none'
+            : 'border-slate-100',
         className,
       )}
     >
       <div className={cn(
-        'flex flex-col gap-4 border-b pb-5 md:flex-row md:items-start md:justify-between',
-        tone === 'dark' ? 'border-white/10' : 'border-app-cabinet-border',
+        'flex flex-col gap-4 border-b pb-4 md:flex-row md:items-start md:justify-between',
+        tone === 'dark' ? 'border-white/10' : 'border-[#E2E8F0]',
       )}>
         <div className="min-w-0">
           {eyebrow ? (
-            <p className={cn('text-[11px] font-semibold uppercase tracking-[0.18em]', tone === 'dark' ? 'text-white/70' : 'text-app-cabinet-muted')}>
+            <p className={cn('text-xs font-semibold uppercase tracking-wider', tone === 'dark' ? 'text-white/70' : 'text-brand-text-muted')}>
               {eyebrow}
             </p>
           ) : null}
-          <h2 className={cn('mt-2 text-pretty text-xl font-semibold', tone === 'dark' ? 'text-white' : 'text-app-cabinet-text')}>
+          <h2 className={cn('mt-2 text-lg font-semibold leading-none tracking-tight', tone === 'dark' ? 'text-white' : 'text-brand-text')}>
             {title}
           </h2>
           {description ? (
-            <p className={cn('mt-2 max-w-3xl text-sm leading-6', tone === 'dark' ? 'text-white/72' : 'text-app-cabinet-muted')}>
+            <p className={cn('mt-2 max-w-3xl text-sm leading-6', tone === 'dark' ? 'text-white/72' : 'text-brand-text-muted')}>
               {description}
             </p>
           ) : null}

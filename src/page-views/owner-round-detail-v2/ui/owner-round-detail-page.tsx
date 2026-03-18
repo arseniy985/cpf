@@ -81,13 +81,13 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
         status={<AppStatusBadge status={round.status} />}
         actions={(
           <>
-            <Button type="button" variant="outline" className="h-11 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text" onClick={() => runAction('submit')}>
+            <Button type="button" variant="outline" className="h-11 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text" onClick={() => runAction('submit')}>
               Отправить на проверку
             </Button>
-            <Button type="button" variant="outline" className="h-11 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text" onClick={() => runAction('live')}>
+            <Button type="button" variant="outline" className="h-11 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text" onClick={() => runAction('live')}>
               Опубликовать
             </Button>
-            <Button type="button" className="h-11 rounded-none bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong" onClick={() => runAction('close')}>
+            <Button type="button" className="h-11 rounded-full bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong" onClick={() => runAction('close')}>
               Закрыть раунд
             </Button>
           </>
@@ -168,7 +168,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-10 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-3 text-app-cabinet-text"
+                      className="h-10 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-3 text-app-cabinet-text"
                       onClick={async () => {
                         try {
                           await approveDistributionMutation.mutateAsync({
@@ -185,7 +185,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
                     </Button>
                     <Button
                       type="button"
-                      className="h-10 rounded-none bg-app-cabinet-primary px-3 text-white hover:bg-app-cabinet-primary-strong"
+                      className="h-10 rounded-full bg-app-cabinet-primary px-3 text-white hover:bg-app-cabinet-primary-strong"
                       onClick={async () => {
                         try {
                           await runDistributionMutation.mutateAsync({

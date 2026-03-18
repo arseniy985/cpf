@@ -17,34 +17,37 @@ export function AppKpiCard({
   tone = 'default',
 }: AppKpiCardProps) {
   return (
-    <div
-      className={cn(
-        'rounded-2xl border px-4 py-4 sm:px-5 sm:py-5',
-        tone === 'accent'
-          ? 'border-app-cabinet-accent/30 bg-app-cabinet-secondary'
-          : tone === 'success'
-            ? 'border-app-cabinet-success/20 bg-app-cabinet-success/5'
-            : tone === 'warning'
-              ? 'border-app-cabinet-warning/20 bg-app-cabinet-warning/5'
-              : 'border-app-cabinet-border bg-app-cabinet-surface',
-      )}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-app-cabinet-muted">
-            {label}
-          </p>
-          <p className="mt-3 text-2xl font-semibold tracking-tight text-app-cabinet-text sm:text-3xl">
-            {value}
-          </p>
-          {hint ? <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{hint}</p> : null}
+    <div className={cn('rounded-3xl border border-slate-100 bg-brand-surface text-brand-text shadow-lg shadow-slate-200/40', classNameByTone(tone))}>
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="mb-2 text-sm font-medium text-brand-text-muted">{label}</p>
+            <h2 className="text-2xl font-bold tracking-tight text-brand-text">{value}</h2>
+            {hint ? <p className="mt-1 text-xs text-brand-text-muted">{hint}</p> : null}
+          </div>
+          {Icon ? (
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-secondary text-brand-primary">
+              <Icon className="h-4 w-4" aria-hidden="true" />
+            </span>
+          ) : null}
         </div>
-        {Icon ? (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-app-cabinet-border bg-app-cabinet-surface text-app-cabinet-primary">
-            <Icon className="h-4 w-4" aria-hidden="true" />
-          </span>
-        ) : null}
       </div>
     </div>
   );
+}
+
+function classNameByTone(tone: AppKpiCardProps['tone']) {
+  if (tone === 'accent') {
+    return 'border-brand-accent/20';
+  }
+
+  if (tone === 'success') {
+    return 'border-brand-success/15';
+  }
+
+  if (tone === 'warning') {
+    return 'border-brand-warning/20';
+  }
+
+  return '';
 }

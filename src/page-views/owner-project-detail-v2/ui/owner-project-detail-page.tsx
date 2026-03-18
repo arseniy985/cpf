@@ -54,7 +54,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
         description={details.project.excerpt}
         status={<AppStatusBadge status={details.project.status} />}
         actions={(
-          <Button asChild variant="outline" className="h-11 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
+          <Button asChild variant="outline" className="h-11 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
             <Link href="/app/owner/projects">Вернуться к проектам</Link>
           </Button>
         )}
@@ -111,7 +111,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
                     <p className="text-sm font-semibold text-app-cabinet-text">{document.title}</p>
                     <p className="mt-1 text-sm text-app-cabinet-muted">{document.kind}</p>
                   </div>
-                  <Button asChild variant="outline" className="h-10 rounded-none border-app-cabinet-border bg-app-cabinet-surface px-3 text-app-cabinet-text">
+                  <Button asChild variant="outline" className="h-10 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-3 text-app-cabinet-text">
                     <a href={document.fileUrl ?? '#'} target="_blank" rel="noreferrer">Открыть</a>
                   </Button>
                 </div>

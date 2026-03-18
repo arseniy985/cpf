@@ -39,7 +39,7 @@ export function AppDataTable<TData>({
 
   return (
     <Table className="border-collapse [&_td]:border-b [&_td]:border-app-cabinet-border/70 [&_th]:border-b [&_th]:border-app-cabinet-border">
-      <TableHeader className="bg-app-cabinet-secondary/45">
+      <TableHeader className="bg-slate-50">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id} className="hover:bg-transparent">
             {headerGroup.headers.map((header) => (
@@ -52,7 +52,7 @@ export function AppDataTable<TData>({
       </TableHeader>
       <TableBody>
         {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id} className="bg-app-cabinet-surface hover:bg-app-cabinet-secondary/30">
+          <TableRow key={row.id} className="bg-app-cabinet-surface hover:bg-slate-50">
             {row.getVisibleCells().map((cell) => (
               <TableCell key={cell.id} className="align-top">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

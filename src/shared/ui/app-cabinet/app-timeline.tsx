@@ -14,14 +14,14 @@ export function AppTimeline({ items }: AppTimelineProps) {
   return (
     <ol className="space-y-4">
       {items.map((item) => (
-        <li key={item.id} className="relative border-l border-app-cabinet-border pl-4">
+        <li key={item.id} className="relative border-l border-app-cabinet-border pl-5">
           <span
             className={
               item.tone === 'success'
-                ? 'absolute -left-[5px] top-1.5 h-2.5 w-2.5 bg-app-cabinet-success'
+                ? 'absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-app-cabinet-success'
                 : item.tone === 'warning'
-                  ? 'absolute -left-[5px] top-1.5 h-2.5 w-2.5 bg-app-cabinet-warning'
-                  : 'absolute -left-[5px] top-1.5 h-2.5 w-2.5 bg-app-cabinet-accent'
+                  ? 'absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-app-cabinet-warning'
+                  : 'absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-app-cabinet-accent'
             }
           />
           <p className="text-sm font-semibold text-app-cabinet-text">{item.title}</p>

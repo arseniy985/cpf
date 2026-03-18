@@ -48,11 +48,11 @@ export default function OwnerProjectsPageV2() {
         actions={(
           <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
             <DialogTrigger asChild>
-              <Button className="h-11 rounded-none bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
+              <Button className="h-11 rounded-full bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
                 Новый проект
               </Button>
             </DialogTrigger>
-            <DialogContent className="rounded-none border-app-cabinet-border p-0 sm:max-w-3xl">
+            <DialogContent className="rounded-[1.75rem] border-app-cabinet-border p-0 sm:max-w-3xl">
               <div className="bg-app-cabinet-surface p-6">
                 <DialogHeader>
                   <DialogTitle className="font-sans text-2xl font-semibold text-app-cabinet-text">Новый проект</DialogTitle>
@@ -67,15 +67,15 @@ export default function OwnerProjectsPageV2() {
         )}
       />
 
-      <AppSurface eyebrow="Фильтры" title="Отберите проекты по статусу" description="Список не скрывает неготовые проекты: документы, revision и rejected остаются видимыми.">
+      <AppSurface eyebrow="Фильтры" title="Отберите проекты по статусу" description="Список не скрывает неготовые проекты: документы, revision и rejected остаются видимыми." tone="secondary">
         <div className="flex flex-wrap gap-2">
           {['all', 'draft', 'precheck', 'documents_required', 'pending_review', 'revision_requested', 'approved_for_listing', 'published', 'archived', 'rejected'].map((status) => (
             <button
               key={status}
               type="button"
               className={filter === status
-                ? 'border border-app-cabinet-primary bg-app-cabinet-primary px-3 py-2 text-sm font-semibold text-white'
-                : 'border border-app-cabinet-border bg-app-cabinet-surface px-3 py-2 text-sm font-semibold text-app-cabinet-text'}
+                ? 'rounded-full border border-app-cabinet-primary bg-app-cabinet-primary px-3 py-2 text-sm font-semibold text-white'
+                : 'rounded-full border border-app-cabinet-border bg-app-cabinet-surface px-3 py-2 text-sm font-semibold text-app-cabinet-text'}
               onClick={() => setFilter(status)}
             >
               {status === 'all' ? 'Все статусы' : status}
@@ -105,7 +105,7 @@ export default function OwnerProjectsPageV2() {
                 </div>
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button asChild className="h-10 rounded-none bg-app-cabinet-primary px-3 text-white hover:bg-app-cabinet-primary-strong">
+                <Button asChild className="h-10 rounded-full bg-app-cabinet-primary px-3 text-white hover:bg-app-cabinet-primary-strong">
                   <Link href={`/app/owner/projects/${project.slug}`}>Открыть карточку</Link>
                 </Button>
               </div>
