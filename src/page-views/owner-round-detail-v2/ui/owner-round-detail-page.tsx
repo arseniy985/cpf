@@ -44,7 +44,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
     return (
       <AppEmptyState
         title="Раунд не найден"
-        description="Не удалось загрузить карточку раунда по текущему slug."
+        description="Не удалось загрузить карточку раунда по текущему адресу."
       />
     );
   }
@@ -60,7 +60,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
 
       if (action === 'live') {
         await goLiveMutation.mutateAsync({ slug });
-        toast.success('Раунд переведён в live');
+        toast.success('Раунд опубликован');
       }
 
       if (action === 'close') {
@@ -75,9 +75,9 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title={round.title}
-        description={`${details.project.title} · раунд привлечения капитала с отдельным контуром аллокаций и выплат.`}
+        description={`${details.project.title} · раунд привлечения капитала с отдельным разделом заявок и выплат.`}
         status={<AppStatusBadge status={round.status} />}
         actions={(
           <>
@@ -128,13 +128,13 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
           </div>
         </AppSurface>
 
-        <AppSurface eyebrow="Timeline" title="История изменений" description="Карточка раунда показывает ключевые события: отправка на проверку, live, закрытие и выплаты.">
+        <AppSurface eyebrow="История" title="История изменений" description="Здесь видны отправка на проверку, публикация, закрытие раунда и выплаты.">
           <AppTimeline items={toTimelineItems(historyQuery.data?.data ?? [])} />
         </AppSurface>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Аллокации" title="Инвесторы и лимиты" description="В раунде отображаются все подтверждённые и неподтверждённые аллокации без нарушения privacy.">
+        <AppSurface eyebrow="Аллокации" title="Инвесторы и лимиты" description="В раунде отображаются все подтверждённые и неподтверждённые распределения заявок.">
           {details.allocations.length ? (
             <div className="space-y-3">
               {details.allocations.map((allocation) => (
@@ -152,7 +152,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
           )}
         </AppSurface>
 
-        <AppSurface eyebrow="Распределения" title="Выплаты и документы раунда" description="Список распределений и действия по согласованию выплат.">
+        <AppSurface eyebrow="Распределения" title="Выплаты и документы раунда" description="Список распределений и действия для согласования выплат.">
           {details.distributions.length ? (
             <div className="space-y-3">
               {details.distributions.map((distribution) => (
@@ -205,7 +205,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
               ))}
             </div>
           ) : (
-            <AppEmptyState title="Распределений пока нет" description="Когда по раунду начнутся выплаты, здесь появится отдельный контур распределений." />
+            <AppEmptyState title="Распределений пока нет" description="Когда по раунду начнутся выплаты, здесь появится список распределений." />
           )}
         </AppSurface>
       </div>

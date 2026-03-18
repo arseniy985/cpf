@@ -20,7 +20,7 @@ export default function InvestorDocumentsPage() {
         <div className="cabinet-card shadow-none">
           <div className="p-12 text-center">
             <h3 className="mb-2 text-lg font-semibold text-brand-text">Документы доступны</h3>
-            <p className="text-sm text-brand-text-muted">Под этот же exact-layout будет подвязан полный список документов.</p>
+            <p className="text-sm text-brand-text-muted">Здесь будет доступен полный список договоров, отчётов и подтверждающих документов.</p>
           </div>
         </div>
       ) : (

@@ -122,7 +122,7 @@ export function OwnerOnboardingForms() {
 
     try {
       await updateAccountMutation.mutateAsync(values);
-      toast.success('Карточка owner account сохранена');
+      toast.success('Профиль кабинета сохранён');
     } catch (error) {
       applyApiFormErrors(error, accountForm.setError);
       setAccountError(getApiErrorMessage(error, 'Не удалось сохранить карточку кабинета.'));
@@ -158,13 +158,13 @@ export function OwnerOnboardingForms() {
       <Form {...accountForm}>
         <form className="space-y-4 border border-app-cabinet-border bg-app-cabinet-surface px-5 py-5" onSubmit={accountForm.handleSubmit(submitAccount)}>
           <div>
-            <h3 className="text-lg font-semibold text-app-cabinet-text">Owner account</h3>
-            <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">Базовая карточка кабинета владельца: название, slug и краткое описание.</p>
+            <h3 className="text-lg font-semibold text-app-cabinet-text">Профиль кабинета</h3>
+            <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">Название кабинета, адрес профиля и краткое описание компании.</p>
           </div>
           <SectionAlert message={accountError} />
           <div className="grid gap-4 md:grid-cols-2">
             <FormField control={accountForm.control} name="display_name" render={({ field }) => <TextField field={field} name="display_name" label="Название кабинета *" placeholder="ООО Центр актива…" />} />
-            <FormField control={accountForm.control} name="slug" render={({ field }) => <TextField field={field} name="slug" label="Slug *" placeholder="center-asset…" description="Используйте латиницу, цифры и дефис." />} />
+            <FormField control={accountForm.control} name="slug" render={({ field }) => <TextField field={field} name="slug" label="Адрес профиля *" placeholder="center-asset…" description="Используйте латиницу, цифры и дефис." />} />
           </div>
           <FormField control={accountForm.control} name="website_url" render={({ field }) => <TextField field={field} name="website_url" label="Сайт" placeholder="https://company.ru…" />} />
           <FormField
@@ -174,7 +174,7 @@ export function OwnerOnboardingForms() {
               <FormItem>
                 <FormLabel className="text-sm font-medium text-app-cabinet-text">Описание кабинета</FormLabel>
                 <FormControl>
-                  <Textarea {...field} name="overview" placeholder="Коротко опишите организацию и контекст объектов…" className="min-h-28 rounded-none border-app-cabinet-border shadow-none" />
+                  <Textarea {...field} name="overview" placeholder="Коротко опишите компанию и направление её работы…" className="min-h-28 rounded-none border-app-cabinet-border shadow-none" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -190,7 +190,7 @@ export function OwnerOnboardingForms() {
         <form className="space-y-4 border border-app-cabinet-border bg-app-cabinet-surface px-5 py-5" onSubmit={organizationForm.handleSubmit(submitOrganization)}>
           <div>
             <h3 className="text-lg font-semibold text-app-cabinet-text">Данные организации</h3>
-            <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">Юрлицо, подписанты, бенефициары и реквизиты, необходимые для KYB.</p>
+            <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">Юрлицо, подписанты, бенефициары и реквизиты, необходимые для проверки компании.</p>
           </div>
           <SectionAlert message={organizationError} />
           <div className="grid gap-4 md:grid-cols-2">
@@ -258,7 +258,7 @@ export function OwnerOnboardingForms() {
               <FormItem>
                 <FormLabel className="text-sm font-medium text-app-cabinet-text">Комментарий</FormLabel>
                 <FormControl>
-                  <Textarea {...field} name="notes" placeholder="Если расчёты идут через отдельный контур или нужны пояснения…" className="min-h-24 rounded-none border-app-cabinet-border shadow-none" />
+                  <Textarea {...field} name="notes" placeholder="Если для выплат нужны пояснения или особые условия…" className="min-h-24 rounded-none border-app-cabinet-border shadow-none" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -6,6 +6,7 @@ import {
   Bell,
   Briefcase,
   Building2,
+  Compass,
   CircleDollarSign,
   FileText,
   LayoutDashboard,
@@ -30,6 +31,7 @@ type AppSidebarProps = {
 
 const investorLinks = [
   { name: 'Обзор', href: '/app/investor', icon: LayoutDashboard },
+  { name: 'Каталог проектов', href: '/app/projects', icon: Compass },
   { name: 'Портфель', href: '/app/investor/portfolio', icon: Briefcase },
   { name: 'Кошелек', href: '/app/investor/wallet', icon: Wallet },
   { name: 'Выплаты и доход', href: '/app/investor/payouts', icon: PieChart },

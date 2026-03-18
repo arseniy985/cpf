@@ -36,7 +36,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
     return (
       <AppEmptyState
         title="Проект не найден"
-        description="Не удалось загрузить карточку проекта по текущему slug."
+        description="Не удалось загрузить карточку проекта по текущему адресу."
       />
     );
   }
@@ -49,7 +49,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title={details.project.title}
         description={details.project.excerpt}
         status={<AppStatusBadge status={details.project.status} />}
@@ -73,7 +73,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
         <AppSurface eyebrow="Инвестиции" title={formatMoney(details.metrics.confirmedAmount)} description="Подтверждённая сумма участия по проекту.">
           <p className="text-sm text-app-cabinet-muted">Заявок: <span className="font-semibold text-app-cabinet-text">{details.metrics.applicationsCount}</span></p>
         </AppSurface>
-        <AppSurface eyebrow="Публикация" title={details.project.fundingStatus} description="Текущий контур публикации и готовности к размещению.">
+        <AppSurface eyebrow="Публикация" title={details.project.fundingStatus} description="Текущий статус публикации и готовности к размещению.">
           <AppStatusBadge status={details.project.status} className="mt-3" />
         </AppSurface>
       </div>
@@ -96,13 +96,13 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
           </div>
         </AppSurface>
 
-        <AppSurface eyebrow="Timeline" title="История изменений" description="На карточке проекта история нужна для прозрачности проверок, замечаний и связанных раундов.">
+        <AppSurface eyebrow="История" title="История изменений" description="Здесь видны проверки, замечания платформы и связанные изменения по проекту.">
           <AppTimeline items={toTimelineItems(historyQuery.data?.data ?? [])} />
         </AppSurface>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Документы" title="Контекстные документы проекта" description="Документы привязаны к проекту и открываются из карточки без переходов в публичный контур.">
+        <AppSurface eyebrow="Документы" title="Документы проекта" description="Все документы проекта собраны в карточке и доступны без лишних переходов.">
           {documents.length ? (
             <div className="space-y-3">
               {documents.map((document) => (
@@ -138,13 +138,13 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
               ))}
             </div>
           ) : (
-            <AppEmptyState title="Раундов пока нет" description="Создайте первый раунд в owner workspace, чтобы привязать его к текущему проекту." />
+            <AppEmptyState title="Раундов пока нет" description="Создайте первый раунд, чтобы привязать его к этому проекту." />
           )}
         </AppSurface>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Отчётность" title="Отчёты и медиа" description="Регулярные отчёты и публикации по факту проекта остаются внутри owner-карточки.">
+        <AppSurface eyebrow="Отчётность" title="Отчёты и медиа" description="Регулярные отчёты и публикации по проекту собраны прямо в его карточке.">
           {reports.length ? (
             <div className="space-y-3">
               {reports.map((report) => (
@@ -159,7 +159,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
           )}
         </AppSurface>
 
-        <AppSurface eyebrow="CTA" title="Следующий шаг" description="Следующее действие зависит от текущего статуса проекта и полноты документов.">
+        <AppSurface eyebrow="Следующий шаг" title="Что сделать дальше" description="Следующее действие зависит от текущего статуса проекта и полноты документов.">
           <div className="space-y-3">
             <div className="border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4">
               <p className="text-sm font-semibold text-app-cabinet-text">Рекомендуемое действие</p>
@@ -168,7 +168,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
                   ? 'Дозаполнить документы и отправить проект на предварительную проверку.'
                   : details.project.status === 'revision_requested'
                     ? 'Разобрать замечания платформы и внести доработки в карточку проекта.'
-                    : 'Проверить связанные раунды и контур отчётности по проекту.'}
+                    : 'Проверить связанные раунды и отчётность по проекту.'}
               </p>
             </div>
             {investments ? (

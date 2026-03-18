@@ -73,7 +73,7 @@ export default function AppAccountOverviewPage() {
       : {
           id: 'kyc',
           title: 'Завершить проверку профиля',
-          description: 'Заполните KYC для операций.',
+          description: 'Заполните анкету и загрузите документы для работы в кабинете.',
           href: '/app/investor/verification',
         },
     pendingDepositRequest
@@ -95,8 +95,8 @@ export default function AppAccountOverviewPage() {
     canUseOwner && ownerWorkspace && ownerWorkspace.onboarding.status !== 'active'
       ? {
           id: 'owner',
-          title: 'Закрыть блокеры owner onboarding',
-          description: 'Нужны данные для активации owner режима.',
+          title: 'Заполнить данные владельца',
+          description: 'Нужны сведения о компании для активации раздела владельца.',
           href: '/app/owner/organization',
         }
       : null,
@@ -115,7 +115,7 @@ export default function AppAccountOverviewPage() {
       id: `owner-action-${action.key}`,
       title: action.title,
       description: action.description.length > 88 ? `${action.description.slice(0, 88)}…` : action.description,
-      meta: 'Owner workspace',
+      meta: 'Кабинет владельца',
       tone: action.tone === 'danger' ? 'warning' as const : 'default' as const,
         }))
       : []),
@@ -185,7 +185,7 @@ export default function AppAccountOverviewPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <AppSurface eyebrow="Investor" title="Деньги и заявки">
+        <AppSurface eyebrow="Инвестор" title="Деньги и заявки">
           <div className="grid gap-4 md:grid-cols-2">
             <AppKpiCard label="Активные заявки" value={String(dashboard.summary.applicationsCount)} icon={BriefcaseBusiness} />
             <AppKpiCard label="Подтверждённые инвестиции" value={formatMoney(dashboard.summary.approvedAmount)} icon={ShieldCheck} tone="success" />
@@ -194,7 +194,7 @@ export default function AppAccountOverviewPage() {
           </div>
         </AppSurface>
 
-        <AppSurface eyebrow="Owner" title="Статус owner workspace">
+        <AppSurface eyebrow="Владелец" title="Статус раздела владельца">
           {ownerWorkspace ? (
             <div className="space-y-4">
               <div className="rounded-xl border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4">
@@ -219,8 +219,8 @@ export default function AppAccountOverviewPage() {
             </div>
           ) : (
             <AppEmptyState
-              title="Owner workspace не активирован"
-              description="Подключите owner режим в настройках."
+              title="Раздел владельца пока не активирован"
+              description="Заполните данные компании, чтобы открыть этот раздел."
               action={(
                 <Button asChild className="h-10 rounded-xl bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
                   <Link href="/app/settings">Перейти в настройки</Link>

@@ -4,6 +4,7 @@ import {
   BriefcaseBusiness,
   Building2,
   CircleDollarSign,
+  Compass,
   FileStack,
   FolderKanban,
   HandCoins,
@@ -41,6 +42,13 @@ export const investorNavigation: AppNavItem[] = [
     match: 'exact',
   },
   {
+    href: '/app/projects',
+    label: 'Каталог',
+    icon: Compass,
+    description: 'Все доступные проекты с фильтрами по входу, доходности и типу актива',
+    match: 'prefix',
+  },
+  {
     href: '/app/investor/portfolio',
     label: 'Портфель',
     icon: BriefcaseBusiness,
@@ -72,7 +80,7 @@ export const investorNavigation: AppNavItem[] = [
     href: '/app/investor/verification',
     label: 'Проверка',
     icon: ShieldCheck,
-    description: 'KYC-анкета, документы и комментарии менеджера',
+    description: 'Анкета, документы и комментарии по проверке профиля',
     match: 'prefix',
   },
 ];
@@ -89,7 +97,7 @@ export const ownerNavigation: AppNavItem[] = [
     href: '/app/owner/organization',
     label: 'Организация',
     icon: ShieldCheck,
-    description: 'Юрлицо, реквизиты и статусы KYB',
+    description: 'Данные компании, реквизиты и статус проверки',
     match: 'prefix',
   },
   {
@@ -148,7 +156,7 @@ export const sharedNavigation: AppNavItem[] = [
     href: '/app/notifications',
     label: 'Уведомления',
     icon: BellDot,
-    description: 'Единая лента по investor и owner',
+    description: 'Единая лента событий по всем разделам кабинета',
     match: 'prefix',
   },
   {
@@ -177,8 +185,17 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname === '/app/investor',
     meta: {
       title: 'Обзор инвестора',
-      section: 'Investor Workspace',
+      section: 'Кабинет инвестора',
       description: 'Баланс, заявки, подтверждённые инвестиции и ожидаемые выплаты без лишнего скролла.',
+      mode: 'investor',
+    },
+  },
+  {
+    match: (pathname) => pathname.startsWith('/app/projects'),
+    meta: {
+      title: 'Каталог проектов',
+      section: 'Кабинет инвестора',
+      description: 'Подбор проектов по доходности, входу, типу актива и текущему прогрессу сбора.',
       mode: 'investor',
     },
   },
@@ -186,7 +203,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/investor/portfolio'),
     meta: {
       title: 'Портфель',
-      section: 'Investor Workspace',
+      section: 'Кабинет инвестора',
       description: 'Все инвестиции и заявки со статусами, доходностью, сроком и документами.',
       mode: 'investor',
     },
@@ -195,7 +212,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/investor/wallet'),
     meta: {
       title: 'Кошелёк',
-      section: 'Investor Workspace',
+      section: 'Кабинет инвестора',
       description: 'Текущий баланс, заявки на пополнение и вывод, а также полная история движений.',
       mode: 'investor',
     },
@@ -204,7 +221,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/investor/payouts'),
     meta: {
       title: 'Выплаты и доход',
-      section: 'Investor Workspace',
+      section: 'Кабинет инвестора',
       description: 'Ожидаемые выплаты, начисления, фактические перечисления и причины задержек.',
       mode: 'investor',
     },
@@ -213,7 +230,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/investor/documents'),
     meta: {
       title: 'Документы инвестора',
-      section: 'Investor Workspace',
+      section: 'Кабинет инвестора',
       description: 'Договоры, отчёты по проектам и подтверждения операций в одном списке.',
       mode: 'investor',
     },
@@ -222,8 +239,8 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/investor/verification'),
     meta: {
       title: 'Проверка профиля',
-      section: 'Investor Workspace',
-      description: 'Анкета, документы, комментарии менеджера и следующий обязательный шаг.',
+      section: 'Кабинет инвестора',
+      description: 'Анкета, документы, комментарии менеджера и текущий этап проверки.',
       mode: 'investor',
     },
   },
@@ -231,7 +248,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname === '/app/notifications',
     meta: {
       title: 'Уведомления',
-      section: 'Shared',
+      section: 'Общие разделы',
       description: 'Единая лента событий по инвестициям, проверке, проектам и выплатам.',
       mode: 'shared',
     },
@@ -240,7 +257,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname === '/app/settings',
     meta: {
       title: 'Настройки аккаунта',
-      section: 'Shared',
+      section: 'Общие разделы',
       description: 'Профиль, контакты, выплаты, сессии и доступные режимы аккаунта.',
       mode: 'shared',
     },
@@ -248,9 +265,9 @@ const routeMetaMatchers: Array<{
   {
     match: (pathname) => pathname === '/app/owner',
     meta: {
-      title: 'Обзор owner workspace',
-      section: 'Owner Workspace',
-      description: 'Статус onboarding, замечания платформы, проекты, раунды и ближайшие обязательные действия.',
+      title: 'Обзор владельца',
+      section: 'Кабинет владельца',
+      description: 'Статус проверки, замечания платформы, проекты, раунды и ближайшие обязательные действия.',
       mode: 'owner',
     },
   },
@@ -258,8 +275,8 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/organization'),
     meta: {
       title: 'Организация',
-      section: 'Owner Workspace',
-      description: 'Карточка owner account, юрлицо, реквизиты, документы и история изменений.',
+      section: 'Кабинет владельца',
+      description: 'Данные компании, реквизиты, документы и история изменений.',
       mode: 'owner',
     },
   },
@@ -267,7 +284,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname === '/app/owner/projects',
     meta: {
       title: 'Проекты',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Список проектов, статусы публикации и переходы в рабочие карточки.',
       mode: 'owner',
     },
@@ -276,7 +293,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/projects/'),
     meta: {
       title: 'Карточка проекта',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Паспорт актива, финмодель, риски, документы, раунды и журнал изменений.',
       mode: 'owner',
     },
@@ -285,7 +302,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname === '/app/owner/rounds',
     meta: {
       title: 'Раунды привлечения',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Цели размещения, лимиты, прогресс сбора и статусы подготовки раундов.',
       mode: 'owner',
     },
@@ -294,7 +311,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/rounds/'),
     meta: {
       title: 'Карточка раунда',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Условия раунда, аллокации, документы, распределения и действия публикации.',
       mode: 'owner',
     },
@@ -303,7 +320,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/allocations'),
     meta: {
       title: 'Инвесторы и аллокации',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Заявки инвесторов, подтверждённые аллокации и история обработки.',
       mode: 'owner',
     },
@@ -312,7 +329,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/reporting'),
     meta: {
       title: 'Отчётность',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Регулярные отчёты, внеплановые уведомления и статусы публикации.',
       mode: 'owner',
     },
@@ -321,7 +338,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/payouts'),
     meta: {
       title: 'Выплаты владельца',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Календарь выплат, реестр получателей, ошибки, возвраты и ручная обработка.',
       mode: 'owner',
     },
@@ -330,7 +347,7 @@ const routeMetaMatchers: Array<{
     match: (pathname) => pathname.startsWith('/app/owner/team'),
     meta: {
       title: 'Команда и настройки',
-      section: 'Owner Workspace',
+      section: 'Кабинет владельца',
       description: 'Приглашения, роли, права доступа, уведомления и юридические подтверждения.',
       mode: 'owner',
     },
@@ -340,7 +357,7 @@ const routeMetaMatchers: Array<{
 export function getAppRouteMeta(pathname: string): AppRouteMeta {
   return routeMetaMatchers.find((matcher) => matcher.match(pathname))?.meta ?? {
     title: 'Личный кабинет',
-    section: 'Shared',
+    section: 'Общие разделы',
     description: 'Прозрачный кабинет инвестора и владельца объекта в одном аккаунте.',
     mode: pathname.startsWith('/app/owner') ? 'owner' : pathname.startsWith('/app/investor') ? 'investor' : 'shared',
   };

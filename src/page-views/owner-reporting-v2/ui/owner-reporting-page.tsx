@@ -19,7 +19,7 @@ export default function OwnerReportingPageV2() {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title="Отчётность"
         description="Регулярные отчёты, фото и медиа-обновления, фактические показатели и история версий по выбранному проекту."
       />
@@ -41,11 +41,11 @@ export default function OwnerReportingPageV2() {
             </Select>
           </div>
         ) : (
-          <AppEmptyState title="Проектов пока нет" description="Сначала нужен хотя бы один проект, чтобы открыть контур отчётности." />
+          <AppEmptyState title="Проектов пока нет" description="Сначала создайте хотя бы один проект, чтобы открыть раздел отчётности." />
         )}
       </AppSurface>
 
-      <AppSurface eyebrow="История версий" title="Регулярные отчёты и публикации" description="Список версий остаётся в operational формате: дата, summary, файл и публичность.">
+      <AppSurface eyebrow="История версий" title="Регулярные отчёты и публикации" description="Здесь собраны версии отчётов, даты публикации и статус доступа.">
         {reports.length ? (
           <div className="space-y-3">
             {reports.map((report) => (

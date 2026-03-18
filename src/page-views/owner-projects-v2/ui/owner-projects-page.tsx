@@ -42,7 +42,7 @@ export default function OwnerProjectsPageV2() {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title="Проекты"
         description="Список проектов, статусы, ключевые параметры и переход в детальную карточку проекта."
         actions={(
@@ -67,7 +67,7 @@ export default function OwnerProjectsPageV2() {
         )}
       />
 
-      <AppSurface eyebrow="Фильтры" title="Отберите проекты по статусу" description="Список не скрывает неготовые проекты: документы, revision и rejected остаются видимыми." tone="secondary">
+      <AppSurface eyebrow="Фильтры" title="Отберите проекты по статусу" description="В списке видны все проекты, включая те, которые требуют документов, доработки или повторной проверки." tone="secondary">
         <div className="flex flex-wrap gap-2">
           {['all', 'draft', 'precheck', 'documents_required', 'pending_review', 'revision_requested', 'approved_for_listing', 'published', 'archived', 'rejected'].map((status) => (
             <button
@@ -78,7 +78,19 @@ export default function OwnerProjectsPageV2() {
                 : 'rounded-full border border-app-cabinet-border bg-app-cabinet-surface px-3 py-2 text-sm font-semibold text-app-cabinet-text'}
               onClick={() => setFilter(status)}
             >
-              {status === 'all' ? 'Все статусы' : status}
+              {status === 'all'
+                ? 'Все статусы'
+                : ({
+                    draft: 'Черновики',
+                    precheck: 'Предпроверка',
+                    documents_required: 'Нужны документы',
+                    pending_review: 'На проверке',
+                    revision_requested: 'Нужна доработка',
+                    approved_for_listing: 'Готовы к размещению',
+                    published: 'Опубликованы',
+                    archived: 'В архиве',
+                    rejected: 'Отклонены',
+                  } as Record<string, string>)[status] ?? status}
             </button>
           ))}
         </div>

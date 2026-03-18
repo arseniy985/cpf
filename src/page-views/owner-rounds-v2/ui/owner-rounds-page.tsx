@@ -40,7 +40,7 @@ export default function OwnerRoundsPageV2() {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title="Раунды привлечения"
         description="Раунды показывают условия размещения, прогресс сбора, лимиты, статусы проверки и дальнейшие действия."
         actions={(
@@ -94,7 +94,7 @@ export default function OwnerRoundsPageV2() {
           ))}
         </div>
       ) : (
-        <AppEmptyState title="Раундов пока нет" description="Создайте первый раунд, чтобы открыть контур аллокаций, проверок и выплат." />
+        <AppEmptyState title="Раундов пока нет" description="Создайте первый раунд, чтобы работать с заявками, проверкой и выплатами." />
       )}
     </div>
   );

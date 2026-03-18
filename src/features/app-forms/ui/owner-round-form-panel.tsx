@@ -97,7 +97,7 @@ export function OwnerRoundFormPanel({ onSuccess }: OwnerRoundFormPanelProps) {
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription className="text-app-cabinet-muted">Раунд создаётся в контуре выбранного проекта.</FormDescription>
+              <FormDescription className="text-app-cabinet-muted">Раунд будет создан внутри выбранного проекта.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -105,7 +105,7 @@ export function OwnerRoundFormPanel({ onSuccess }: OwnerRoundFormPanelProps) {
 
         <div className="grid gap-4 md:grid-cols-2">
           {[
-            ['slug', 'Slug *', 'round-2026-spring…'],
+            ['slug', 'Адрес раунда *', 'round-2026-spring…'],
             ['title', 'Название раунда *', 'Весенний раунд 2026…'],
             ['target_amount', 'Целевая сумма *', '15000000…'],
             ['min_investment', 'Минимальный вход *', '100000…'],
@@ -150,7 +150,7 @@ export function OwnerRoundFormPanel({ onSuccess }: OwnerRoundFormPanelProps) {
                 <SelectContent className="rounded-none border-app-cabinet-border">
                   <SelectItem value="monthly">Ежемесячно</SelectItem>
                   <SelectItem value="quarterly">Ежеквартально</SelectItem>
-                  <SelectItem value="at_maturity">В конце срока</SelectItem>
+                  <SelectItem value="at_maturity">В конце периода</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

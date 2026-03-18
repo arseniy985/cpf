@@ -17,7 +17,7 @@ export default function OwnerOverviewPageV2() {
   const roundsQuery = useOwnerRoundsQuery();
 
   if (workspaceQuery.isPending) {
-    return <AppEmptyState title="Кабинет загружается" description="Подтягиваем onboarding, проекты и раунды." />;
+    return <AppEmptyState title="Кабинет загружается" description="Подгружаем данные по компании, проектам и раундам." />;
   }
 
   const workspace = workspaceQuery.data?.data;
@@ -25,7 +25,7 @@ export default function OwnerOverviewPageV2() {
   const rounds = roundsQuery.data?.data ?? [];
 
   if (!workspace) {
-    return <AppEmptyState title="Owner workspace недоступен" description="Не удалось загрузить профиль owner." />;
+    return <AppEmptyState title="Раздел временно недоступен" description="Не удалось загрузить данные кабинета владельца." />;
   }
 
   const liveRound = rounds.find((round) => ['live', 'ready', 'settling'].includes(round.status));
@@ -44,7 +44,7 @@ export default function OwnerOverviewPageV2() {
         </div>
         <div className="flex gap-3">
           <Button asChild variant="outline" className="h-11 border-slate-200 bg-white px-6 text-brand-primary hover:bg-brand-secondary">
-            <Link href="/app/owner/projects">Новый проект</Link>
+            <Link href="/app/owner/projects?dialog=create">Новый проект</Link>
           </Button>
           <Button asChild className="h-11 border border-brand-primary bg-brand-primary px-6 text-white hover:bg-brand-primary/90">
             <Link href="/app/owner/rounds">Создать раунд</Link>

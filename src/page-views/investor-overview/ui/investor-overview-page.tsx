@@ -23,7 +23,7 @@ export default function InvestorOverviewPage() {
   const notifications = notificationsQuery.data?.data ?? [];
 
   if (!dashboard) {
-    return <AppEmptyState title="Investor workspace недоступен" description="Не удалось загрузить основной набор данных для инвестора." />;
+    return <AppEmptyState title="Кабинет инвестора недоступен" description="Не удалось загрузить основной набор данных для инвестора." />;
   }
 
   const kycPending = session.user?.kycStatus !== 'approved';
@@ -79,7 +79,7 @@ export default function InvestorOverviewPage() {
             <Link href="/app/investor/wallet">Пополнить кошелек</Link>
           </Button>
           <Button asChild className="h-11 border border-brand-primary bg-brand-primary px-6 text-white hover:bg-brand-primary/90">
-            <Link href="/projects">Выбрать проект</Link>
+            <Link href="/app/projects">Выбрать проект</Link>
           </Button>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function InvestorOverviewPage() {
             </div>
             <div>
               <h3 className="mb-1 text-base font-semibold text-brand-text">
-                {kycPending ? 'Завершите проверку профиля (KYC)' : 'Следующий шаг по кабинету'}
+                {kycPending ? 'Завершите проверку профиля' : 'Следующий шаг по кабинету'}
               </h3>
               <p className="text-sm text-brand-text-muted">
                 {kycPending

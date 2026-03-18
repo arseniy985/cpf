@@ -24,12 +24,12 @@ export default function OwnerAllocationsPageV2() {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title="Инвесторы и аллокации"
         description="Страница собирает заявки инвесторов, подтверждённые аллокации, отмены и историю обработки по выбранному раунду."
       />
 
-      <AppSurface eyebrow="Выбор раунда" title="Контекст аллокаций" description="Так как аллокации жёстко привязаны к раунду, список переключается по выбранному раунду." tone="secondary">
+      <AppSurface eyebrow="Выбор раунда" title="Раунд для просмотра" description="Список заявок и распределений переключается в зависимости от выбранного раунда." tone="secondary">
         {rounds.length ? (
           <div className="max-w-md">
             <Select value={effectiveSlug ?? ''} onValueChange={setSelectedRoundSlug}>
@@ -46,7 +46,7 @@ export default function OwnerAllocationsPageV2() {
             </Select>
           </div>
         ) : (
-          <AppEmptyState title="Раундов пока нет" description="Создайте раунд, чтобы открыть контур аллокаций." />
+          <AppEmptyState title="Раундов пока нет" description="Создайте раунд, чтобы открыть раздел заявок и распределений." />
         )}
       </AppSurface>
 

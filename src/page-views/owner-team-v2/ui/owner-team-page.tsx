@@ -16,13 +16,13 @@ export default function OwnerTeamPageV2() {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        eyebrow="Owner workspace"
+        eyebrow="Кабинет владельца"
         title="Команда и настройки"
-        description="Команда owner workspace, роли, история действий и актуальные юридические документы в одном рабочем разделе."
+        description="Состав команды, роли, история действий и действующие документы собраны в одном разделе."
       />
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Команда" title="Участники owner workspace" description="Состав команды читается из owner account и показывает текущие роли, статусы и последнюю активность.">
+        <AppSurface eyebrow="Команда" title="Участники кабинета" description="Здесь отображаются текущие роли, статусы и последняя активность участников.">
           {team?.members.length ? (
             <div className="space-y-3">
               {team.members.map((member) => (
@@ -44,11 +44,11 @@ export default function OwnerTeamPageV2() {
               ))}
             </div>
           ) : (
-            <AppEmptyState title="Команда пока не сформирована" description="Как только в owner account появятся участники, они будут отображены здесь." />
+            <AppEmptyState title="Команда пока не сформирована" description="Когда участники будут добавлены, они появятся в этом разделе." />
           )}
         </AppSurface>
 
-        <AppSurface eyebrow="Юридический контур" title="Актуальные документы и оферты" description="Публикуемые юридические документы доступны прямо из owner workspace как операционный reference-контур.">
+        <AppSurface eyebrow="Документы" title="Актуальные документы и оферты" description="Здесь собраны опубликованные документы компании и актуальные версии оферт.">
           {team?.legalDocuments.length ? (
             <div className="space-y-3">
               {team.legalDocuments.map((document) => (
@@ -62,12 +62,12 @@ export default function OwnerTeamPageV2() {
               ))}
             </div>
           ) : (
-            <AppEmptyState title="Юридических документов пока нет" description="Когда опубликованные документы появятся в backend, они будут доступны и здесь." />
+            <AppEmptyState title="Документов пока нет" description="Когда документы будут опубликованы, они появятся и здесь." />
           )}
         </AppSurface>
       </div>
 
-      <AppSurface eyebrow="История" title="История действий" description="Timeline по owner account и команде берётся из backend activity log и не зависит от локального UI-состояния.">
+      <AppSurface eyebrow="История" title="История действий" description="Здесь собраны последние действия по компании и команде.">
         <AppTimeline items={toTimelineItems(team?.activity ?? [])} />
       </AppSurface>
     </div>

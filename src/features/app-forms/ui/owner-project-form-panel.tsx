@@ -83,11 +83,11 @@ export function OwnerProjectFormPanel({ onSuccess }: OwnerProjectFormPanelProps)
         <div className="grid gap-4 md:grid-cols-2">
           {[
             ['title', 'Название проекта *', 'Например, Логистический парк Юг…'],
-            ['slug', 'Slug *', 'logistic-park-yug…'],
+            ['slug', 'Адрес проекта *', 'logistic-park-yug…'],
             ['location', 'Локация *', 'Москва…'],
-            ['asset_type', 'Тип актива *', 'commercial_real_estate…'],
-            ['risk_level', 'Риск *', 'moderate…'],
-            ['payout_frequency', 'Частота выплат *', 'monthly…'],
+            ['asset_type', 'Тип актива *', 'Коммерческая недвижимость…'],
+            ['risk_level', 'Уровень риска *', 'Умеренный…'],
+            ['payout_frequency', 'Частота выплат *', 'Ежемесячно…'],
             ['min_investment', 'Минимальный вход *', '100000…'],
             ['target_amount', 'Целевая сумма *', '25000000…'],
             ['target_yield', 'Доходность *', '18…'],
@@ -118,7 +118,7 @@ export function OwnerProjectFormPanel({ onSuccess }: OwnerProjectFormPanelProps)
               <FormControl>
                 <Textarea {...field} name="excerpt" placeholder="Короткое описание актива и ключевой логики сделки…" className="min-h-24 rounded-none border-app-cabinet-border shadow-none" />
               </FormControl>
-              <FormDescription className="text-app-cabinet-muted">Это поле используется в карточках и кратких summaries.</FormDescription>
+              <FormDescription className="text-app-cabinet-muted">Этот текст используется в карточках проекта и кратких описаниях.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -130,7 +130,7 @@ export function OwnerProjectFormPanel({ onSuccess }: OwnerProjectFormPanelProps)
             <FormItem>
               <FormLabel className="text-sm font-medium text-app-cabinet-text">Описание проекта *</FormLabel>
               <FormControl>
-                <Textarea {...field} name="description" placeholder="Полное описание проекта, модели и операционного контура…" className="min-h-32 rounded-none border-app-cabinet-border shadow-none" />
+                <Textarea {...field} name="description" placeholder="Подробно опишите проект, его модель и ключевые условия…" className="min-h-32 rounded-none border-app-cabinet-border shadow-none" />
               </FormControl>
               <FormMessage />
             </FormItem>

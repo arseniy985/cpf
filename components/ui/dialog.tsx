@@ -52,10 +52,10 @@ function DialogContent({
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Content
-        data-slot="dialog-content"
-        className={cn(
-          "fixed top-[50%] left-[50%] z-50 grid w-[min(96vw,42rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-[2rem] border border-border/80 bg-card p-8 shadow-2xl shadow-primary/10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:p-10",
+        <DialogPrimitive.Content
+          data-slot="dialog-content"
+          className={cn(
+          "fixed left-[50%] top-[50%] z-50 grid max-h-[min(88vh,56rem)] w-[min(96vw,42rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-[2rem] border border-border/80 bg-card p-8 shadow-2xl shadow-primary/10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:p-10",
           className
         )}
         {...props}

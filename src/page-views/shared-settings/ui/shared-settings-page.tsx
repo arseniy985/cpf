@@ -19,7 +19,7 @@ export default function SharedSettingsPage() {
         <div className="cabinet-card shadow-none">
           <div className="p-12 text-center">
             <h3 className="mb-2 text-lg font-semibold text-brand-text">Настройки аккаунта</h3>
-            <p className="text-sm text-brand-text-muted">Под этот exact-layout будет привязан полный профиль, безопасность и уведомления.</p>
+            <p className="text-sm text-brand-text-muted">Здесь будут доступны профиль, безопасность входа и настройки уведомлений.</p>
           </div>
         </div>
       ) : (

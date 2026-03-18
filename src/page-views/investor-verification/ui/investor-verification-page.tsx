@@ -19,8 +19,8 @@ export default function InvestorVerificationPage() {
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-brand-text">Проверка профиля (KYC)</h1>
-        <p className="mt-1 text-sm text-brand-text-muted">Заполните данные для получения статуса квалифицированного инвестора</p>
+        <h1 className="text-2xl font-bold tracking-tight text-brand-text">Проверка профиля</h1>
+        <p className="mt-1 text-sm text-brand-text-muted">Заполните данные и загрузите документы для подтверждения профиля</p>
       </div>
 
       <div className="cabinet-card shadow-none">
