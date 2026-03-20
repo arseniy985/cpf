@@ -130,10 +130,10 @@ export default function AppAccountOverviewPage() {
         status={<AppStatusBadge status={canUseOwner ? ownerPrimaryStatus : session.user.kycStatus} />}
         actions={(
           <>
-            <Button asChild variant="outline" className="h-10 rounded-xl border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
+            <Button asChild variant="outline" className="h-10 w-full rounded-xl border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text sm:w-auto">
               <Link href="/app/notifications">Открыть уведомления</Link>
             </Button>
-            <Button asChild className="h-10 rounded-xl bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong">
+            <Button asChild className="h-10 w-full rounded-xl bg-app-cabinet-primary px-4 text-white hover:bg-app-cabinet-primary-strong sm:w-auto">
               <Link href={nextSteps[0]?.href ?? '/app/investor'}>
                 Выполнить следующий шаг
               </Link>
@@ -152,7 +152,7 @@ export default function AppAccountOverviewPage() {
         eyebrow="В Фокусе"
         title="Следующие шаги"
         action={(
-          <Button asChild variant="outline" className="h-10 rounded-xl border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
+          <Button asChild variant="outline" className="h-10 w-full rounded-xl border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text md:w-auto">
             <Link href="/app/settings">Все настройки</Link>
           </Button>
         )}
@@ -165,8 +165,8 @@ export default function AppAccountOverviewPage() {
         ) : (
           <div className="grid gap-4 lg:grid-cols-3">
             {nextSteps.slice(0, 3).map((step) => (
-              <Link key={step.id} href={step.href} className="rounded-xl border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4 transition-colors hover:border-app-cabinet-accent">
-                <p className="text-sm font-semibold text-app-cabinet-text">{step.title}</p>
+              <Link key={step.id} href={step.href} className="min-w-0 rounded-xl border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4 transition-colors hover:border-app-cabinet-accent">
+                <p className="text-sm font-semibold text-app-cabinet-text text-balance">{step.title}</p>
                 <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{step.description}</p>
                 <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-app-cabinet-primary">
                   Открыть <ArrowRight className="h-3.5 w-3.5" />

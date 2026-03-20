@@ -36,7 +36,7 @@ export function AppPageHeader({
         {summary ? <div className="mt-3 flex flex-wrap gap-2">{summary}</div> : null}
       </div>
       {actions ? (
-        <div className="flex shrink-0 flex-wrap gap-3">
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:shrink-0 sm:flex-row sm:flex-wrap [&>[data-slot=button]]:w-full sm:[&>[data-slot=button]]:w-auto [&>a]:w-full sm:[&>a]:w-auto">
           {actions}
         </div>
       ) : null}

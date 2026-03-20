@@ -34,7 +34,7 @@ export default function OwnerOverviewPageV2() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold tracking-tight text-brand-text">Обзор владельца объектов</h1>
           <div className="mt-1 flex items-center gap-2">
             <span className="text-sm text-brand-text-muted">Организация:</span>
@@ -42,11 +42,11 @@ export default function OwnerOverviewPageV2() {
             <AppStatusBadge status={workspace.onboarding.status} className="ml-2" />
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button asChild variant="outline" className="h-11 border-slate-200 bg-white px-6 text-brand-primary hover:bg-brand-secondary">
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <Button asChild variant="outline" className="h-11 w-full border-slate-200 bg-white px-6 text-brand-primary hover:bg-brand-secondary sm:w-auto">
             <Link href="/app/owner/projects?dialog=create">Новый проект</Link>
           </Button>
-          <Button asChild className="h-11 border border-brand-primary bg-brand-primary px-6 text-white hover:bg-brand-primary/90">
+          <Button asChild className="h-11 w-full border border-brand-primary bg-brand-primary px-6 text-white hover:bg-brand-primary/90 sm:w-auto">
             <Link href="/app/owner/rounds">Создать раунд</Link>
           </Button>
         </div>
@@ -54,12 +54,12 @@ export default function OwnerOverviewPageV2() {
 
       <div className="rounded-3xl border border-brand-warning/30 bg-[#FFFAF0]">
         <div className="flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
-          <div className="flex items-start gap-4">
-            <div className="mt-1 rounded-full bg-brand-warning/10 p-2 text-brand-warning">
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="mt-1 shrink-0 rounded-full bg-brand-warning/10 p-2 text-brand-warning">
               <AlertCircle className="h-5 w-5" />
             </div>
-            <div>
-              <h3 className="mb-1 text-base font-semibold text-brand-text">
+            <div className="min-w-0">
+              <h3 className="mb-1 text-base font-semibold text-brand-text text-balance">
                 {workspace.actionItems[0]?.title ?? 'Требуется загрузить отчетность'}
               </h3>
               <p className="text-sm text-brand-text-muted">
@@ -67,8 +67,8 @@ export default function OwnerOverviewPageV2() {
               </p>
             </div>
           </div>
-          <div className="flex w-full shrink-0 items-center gap-3 sm:w-auto">
-            <Button asChild variant="ghost" className="w-full text-brand-text hover:bg-brand-secondary hover:text-brand-primary sm:w-auto">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <Button asChild variant="ghost" className="w-full justify-center text-brand-text hover:bg-brand-secondary hover:text-brand-primary sm:w-auto">
               <Link href={workspace.actionItems[0]?.href ?? '/app/owner/projects'}>Перейти к проекту</Link>
             </Button>
             <Button asChild className="w-full border border-brand-primary bg-brand-primary text-white hover:bg-brand-primary/90 sm:w-auto">
