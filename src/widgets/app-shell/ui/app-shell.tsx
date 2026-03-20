@@ -87,7 +87,7 @@ export function AppShell({ children }: AppShellProps) {
     <div data-cpf-app-shell="true" className="min-h-screen bg-cabinet-canvas text-cabinet-ink">
       <div className="min-h-screen bg-brand-bg md:pl-64">
         <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 shrink-0 md:block">
-          <AppSidebar pathname={pathname} user={session.user} activeMode={activeMode} />
+          <AppSidebar pathname={pathname} user={session.user} activeMode={activeMode} onLogout={session.logout} />
         </aside>
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -100,6 +100,7 @@ export function AppShell({ children }: AppShellProps) {
               user={session.user}
               activeMode={activeMode}
               onNavigate={() => setMobileOpen(false)}
+              onLogout={session.logout}
             />
           </SheetContent>
         </Sheet>
@@ -108,9 +109,7 @@ export function AppShell({ children }: AppShellProps) {
           <AppTopbar
             meta={meta}
             activeMode={activeMode}
-            user={session.user}
             onOpenMenu={() => setMobileOpen(true)}
-            onLogout={session.logout}
           />
           <main id="main-content" className="flex-1">
             <div className="mx-auto flex max-w-[1440px] flex-col gap-6 p-4 sm:p-6 lg:p-8">{children}</div>

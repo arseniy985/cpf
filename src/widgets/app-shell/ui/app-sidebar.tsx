@@ -10,6 +10,7 @@ import {
   CircleDollarSign,
   FileText,
   LayoutDashboard,
+  LogOut,
   PieChart,
   Settings,
   UserCheck,
@@ -27,6 +28,7 @@ type AppSidebarProps = {
   user: AuthUser;
   activeMode: WorkspaceMode;
   onNavigate?: () => void;
+  onLogout?: () => Promise<void>;
 };
 
 const investorLinks = [
@@ -55,7 +57,7 @@ const sharedLinks = [
   { name: 'Настройки', href: '/app/settings', icon: Settings },
 ] as const;
 
-export function AppSidebar({ pathname, user, activeMode, onNavigate }: AppSidebarProps) {
+export function AppSidebar({ pathname, user, activeMode, onNavigate, onLogout }: AppSidebarProps) {
   const ownerAvailable = user.roles.includes('project_owner') || Boolean(user.ownerAccount);
   const links = activeMode === 'investor' ? investorLinks : ownerLinks;
   const initials = user.name
@@ -68,7 +70,7 @@ export function AppSidebar({ pathname, user, activeMode, onNavigate }: AppSideba
   const nextMode = activeMode === 'investor' ? 'owner' : 'investor';
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r border-brand-primary bg-brand-primary md:flex">
+    <aside className="flex h-full min-h-0 w-full flex-col border-r border-white/10 bg-brand-primary">
       <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-6">
         <Link href="/app" className="flex items-center gap-2" onClick={onNavigate}>
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-accent text-lg font-bold text-white">
@@ -147,6 +149,20 @@ export function AppSidebar({ pathname, user, activeMode, onNavigate }: AppSideba
             <span className="mt-1 text-xs text-slate-400">{user.email}</span>
           </div>
         </div>
+
+        {onLogout ? (
+          <button
+            type="button"
+            onClick={() => {
+              void onLogout();
+              onNavigate?.();
+            }}
+            className="flex w-full items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
+          >
+            <LogOut className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            Выйти
+          </button>
+        ) : null}
       </div>
     </aside>
   );

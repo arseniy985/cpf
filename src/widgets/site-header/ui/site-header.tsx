@@ -95,19 +95,19 @@ export default function Header() {
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-            type="text"
-            placeholder="Поиск по коммерческой недвижимости и инвестпроектам…"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                handleSearchSubmit();
-              }
-            }}
+              type="text"
+              placeholder="Поиск по коммерческой недвижимости и инвестпроектам…"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleSearchSubmit();
+                }
+              }}
               className="h-13 rounded-full border-transparent bg-muted pl-11 pr-4"
             />
           </div>
-          <Button size="icon" className="shrink-0" onClick={handleSearchSubmit}>
+          <Button size="icon" className="shrink-0" onClick={handleSearchSubmit} aria-label="Запустить поиск">
             <Search className="size-4" />
           </Button>
         </div>
@@ -134,13 +134,21 @@ export default function Header() {
           )}
         </div>
 
-        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden rounded-2xl">
-              <Menu className="size-5" />
-              <span className="sr-only">Открыть меню</span>
-            </Button>
-          </SheetTrigger>
+        <div className="flex items-center gap-2 lg:hidden">
+          <Button asChild size="sm" className="h-10 rounded-full px-4 shadow-md shadow-primary/15">
+            <Link href={accountLink.href} className="flex items-center gap-2">
+              <User className="size-4" aria-hidden="true" />
+              <span>{accountLink.label}</span>
+            </Link>
+          </Button>
+
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-2xl" aria-label="Открыть меню навигации">
+                <Menu className="size-5" aria-hidden="true" />
+                <span className="sr-only">Открыть меню</span>
+              </Button>
+            </SheetTrigger>
           <SheetContent side="right" className="flex w-[90vw] max-w-sm flex-col bg-indigo-950 text-white">
             <SheetHeader>
               <SheetTitle>Навигация ЦПФ</SheetTitle>
@@ -160,10 +168,19 @@ export default function Header() {
                       handleSearchSubmit();
                     }
                   }}
-                  placeholder="Поиск по проектам"
+                  placeholder="Поиск по проектам…"
                   className="rounded-full border-indigo-800 bg-indigo-900 pl-11 text-white placeholder:text-indigo-300"
                 />
               </div>
+
+              <Button
+                type="button"
+                width="full"
+                className="h-11 rounded-full bg-white text-indigo-950 hover:bg-indigo-100"
+                onClick={handleSearchSubmit}
+              >
+                Найти проект
+              </Button>
 
               <div className="grid gap-2">
                 {navLinks.map((link) => (
@@ -208,7 +225,8 @@ export default function Header() {
               ) : null}
             </div>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
       </div>
 
       <nav className="hidden lg:flex bg-indigo-950 text-white px-6 py-3.5 gap-7 justify-start overflow-x-auto whitespace-nowrap shadow-inner">
