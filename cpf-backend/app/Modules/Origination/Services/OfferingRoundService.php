@@ -70,50 +70,26 @@ class OfferingRoundService
         $this->assertOwnership($user, $round);
         $round->loadMissing('project', 'ownerAccount.onboarding');
 
-        if (! in_array($round->status, ['pending_review', 'ready'], true)) {
-            throw ValidationException::withMessages([
-                'round' => ['Открыть сбор можно только после отправки раунда на проверку.'],
-            ]);
-        }
+        return $this->publishRound($round);
+    }
 
-        if ($round->project?->status !== 'published') {
-            throw ValidationException::withMessages([
-                'project' => ['Открыть сбор можно только для опубликованного проекта.'],
-            ]);
-        }
+    public function goLiveAsAdmin(OfferingRound $round): OfferingRound
+    {
+        $round->loadMissing('project', 'ownerAccount.onboarding');
 
-        if (! in_array($round->ownerAccount?->onboarding?->status, ['kyb_approved', 'active'], true)) {
-            throw ValidationException::withMessages([
-                'owner' => ['Профиль компании должен быть одобрен перед запуском сбора.'],
-            ]);
-        }
-
-        $round->forceFill([
-            'status' => 'live',
-            'opens_at' => $round->opens_at ?: now(),
-            'went_live_at' => now(),
-        ])->save();
-
-        return $round->fresh(['project', 'allocations', 'distributions']);
+        return $this->publishRound($round);
     }
 
     public function close(User $user, OfferingRound $round): OfferingRound
     {
         $this->assertOwnership($user, $round);
 
-        if (! in_array($round->status, ['live', 'fully_allocated'], true)) {
-            throw ValidationException::withMessages([
-                'round' => ['Закрыть можно только активный или полностью заполненный раунд.'],
-            ]);
-        }
+        return $this->closeAsAdmin($round);
+    }
 
-        $round->forceFill([
-            'status' => 'closed',
-            'closes_at' => $round->closes_at ?: now(),
-            'closed_at' => now(),
-        ])->save();
-
-        return $round->fresh(['project', 'allocations', 'distributions']);
+    public function closeAsAdmin(OfferingRound $round): OfferingRound
+    {
+        return $this->finalizeClose($round);
     }
 
     public function ensureAcceptingRound(Project $project): ?OfferingRound
@@ -153,5 +129,51 @@ class OfferingRoundService
     private function assertOwnership(User $user, OfferingRound $round): void
     {
         abort_unless($round->ownerAccount->members()->where('user_id', $user->id)->exists(), 404);
+    }
+
+    private function publishRound(OfferingRound $round): OfferingRound
+    {
+        if (! in_array($round->status, ['pending_review', 'ready'], true)) {
+            throw ValidationException::withMessages([
+                'round' => ['Открыть сбор можно только после отправки раунда на проверку.'],
+            ]);
+        }
+
+        if ($round->project?->status !== 'published') {
+            throw ValidationException::withMessages([
+                'project' => ['Открыть сбор можно только для опубликованного проекта.'],
+            ]);
+        }
+
+        if (! in_array($round->ownerAccount?->onboarding?->status, ['kyb_approved', 'active'], true)) {
+            throw ValidationException::withMessages([
+                'owner' => ['Профиль компании должен быть одобрен перед запуском сбора.'],
+            ]);
+        }
+
+        $round->forceFill([
+            'status' => 'live',
+            'opens_at' => $round->opens_at ?: now(),
+            'went_live_at' => now(),
+        ])->save();
+
+        return $round->fresh(['project', 'allocations', 'distributions']);
+    }
+
+    private function finalizeClose(OfferingRound $round): OfferingRound
+    {
+        if (! in_array($round->status, ['live', 'fully_allocated'], true)) {
+            throw ValidationException::withMessages([
+                'round' => ['Закрыть можно только активный или полностью заполненный раунд.'],
+            ]);
+        }
+
+        $round->forceFill([
+            'status' => 'closed',
+            'closes_at' => $round->closes_at ?: now(),
+            'closed_at' => now(),
+        ])->save();
+
+        return $round->fresh(['project', 'allocations', 'distributions']);
     }
 }

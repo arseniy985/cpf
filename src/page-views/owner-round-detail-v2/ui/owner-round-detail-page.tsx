@@ -28,6 +28,9 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
   const approveDistributionMutation = useApproveOwnerDistributionMutation();
   const runDistributionMutation = useRunOwnerDistributionPayoutsMutation();
   const historyQuery = useOwnerRoundHistoryQuery(slug);
+  const goLiveBlocker = goLiveMutation.isError
+    ? getApiErrorMessage(goLiveMutation.error, 'Не удалось опубликовать раунд.')
+    : null;
 
   if (roundQuery.isPending) {
     return (
@@ -93,6 +96,19 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
           </>
         )}
       />
+
+      {goLiveBlocker ? (
+        <AppSurface
+          eyebrow="Блокировка публикации"
+          title="Раунд пока нельзя открыть"
+          description={goLiveBlocker}
+          tone="secondary"
+        >
+          <p className="text-sm text-brand-text-muted">
+            После одобрения компании в админке раунд можно будет повторно отправить в публикацию без пересоздания.
+          </p>
+        </AppSurface>
+      ) : null}
 
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <AppSurface eyebrow="Условия" title={formatMoney(round.targetAmount)} description="Целевой объём раунда.">

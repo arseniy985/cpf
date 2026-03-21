@@ -12,6 +12,7 @@ import {
   formatProjectTerm,
   formatProjectYield,
   getProjectCategoryLabel,
+  getProjectCoverImage,
   projectCategoryLabels,
 } from '@/entities/project';
 import { AppEmptyState } from '@/shared/ui/app-cabinet/app-empty-state';
@@ -174,7 +175,7 @@ export default function AppProjectCatalogPage() {
                 <div className="grid h-full gap-0 lg:grid-cols-[0.92fr_1.08fr]">
                   <div className="relative min-h-[240px] border-b border-[#DCE6F5] lg:border-b-0 lg:border-r">
                     <Image
-                      src={project.coverImageUrl ?? 'https://picsum.photos/seed/app-project-catalog/1200/800'}
+                      src={getProjectCoverImage(project.coverImageUrl)}
                       alt={project.title}
                       fill
                       className="object-cover"

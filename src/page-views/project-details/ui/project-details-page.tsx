@@ -12,6 +12,7 @@ import {
   formatProjectTerm,
   formatProjectYield,
   getProjectCategoryLabel,
+  getProjectCoverImage,
 } from '@/entities/project';
 import { useProjectFaqQuery, useProjectForecastQuery, useProjectQuery } from '@/entities/project/api/hooks';
 import { formatMoney } from '@/shared/lib/format';
@@ -58,7 +59,7 @@ export default function ProjectDetailsPage({ projectSlug }: { projectSlug: strin
                 <div className="space-y-6 lg:col-span-8">
                   <div className="relative h-[420px] overflow-hidden rounded-[32px] border border-slate-200">
                     <Image
-                      src={project.coverImageUrl ?? 'https://picsum.photos/seed/project/1200/800'}
+                      src={getProjectCoverImage(project.coverImageUrl)}
                       alt={project.title}
                       fill
                       className="object-cover"

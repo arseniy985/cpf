@@ -11,6 +11,7 @@ import {
   formatProjectTerm,
   formatProjectYield,
   getProjectCategoryLabel,
+  getProjectCoverImage,
   projectCategoryLabels,
 } from '@/entities/project';
 import { useProjectsQuery } from '@/entities/project/api/hooks';
@@ -162,7 +163,7 @@ export default function ProjectsPage({ initialSearch = '' }: { initialSearch?: s
               <Card key={project.id} className="overflow-hidden rounded-[32px]">
                 <div className="relative h-64 border-b border-slate-200">
                   <Image
-                    src={project.coverImageUrl ?? 'https://picsum.photos/seed/project-card/1200/800'}
+                    src={getProjectCoverImage(project.coverImageUrl)}
                     alt={project.title}
                     fill
                     className="object-cover"
