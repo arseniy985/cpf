@@ -1,24 +1,105 @@
 <x-filament-panels::page>
-    <div class="space-y-6">
+    <style>
+        .cpf-queue-page {
+            display: grid;
+            gap: 24px;
+        }
+
+        .cpf-queue-panel,
+        .cpf-queue-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 18px 40px -28px rgba(15, 23, 42, 0.35);
+        }
+
+        .cpf-queue-panel {
+            padding: 20px;
+        }
+
+        .cpf-queue-grid {
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .cpf-queue-item {
+            padding: 16px;
+        }
+
+        .cpf-queue-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .cpf-queue-count {
+            min-width: 92px;
+            text-align: right;
+        }
+
+        .cpf-queue-title,
+        .cpf-queue-section-title {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .cpf-queue-section-copy,
+        .cpf-queue-copy,
+        .cpf-queue-meta {
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        .cpf-queue-value {
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1;
+            color: #111827;
+        }
+
+        .cpf-queue-action {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 14px;
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .cpf-queue-action:hover,
+        .cpf-queue-action:focus-visible {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 768px) {
+            .cpf-queue-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+
+    <div class="cpf-queue-page">
         @foreach ($sections as $section)
-            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-gray-900">
-                <div class="flex flex-col gap-1">
-                    <h2 class="text-base font-semibold text-gray-950 dark:text-white">{{ $section['title'] }}</h2>
-                    <p class="text-sm leading-6 text-gray-500 dark:text-gray-400">{{ $section['description'] }}</p>
+            <section class="cpf-queue-panel">
+                <div>
+                    <h2 class="cpf-queue-section-title">{{ $section['title'] }}</h2>
+                    <p class="cpf-queue-section-copy">{{ $section['description'] }}</p>
                 </div>
 
-                <div class="mt-5 grid gap-4 md:grid-cols-2">
+                <div class="cpf-queue-grid">
                     @foreach ($section['items'] as $item)
-                        <div class="rounded-xl border border-gray-200 p-4 dark:border-white/10">
-                            <div class="flex items-start justify-between gap-4">
-                                <div class="min-w-0">
-                                    <div class="text-sm font-semibold text-gray-950 dark:text-white">{{ $item['label'] }}</div>
-                                    <p class="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">{{ $item['description'] }}</p>
+                        <div class="cpf-queue-item">
+                            <div class="cpf-queue-head">
+                                <div>
+                                    <div class="cpf-queue-title">{{ $item['label'] }}</div>
+                                    <p class="cpf-queue-copy">{{ $item['description'] }}</p>
                                 </div>
 
-                                <div class="shrink-0 text-right">
-                                    <div class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white">{{ $item['count'] }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                <div class="cpf-queue-count">
+                                    <div class="cpf-queue-value">{{ $item['count'] }}</div>
+                                    <div class="cpf-queue-meta">
                                         @if ($item['overdue'] > 0)
                                             Просрочено: {{ $item['overdue'] }}
                                         @else
@@ -28,12 +109,7 @@
                                 </div>
                             </div>
 
-                            <a
-                                href="{{ $item['url'] }}"
-                                class="mt-4 inline-flex items-center text-sm font-medium text-blue-700 transition hover:text-blue-900 focus-visible:outline-none focus-visible:underline dark:text-blue-300 dark:hover:text-blue-100"
-                            >
-                                {{ $item['action'] }}
-                            </a>
+                            <a href="{{ $item['url'] }}" class="cpf-queue-action">{{ $item['action'] }}</a>
                         </div>
                     @endforeach
                 </div>
