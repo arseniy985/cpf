@@ -27,7 +27,7 @@ const navLinks = [
   { name: 'Тарифы', href: '/tariffs' },
   { name: 'Документы', href: '/documents' },
   { name: 'Отзывы', href: '/reviews' },
-  { name: 'FAQ', href: '/faq' },
+  { name: 'Вопросы', href: '/faq' },
   { name: 'Блог', href: '/blog' },
   { name: 'Контакты', href: '/contacts' },
   { name: 'Кабинет', href: '/app' },

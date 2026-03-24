@@ -7,6 +7,8 @@ type StatusMeta = {
 
 const statusMap: Record<string, StatusMeta> = {
   verified: { label: 'Подтверждено', tone: 'success' },
+  confirmed: { label: 'Подтверждено', tone: 'success' },
+  succeeded: { label: 'Исполнено', tone: 'success' },
   'email verified': { label: 'Почта подтверждена', tone: 'success' },
   'email not verified': { label: 'Почта не подтверждена', tone: 'warning' },
   draft: { label: 'Черновик', tone: 'neutral' },
@@ -38,6 +40,8 @@ const statusMap: Record<string, StatusMeta> = {
   precheck: { label: 'Предпроверка', tone: 'info' },
   documents_required: { label: 'Нужны документы', tone: 'warning' },
   published: { label: 'Опубликован', tone: 'success' },
+  preparing: { label: 'Подготовка', tone: 'info' },
+  collecting: { label: 'Идёт сбор', tone: 'success' },
   archived: { label: 'В архиве', tone: 'neutral' },
   kyc_draft: { label: 'Черновик проверки', tone: 'neutral' },
   kyc_review: { label: 'Проверка профиля', tone: 'info' },
@@ -72,8 +76,10 @@ export function getStatusMeta(status: string | null | undefined): StatusMeta {
     };
   }
 
-  return statusMap[status] ?? {
-    label: status.replaceAll('_', ' '),
+  const normalized = status.trim().toLowerCase().replace(/[\s-]+/g, '_');
+
+  return statusMap[normalized] ?? {
+    label: status.replaceAll('_', ' ').replaceAll('-', ' '),
     tone: 'neutral',
   };
 }

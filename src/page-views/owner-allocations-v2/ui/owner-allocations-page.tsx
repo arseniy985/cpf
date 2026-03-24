@@ -25,11 +25,11 @@ export default function OwnerAllocationsPageV2() {
     <div className="space-y-6">
       <AppPageHeader
         eyebrow="Кабинет владельца"
-        title="Инвесторы и аллокации"
-        description="Страница собирает заявки инвесторов, подтверждённые аллокации, отмены и историю обработки по выбранному раунду."
+        title="Заявки инвесторов"
+        description="Здесь собраны заявки в выбранный раунд, подтверждённые участия, отмены и история обработки."
       />
 
-      <AppSurface eyebrow="Выбор раунда" title="Раунд для просмотра" description="Список заявок и распределений переключается в зависимости от выбранного раунда." tone="secondary">
+      <AppSurface eyebrow="Выбор раунда" title="Какой раунд открыть" description="Состав заявок и подтверждённых инвестиций зависит от выбранного раунда." tone="secondary">
         {rounds.length ? (
           <div className="max-w-md">
             <Select value={effectiveSlug ?? ''} onValueChange={setSelectedRoundSlug}>
@@ -46,11 +46,11 @@ export default function OwnerAllocationsPageV2() {
             </Select>
           </div>
         ) : (
-          <AppEmptyState title="Раундов пока нет" description="Создайте раунд, чтобы открыть раздел заявок и распределений." />
+          <AppEmptyState title="Раундов пока нет" description="Создайте раунд, чтобы открыть раздел заявок инвесторов." />
         )}
       </AppSurface>
 
-      <AppSurface eyebrow="Список" title="Заявки инвесторов и аллокации" description="Здесь показываются статусы обработки, подтверждения, отмены и комментарии без лишних приватных деталей.">
+      <AppSurface eyebrow="Список" title="Заявки и подтверждённые участия" description="Показываем сумму заявки, статус обработки и наличие договора без служебных технических деталей.">
         {allocations.length ? (
           <div className="space-y-3">
             {allocations.map((allocation) => (
@@ -59,7 +59,7 @@ export default function OwnerAllocationsPageV2() {
                   <div>
                     <p className="text-sm font-semibold text-app-cabinet-text">{allocation.investorName ?? allocation.investorEmail ?? 'Инвестор'}</p>
                     <p className="mt-1 text-sm text-app-cabinet-muted">{formatMoney(allocation.amount)} · {allocation.round.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{allocation.agreementUrl ? 'Договор доступен в контексте аллокации.' : 'Договор пока не приложен.'}</p>
+                    <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">{allocation.agreementUrl ? 'Договор загружен и доступен в карточке заявки.' : 'Договор по этой заявке пока не загружен.'}</p>
                   </div>
                   <AppStatusBadge status={allocation.status} />
                 </div>
@@ -67,7 +67,7 @@ export default function OwnerAllocationsPageV2() {
             ))}
           </div>
         ) : (
-          <AppEmptyState title="Аллокации пока не найдены" description="Выберите другой раунд или дождитесь первых заявок инвесторов." />
+          <AppEmptyState title="Заявок пока нет" description="Выберите другой раунд или дождитесь первых заявок от инвесторов." />
         )}
       </AppSurface>
     </div>

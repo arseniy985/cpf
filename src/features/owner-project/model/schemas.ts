@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const ownerProjectSchema = z.object({
-  slug: z.string().min(2, 'Укажите slug.'),
+  slug: z.string().min(2, 'Укажите короткий адрес проекта.'),
   title: z.string().min(3, 'Укажите название.'),
   excerpt: z.string().min(10, 'Добавьте краткое описание.'),
   description: z.string().min(20, 'Добавьте полное описание.'),

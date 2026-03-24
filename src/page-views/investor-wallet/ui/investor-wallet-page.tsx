@@ -47,7 +47,7 @@ export default function InvestorWalletPage() {
       {dashboard && dashboard.summary.walletBalance > 0 ? (
         <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
           <div className="cabinet-card shadow-none">
-            <div className="space-y-4 p-8">
+            <div className="space-y-4 p-5 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-text-muted">Доступно сейчас</p>
               <h2 className="text-4xl font-bold tracking-tight text-brand-text">{formatMoney(dashboard.summary.walletBalance)}</h2>
               <p className="max-w-md text-sm leading-6 text-brand-text-muted">
@@ -67,15 +67,15 @@ export default function InvestorWalletPage() {
           </div>
 
           <div className="cabinet-card shadow-none">
-            <div className="flex items-center justify-between border-b border-[#E2E8F0] p-6 pb-4">
-              <div>
+            <div className="flex flex-col gap-3 border-b border-[#E2E8F0] p-5 pb-4 sm:p-6 sm:pb-4">
+              <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-brand-text">История операций</h3>
                 <p className="mt-1 text-sm text-brand-text-muted">Последние движения по балансу с датой и текущим статусом.</p>
               </div>
             </div>
             <div className="divide-y divide-[#E2E8F0]">
               {walletTransactions.length ? walletTransactions.map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between gap-4 p-4">
+                <div key={transaction.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-start gap-3">
                     <div className={transaction.direction === 'credit' ? 'rounded-full bg-brand-success/10 p-2 text-brand-success' : 'rounded-full bg-brand-warning/10 p-2 text-brand-warning'}>
                       {transaction.direction === 'credit' ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
@@ -85,7 +85,7 @@ export default function InvestorWalletPage() {
                       <p className="mt-1 text-xs text-brand-text-muted">{formatDateTime(transaction.occurredAt)}</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="sm:shrink-0 sm:text-right">
                     <p className={transaction.direction === 'credit' ? 'text-sm font-semibold text-brand-success' : 'text-sm font-semibold text-brand-text'}>
                       {transaction.direction === 'credit' ? '+' : '-'} {formatMoney(transaction.amount, transaction.currency)}
                     </p>

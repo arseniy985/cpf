@@ -41,7 +41,7 @@ export default function Hero() {
             </h1>
             
             <p className="text-lg text-slate-600 mb-8 max-w-lg leading-relaxed font-medium">
-              Выбирайте проверенный проект, проходите короткий KYC, пополняйте кошелек и подтверждайте участие в сделке прямо на платформе.
+              Выбирайте проверенный проект, проходите короткую проверку профиля, пополняйте кошелёк и подтверждайте участие в сделке прямо на платформе.
             </p>
             
             {/* Trust Badges */}
@@ -62,7 +62,7 @@ export default function Hero() {
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-indigo-600">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold text-slate-600 leading-tight">KYC, документы и контроль рисков</span>
+                <span className="text-xs font-bold text-slate-600 leading-tight">Проверка профиля, документы и контроль рисков</span>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-indigo-600">

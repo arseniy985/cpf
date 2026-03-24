@@ -9,6 +9,7 @@ import {
   formatProjectMoney,
   formatProjectTerm,
   formatProjectYield,
+  getProjectCoverImage,
   getProjectCategoryLabel,
   projectCategoryLabels,
 } from '@/entities/project';
@@ -68,11 +69,13 @@ export default function Projects() {
             >
               <div className="relative h-60 w-full overflow-hidden">
                 <Image
-                  src={project.coverImageUrl ?? 'https://picsum.photos/seed/home-project/1200/800'}
+                  src={getProjectCoverImage(project.coverImageUrl, {
+                    title: project.title,
+                    accent: getProjectCategoryLabel(project.assetType),
+                  })}
                   alt={project.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/60 to-transparent opacity-50"></div>
                 <div className="absolute top-4 left-4">

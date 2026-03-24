@@ -159,12 +159,12 @@ export function OwnerOnboardingForms() {
         <form className="space-y-4 border border-app-cabinet-border bg-app-cabinet-surface px-5 py-5" onSubmit={accountForm.handleSubmit(submitAccount)}>
           <div>
             <h3 className="text-lg font-semibold text-app-cabinet-text">Профиль кабинета</h3>
-            <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">Название кабинета, адрес профиля и краткое описание компании.</p>
+            <p className="mt-2 text-sm leading-6 text-app-cabinet-muted">Название кабинета, короткий адрес и краткое описание компании.</p>
           </div>
           <SectionAlert message={accountError} />
           <div className="grid gap-4 md:grid-cols-2">
             <FormField control={accountForm.control} name="display_name" render={({ field }) => <TextField field={field} name="display_name" label="Название кабинета *" placeholder="ООО Центр актива…" />} />
-            <FormField control={accountForm.control} name="slug" render={({ field }) => <TextField field={field} name="slug" label="Адрес профиля *" placeholder="center-asset…" description="Используйте латиницу, цифры и дефис." />} />
+            <FormField control={accountForm.control} name="slug" render={({ field }) => <TextField field={field} name="slug" label="Короткий адрес кабинета *" placeholder="center-asset…" description="Используйте латиницу, цифры и дефис." />} />
           </div>
           <FormField control={accountForm.control} name="website_url" render={({ field }) => <TextField field={field} name="website_url" label="Сайт" placeholder="https://company.ru…" />} />
           <FormField
@@ -244,7 +244,7 @@ export function OwnerOnboardingForms() {
           </div>
           <SectionAlert message={bankError} />
           <div className="grid gap-4 md:grid-cols-2">
-            <FormField control={bankForm.control} name="payout_method" render={({ field }) => <TextField field={field} name="payout_method" label="Способ расчёта *" placeholder="manual…" />} />
+            <FormField control={bankForm.control} name="payout_method" render={({ field }) => <TextField field={field} name="payout_method" label="Способ расчёта *" placeholder="Ручной перевод…" />} />
             <FormField control={bankForm.control} name="recipient_name" render={({ field }) => <TextField field={field} name="recipient_name" label="Получатель *" placeholder="ООО Центр актива…" />} />
             <FormField control={bankForm.control} name="bank_name" render={({ field }) => <TextField field={field} name="bank_name" label="Банк *" placeholder="Т-Банк…" />} />
             <FormField control={bankForm.control} name="bank_bik" render={({ field }) => <TextField field={field} name="bank_bik" label="БИК *" placeholder="044525974…" />} />

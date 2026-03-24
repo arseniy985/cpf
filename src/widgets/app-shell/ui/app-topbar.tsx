@@ -20,7 +20,7 @@ export function AppTopbar({ meta, activeMode, onOpenMenu }: AppTopbarProps) {
         className="-m-2.5 rounded-full p-2.5 text-brand-text-muted transition-colors hover:bg-slate-100 hover:text-brand-text md:hidden"
         aria-label="Открыть меню кабинета"
       >
-        <span className="sr-only">Open sidebar</span>
+        <span className="sr-only">Открыть боковое меню</span>
         <Menu className="h-6 w-6" aria-hidden="true" />
       </button>
 
@@ -75,7 +75,7 @@ export function AppTopbar({ meta, activeMode, onOpenMenu }: AppTopbarProps) {
           </Button>
 
           <Button asChild variant="ghost" size="icon" className="-m-2.5 relative rounded-full p-2.5 text-brand-text-muted hover:bg-slate-100 hover:text-brand-text">
-            <Link href="/app/notifications" aria-label="View notifications">
+            <Link href="/app/notifications" aria-label="Открыть уведомления">
               <Bell className="h-5 w-5" aria-hidden="true" />
               <span className="absolute right-2.5 top-2 block h-2 w-2 rounded-full bg-brand-error ring-2 ring-white" />
             </Link>

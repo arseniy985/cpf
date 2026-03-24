@@ -1,4 +1,5 @@
 import type { AuditLogEntry } from '@/entities/audit-log/api/types';
+import { formatAuditLogEntry } from './format-audit-log-entry';
 
 type TimelineTone = 'default' | 'success' | 'warning';
 
@@ -17,13 +18,7 @@ function resolveTone(entry: AuditLogEntry): TimelineTone {
 export function toTimelineItems(entries: AuditLogEntry[]) {
   return entries.map((entry) => ({
     id: entry.id,
-    title: entry.subjectLabel,
-    description: entry.changedFields.length
-      ? `${entry.description}. Поля: ${entry.changedFields.join(', ')}.`
-      : entry.description,
-    meta: entry.causerName
-      ? `${entry.createdAt ?? 'Без даты'} · ${entry.causerName}`
-      : entry.createdAt ?? 'Без даты',
+    ...formatAuditLogEntry(entry),
     tone: resolveTone(entry),
   }));
 }

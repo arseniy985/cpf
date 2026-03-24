@@ -11,30 +11,30 @@ const authBenefits = {
     },
     {
       icon: FileCheck2,
-      title: 'KYC без хаоса',
-      text: 'Паспорт, статусы проверки и комментарии менеджера держатся в одном понятном контуре.',
+      title: 'Проверка профиля без путаницы',
+      text: 'Паспорт, статусы проверки и комментарии менеджера собраны в одном понятном разделе.',
     },
     {
       icon: WalletCards,
-      title: 'Портфель & выплаты',
-      text: 'Деньги, кошелек, подтвержденные участия и будущие распределения видны сразу.',
+      title: 'Портфель и выплаты',
+      text: 'Баланс, подтверждённые участия и будущие выплаты видны сразу.',
     },
   ],
   owner: [
     {
       icon: ShieldCheck,
-      title: 'Owner onboarding',
-      text: 'Сразу после входа открывается профиль компании, реквизиты и этапы KYB.',
+      title: 'Профиль компании',
+      text: 'Сразу после входа доступны профиль компании, реквизиты и этапы проверки.',
     },
     {
       icon: Landmark,
       title: 'Раунды без ручной координации',
-      text: 'Проекты, окна размещения, аллокации и payout queue ведутся в одном owner workspace.',
+      text: 'Проекты, этапы размещения, заявки инвесторов и выплаты собраны в одном рабочем кабинете.',
     },
     {
       icon: BarChart3,
       title: 'Структурированный запуск',
-      text: 'Черновик объекта можно подготовить заранее, а после approval быстро выйти в live.',
+      text: 'Черновик объекта можно подготовить заранее, а после одобрения быстро открыть сбор.',
     },
   ],
 } as const;
@@ -60,7 +60,7 @@ export function AuthPromoPanel({
       <div className={`pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.05),transparent_52%)] ${isOwner ? 'opacity-80' : 'opacity-100'}`} />
       <div className="pointer-events-none absolute inset-x-10 bottom-0 h-px bg-white/10" />
       <Badge className={isOwner ? 'border-[#f7d5c1]/20 bg-[#f7d5c1]/10 text-[#ffe7d7]' : 'border-teal-400/30 bg-teal-400/15 text-teal-100'}>
-        {isOwner ? 'Owner Workspace' : 'Investor Cabinet'}
+        {isOwner ? 'Кабинет владельца' : 'Кабинет инвестора'}
       </Badge>
       <h1 className="mt-6 text-4xl font-display font-black leading-tight text-balance md:text-6xl">
         {mode === 'register'
@@ -68,7 +68,7 @@ export function AuthPromoPanel({
             ? 'Запускайте объекты через собственный рабочий контур.'
             : 'Откройте доступ к сделкам, документам и портфелю.'
           : isOwner
-            ? 'Вернитесь в owner workspace и продолжите подготовку размещения.'
+            ? 'Вернитесь в кабинет владельца и продолжите подготовку размещения.'
             : 'Вернитесь в кабинет и продолжите работу с проектами.'}
       </h1>
       <p className={`mt-6 max-w-xl text-base leading-relaxed md:text-lg ${isOwner ? 'text-[#f2d6c8]' : 'text-indigo-100'}`}>

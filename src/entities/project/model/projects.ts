@@ -1,4 +1,5 @@
 import type { PublicProject } from './public-project';
+import { getProjectCoverImage } from '@/entities/project/lib/get-project-cover-image';
 
 export type Project = {
   id: string;
@@ -27,7 +28,7 @@ export const projects: Project[] = [
     yield: '22.5%',
     term: '36 мес',
     funded: 85,
-    image: 'https://picsum.photos/seed/building1/1200/800',
+    image: getProjectCoverImage(null, {title: 'Торговый центр "Галерея"', accent: 'Retail & tenant mix'}),
     status: 'Сбор средств',
     shortDescription: 'Объект с действующими арендаторами и долгосрочными договорами аренды.',
     riskLevel: 'Умеренный',
@@ -42,7 +43,7 @@ export const projects: Project[] = [
     yield: '19.8%',
     term: '24 мес',
     funded: 100,
-    image: 'https://picsum.photos/seed/warehouse/1200/800',
+    image: getProjectCoverImage(null, {title: 'Складской комплекс А+', accent: 'Logistics & cashflow'}),
     status: 'Сбор закрыт',
     shortDescription: 'Склад с якорным арендатором и подтвержденным денежным потоком.',
     riskLevel: 'Низкий',
@@ -57,7 +58,7 @@ export const projects: Project[] = [
     yield: '26.0%',
     term: '12 мес',
     funded: 45,
-    image: 'https://picsum.photos/seed/street/1200/800',
+    image: getProjectCoverImage(null, {title: 'Сеть стрит-ритейла', accent: 'Urban repositioning'}),
     status: 'Сбор средств',
     shortDescription: 'Реконцепция помещений под арендаторов ежедневного спроса.',
     riskLevel: 'Повышенный',
@@ -72,7 +73,7 @@ export const projects: Project[] = [
     yield: '30.0%',
     term: '18 мес',
     funded: 12,
-    image: 'https://picsum.photos/seed/coffee/1200/800',
+    image: getProjectCoverImage(null, {title: 'Сеть кофеен "Утро"', accent: 'Operating business'}),
     status: 'Сбор средств',
     shortDescription: 'Пакет действующих точек с операционной моделью и отчетностью.',
     riskLevel: 'Повышенный',
@@ -87,7 +88,7 @@ export const projects: Project[] = [
     yield: '24.0%',
     term: '48 мес',
     funded: 60,
-    image: 'https://picsum.photos/seed/clinic/1200/800',
+    image: getProjectCoverImage(null, {title: 'Медицинская клиника', accent: 'Healthcare operations'}),
     status: 'Сбор средств',
     shortDescription: 'Клиника с действующей лицензией и стабильной базой пациентов.',
     riskLevel: 'Умеренный',
@@ -102,7 +103,7 @@ export const projects: Project[] = [
     yield: '45.0%',
     term: '60 мес',
     funded: 90,
-    image: 'https://picsum.photos/seed/it/1200/800',
+    image: getProjectCoverImage(null, {title: 'IT-компания (SaaS)', accent: 'Equity participation'}),
     status: 'Сбор средств',
     shortDescription: 'Долевое участие в продуктовой компании с подтвержденной выручкой.',
     riskLevel: 'Высокий',

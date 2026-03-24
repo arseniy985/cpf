@@ -40,7 +40,7 @@ export default function Footer() {
               <li><Link href="/projects" className="hover:text-teal-400 transition-colors">Проекты</Link></li>
               <li><Link href="/calculator" className="hover:text-teal-400 transition-colors">Калькулятор</Link></li>
               <li><Link href="/tariffs" className="hover:text-teal-400 transition-colors">Тарифы</Link></li>
-              <li><Link href="/faq" className="hover:text-teal-400 transition-colors">FAQ</Link></li>
+              <li><Link href="/faq" className="hover:text-teal-400 transition-colors">Вопросы</Link></li>
             </ul>
           </div>
 

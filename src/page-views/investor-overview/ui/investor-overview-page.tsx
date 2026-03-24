@@ -60,7 +60,8 @@ export default function InvestorOverviewPage() {
       id: `${item.id}-${document.id}`,
       title: document.title,
       subtitle: item.project.title,
-      href: '/app/investor/documents',
+      href: document.fileUrl ?? '/app/investor/documents',
+      external: Boolean(document.fileUrl),
     })))
     .slice(0, 2);
 
@@ -185,7 +186,7 @@ export default function InvestorOverviewPage() {
                 </Link>
               )) : (
                 <div className="p-6">
-                  <AppEmptyState title="Активных инвестиций пока нет" description="После подтверждения аллокаций здесь появятся активные позиции." />
+                  <AppEmptyState title="Активных инвестиций пока нет" description="После подтверждения заявок здесь появятся активные позиции." />
                 </div>
               )}
             </div>
@@ -219,7 +220,13 @@ export default function InvestorOverviewPage() {
             </div>
             <div className="space-y-3 p-6 pt-0">
               {nextDocuments.length ? nextDocuments.map((document) => (
-                <Link key={document.id} href={document.href} className="flex items-start gap-3">
+                <Link
+                  key={document.id}
+                  href={document.href}
+                  target={document.external ? '_blank' : undefined}
+                  rel={document.external ? 'noreferrer' : undefined}
+                  className="flex items-start gap-3"
+                >
                   <FileText className="mt-0.5 h-4 w-4 text-brand-text-muted" />
                   <div>
                     <p className="cursor-pointer text-sm text-brand-text transition-colors hover:text-brand-primary">{document.title}</p>

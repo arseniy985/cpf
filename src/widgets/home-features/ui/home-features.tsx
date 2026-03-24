@@ -26,7 +26,32 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="md:col-span-8 md:row-span-2 bg-indigo-950 rounded-[40px] p-10 md:p-16 relative overflow-hidden group"
           >
-            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://picsum.photos/seed/arch/800/800')] bg-cover bg-center opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_18%,rgba(125,211,252,0.22),transparent_22%),radial-gradient(circle_at_18%_78%,rgba(255,255,255,0.12),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.02))] opacity-90 transition-transform duration-700 group-hover:scale-105"></div>
+            <div className="absolute inset-y-16 right-14 hidden w-72 rounded-[32px] border border-white/12 bg-white/6 p-6 md:block">
+              <div className="mb-4 flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-indigo-200">
+                <span>Денежный поток</span>
+                <span>Ежемесячно</span>
+              </div>
+              <div className="space-y-4">
+                <div className="h-2 rounded-full bg-white/10">
+                  <div className="h-2 w-[72%] rounded-full bg-teal-300"></div>
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-xs text-indigo-100">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                    <div className="mb-1 text-indigo-300">Аренда</div>
+                    <div className="text-lg font-bold text-white">81%</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                    <div className="mb-1 text-indigo-300">Расходы</div>
+                    <div className="text-lg font-bold text-white">12%</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                    <div className="mb-1 text-indigo-300">Чистый доход</div>
+                    <div className="text-lg font-bold text-white">69%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/80 to-transparent"></div>
             
             <div className="relative z-10 h-full flex flex-col justify-between">

@@ -46,7 +46,7 @@ const ownerLinks = [
   { name: 'Организация', href: '/app/owner/organization', icon: Building2 },
   { name: 'Проекты', href: '/app/owner/projects', icon: FolderKanban },
   { name: 'Раунды', href: '/app/owner/rounds', icon: CircleDollarSign },
-  { name: 'Аллокации', href: '/app/owner/allocations', icon: Users },
+  { name: 'Заявки инвесторов', href: '/app/owner/allocations', icon: Users },
   { name: 'Отчетность', href: '/app/owner/reporting', icon: BarChart3 },
   { name: 'Выплаты', href: '/app/owner/payouts', icon: PieChart },
   { name: 'Команда', href: '/app/owner/team', icon: Users },

@@ -8,7 +8,9 @@ import { Clock, Download, MapPin, ShieldAlert, TrendingUp } from 'lucide-react';
 import Header from '@/widgets/site-header';
 import Footer from '@/widgets/site-footer';
 import {
+  getProjectDocumentKindLabel,
   formatProjectMoney,
+  getProjectRiskLevelLabel,
   formatProjectTerm,
   formatProjectYield,
   getProjectCategoryLabel,
@@ -59,11 +61,10 @@ export default function ProjectDetailsPage({ projectSlug }: { projectSlug: strin
                 <div className="space-y-6 lg:col-span-8">
                   <div className="relative h-[420px] overflow-hidden rounded-[32px] border border-slate-200">
                     <Image
-                      src={getProjectCoverImage(project.coverImageUrl)}
+                      src={getProjectCoverImage(project.coverImageUrl, {title: project.title, accent: project.assetType})}
                       alt={project.title}
                       fill
                       className="object-cover"
-                      referrerPolicy="no-referrer"
                     />
                   </div>
 
@@ -89,7 +90,7 @@ export default function ProjectDetailsPage({ projectSlug }: { projectSlug: strin
                           <div key={document.id} className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <div>
                               <p className="font-bold text-indigo-950">{document.title}</p>
-                              <p className="text-sm text-slate-500">{document.label ?? document.kind}</p>
+                              <p className="text-sm text-slate-500">{document.label ?? getProjectDocumentKindLabel(document.kind)}</p>
                             </div>
                             {document.fileUrl ? (
                               <a href={document.fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600">
@@ -104,9 +105,9 @@ export default function ProjectDetailsPage({ projectSlug }: { projectSlug: strin
 
                   <Card className="rounded-[32px]">
                     <CardContent className="space-y-4 p-8">
-                      <h2 className="text-2xl font-display font-black text-indigo-950">FAQ проекта</h2>
+                      <h2 className="text-2xl font-display font-black text-indigo-950">Вопросы по проекту</h2>
                       {(faqQuery.data ?? []).length === 0 ? (
-                        <p className="text-sm text-slate-500">FAQ пока не опубликован.</p>
+                        <p className="text-sm text-slate-500">Раздел с вопросами пока не опубликован.</p>
                       ) : (
                         faqQuery.data?.map((item) => (
                           <div key={item.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -127,7 +128,7 @@ export default function ProjectDetailsPage({ projectSlug }: { projectSlug: strin
                       <Metric label="Срок" value={formatProjectTerm(project.termMonths)} icon={<Clock className="h-4 w-4" />} />
                       <Metric label="Локация" value={project.location} icon={<MapPin className="h-4 w-4" />} />
                       <Metric label="Мин. сумма" value={formatProjectMoney(project.minInvestment)} />
-                      <Metric label="Риск" value={project.riskLevel} icon={<ShieldAlert className="h-4 w-4" />} />
+                      <Metric label="Риск" value={getProjectRiskLevelLabel(project.riskLevel)} icon={<ShieldAlert className="h-4 w-4" />} />
 
                       <div className="space-y-3">
                         <div className="flex items-center justify-between text-sm font-bold">

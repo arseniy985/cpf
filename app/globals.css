@@ -251,10 +251,10 @@
   }
 
   .cabinet-card {
-    @apply rounded-3xl border border-slate-100 bg-brand-surface text-brand-text shadow-lg shadow-slate-200/40;
+    @apply min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-100 bg-brand-surface text-brand-text shadow-lg shadow-slate-200/40;
   }
 
   .cabinet-subtle-card {
-    @apply rounded-3xl border border-slate-100 bg-brand-surface text-brand-text shadow-lg shadow-slate-200/20;
+    @apply min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-100 bg-brand-surface text-brand-text shadow-lg shadow-slate-200/20;
   }
 }

@@ -66,7 +66,7 @@ export default function InvestorPortfolioPage() {
             disabled={rows.length === 0}
           >
             <Download className="h-4 w-4" />
-            Экспорт CSV
+            Скачать таблицу
           </Button>
         </div>
       </div>

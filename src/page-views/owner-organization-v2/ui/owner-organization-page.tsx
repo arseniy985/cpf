@@ -51,8 +51,8 @@ export default function OwnerOrganizationPageV2() {
               <AppStatusBadge status={workspace.account.status} className="mt-3" />
             </div>
             <div className="border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4">
-              <p className="text-xs uppercase tracking-[0.16em] text-app-cabinet-muted">Адрес профиля</p>
-              <p className="mt-3 text-sm font-semibold text-app-cabinet-text">{workspace.account.slug}</p>
+              <p className="text-xs uppercase tracking-[0.16em] text-app-cabinet-muted">Сайт</p>
+              <p className="mt-3 break-all text-sm font-semibold text-app-cabinet-text">{workspace.account.websiteUrl ?? workspace.organization.websiteUrl ?? 'Не указан'}</p>
             </div>
             <div className="border border-app-cabinet-border bg-app-cabinet-secondary/35 px-4 py-4">
               <p className="text-xs uppercase tracking-[0.16em] text-app-cabinet-muted">Юрлицо</p>

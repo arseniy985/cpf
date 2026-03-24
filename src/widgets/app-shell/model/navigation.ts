@@ -111,14 +111,14 @@ export const ownerNavigation: AppNavItem[] = [
     href: '/app/owner/rounds',
     label: 'Раунды',
     icon: Landmark,
-    description: 'Условия размещения, аллокации и статусы',
+    description: 'Условия размещения, заявки инвесторов и статусы',
     match: 'prefix',
   },
   {
     href: '/app/owner/allocations',
-    label: 'Аллокации',
+    label: 'Заявки инвесторов',
     icon: CircleDollarSign,
-    description: 'Заявки инвесторов и обработка распределений',
+    description: 'Заявки инвесторов, подтверждения и история обработки',
     match: 'prefix',
   },
   {
@@ -312,16 +312,16 @@ const routeMetaMatchers: Array<{
     meta: {
       title: 'Карточка раунда',
       section: 'Кабинет владельца',
-      description: 'Условия раунда, аллокации, документы, распределения и действия публикации.',
+      description: 'Условия раунда, заявки инвесторов, документы, выплаты и действия публикации.',
       mode: 'owner',
     },
   },
   {
     match: (pathname) => pathname.startsWith('/app/owner/allocations'),
     meta: {
-      title: 'Инвесторы и аллокации',
+      title: 'Заявки инвесторов',
       section: 'Кабинет владельца',
-      description: 'Заявки инвесторов, подтверждённые аллокации и история обработки.',
+      description: 'Заявки инвесторов, подтверждённые участия и история обработки.',
       mode: 'owner',
     },
   },

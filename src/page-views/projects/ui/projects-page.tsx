@@ -163,11 +163,10 @@ export default function ProjectsPage({ initialSearch = '' }: { initialSearch?: s
               <Card key={project.id} className="overflow-hidden rounded-[32px]">
                 <div className="relative h-64 border-b border-slate-200">
                   <Image
-                    src={getProjectCoverImage(project.coverImageUrl)}
+                    src={getProjectCoverImage(project.coverImageUrl, {title: project.title, accent: project.assetType})}
                     alt={project.title}
                     fill
                     className="object-cover"
-                    referrerPolicy="no-referrer"
                   />
                 </div>
                 <CardContent className="space-y-5 p-6">

@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import { useHomeQuery } from '@/entities/content/api/hooks';
+import { getAvatarPlaceholder } from '@/entities/project';
 
 export default function Stats() {
   const homeQuery = useHomeQuery();
@@ -33,12 +34,11 @@ export default function Stats() {
                 {[1,2,3,4].map(i => (
                   <Image
                     key={i}
-                    src={`https://picsum.photos/seed/inv${i}/100/100`}
+                    src={getAvatarPlaceholder(`Investor ${i}`)}
                     width={48}
                     height={48}
                     className="w-12 h-12 rounded-full border-2 border-indigo-950"
-                    alt="investor"
-                    referrerPolicy="no-referrer"
+                    alt={`Инвестор ${i}`}
                   />
                 ))}
               </div>

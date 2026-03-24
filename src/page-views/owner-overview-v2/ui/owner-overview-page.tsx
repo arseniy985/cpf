@@ -126,7 +126,7 @@ export default function OwnerOverviewPageV2() {
 
                   <div className="mt-6 flex gap-3">
                     <Button asChild variant="outline" size="sm" className="w-full border-slate-200 bg-white text-brand-primary hover:bg-brand-secondary">
-                      <Link href={`/app/owner/rounds/${liveRound.slug}`}>Управление аллокациями</Link>
+                      <Link href={`/app/owner/rounds/${liveRound.slug}`}>Открыть заявки инвесторов</Link>
                     </Button>
                   </div>
                 </>

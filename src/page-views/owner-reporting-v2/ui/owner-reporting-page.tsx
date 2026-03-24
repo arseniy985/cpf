@@ -21,10 +21,10 @@ export default function OwnerReportingPageV2() {
       <AppPageHeader
         eyebrow="Кабинет владельца"
         title="Отчётность"
-        description="Регулярные отчёты, фото и медиа-обновления, фактические показатели и история версий по выбранному проекту."
+        description="Отчёты по проекту, даты публикации и материалы, которые видят инвесторы и команда."
       />
 
-      <AppSurface eyebrow="Выбор проекта" title="Контекст отчётности" description="Отчёты и версии всегда привязаны к конкретному проекту." tone="secondary">
+      <AppSurface eyebrow="Выбор проекта" title="Проект для отчётности" description="Сначала выберите проект, по которому хотите посмотреть или подготовить отчёты." tone="secondary">
         {projects.length ? (
           <div className="max-w-md">
             <Select value={effectiveSlug ?? ''} onValueChange={setSelectedProjectSlug}>
@@ -45,7 +45,7 @@ export default function OwnerReportingPageV2() {
         )}
       </AppSurface>
 
-      <AppSurface eyebrow="История версий" title="Регулярные отчёты и публикации" description="Здесь собраны версии отчётов, даты публикации и статус доступа.">
+      <AppSurface eyebrow="История публикаций" title="Отчёты по проекту" description="Здесь собраны все отчёты, даты публикации и статус доступа к ним.">
         {reports.length ? (
           <div className="space-y-3">
             {reports.map((report) => (

@@ -4,7 +4,7 @@ const slugPattern = /^[a-z0-9-]+$/;
 
 export const ownerRoundSchema = z.object({
   project_id: z.string().trim().min(1, 'Выберите проект.'),
-  slug: z.string().trim().min(2, 'Укажите slug раунда.').regex(slugPattern, 'Используйте латиницу, цифры и дефис.'),
+  slug: z.string().trim().min(2, 'Укажите короткий адрес раунда.').regex(slugPattern, 'Используйте латиницу, цифры и дефис.'),
   title: z.string().trim().min(2, 'Укажите название раунда.'),
   target_amount: z.string().trim().min(1, 'Укажите целевой объем.'),
   min_investment: z.string().trim().min(1, 'Укажите минимальный чек.'),

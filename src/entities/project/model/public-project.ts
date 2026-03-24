@@ -43,8 +43,81 @@ export const projectCategoryLabels: Record<string, string> = {
   logistics: 'Логистика',
 };
 
+const fundingStatusLabels: Record<string, string> = {
+  preparing: 'Подготовка',
+  collecting: 'Идёт сбор',
+  closed: 'Сбор завершён',
+};
+
+const riskLevelLabels: Record<string, string> = {
+  low: 'Низкий',
+  moderate: 'Умеренный',
+  medium: 'Средний',
+  elevated: 'Повышенный',
+  high: 'Высокий',
+};
+
+const payoutFrequencyLabels: Record<string, string> = {
+  monthly: 'Ежемесячно',
+  quarterly: 'Ежеквартально',
+  at_exit: 'В конце проекта',
+  at_maturity: 'В конце периода',
+};
+
+const documentKindLabels: Record<string, string> = {
+  memorandum: 'Инвестиционный меморандум',
+  presentation: 'Презентация проекта',
+  financial_model: 'Финансовая модель',
+  legal_document: 'Юридический документ',
+  report: 'Отчёт',
+  faq: 'Вопросы и ответы',
+  other: 'Документ',
+};
+
+function normalizeProjectValue(value: string | null | undefined) {
+  return value?.trim().toLowerCase().replace(/[\s-]+/g, '_') ?? '';
+}
+
 export function getProjectCategoryLabel(assetType: string) {
-  return projectCategoryLabels[assetType] ?? assetType;
+  const normalized = normalizeProjectValue(assetType);
+
+  return projectCategoryLabels[assetType] ?? projectCategoryLabels[normalized] ?? assetType;
+}
+
+export function getProjectFundingStatusLabel(status: string | null | undefined) {
+  const normalized = normalizeProjectValue(status);
+
+  return fundingStatusLabels[normalized] ?? 'Статус уточняется';
+}
+
+export function getProjectRiskLevelLabel(riskLevel: string | null | undefined) {
+  if (!riskLevel) {
+    return 'Не указан';
+  }
+
+  const normalized = normalizeProjectValue(riskLevel);
+
+  return riskLevelLabels[normalized] ?? riskLevel;
+}
+
+export function getProjectPayoutFrequencyLabel(payoutFrequency: string | null | undefined) {
+  if (!payoutFrequency) {
+    return 'Не указана';
+  }
+
+  const normalized = normalizeProjectValue(payoutFrequency);
+
+  return payoutFrequencyLabels[normalized] ?? payoutFrequency;
+}
+
+export function getProjectDocumentKindLabel(kind: string | null | undefined) {
+  if (!kind) {
+    return 'Документ';
+  }
+
+  const normalized = normalizeProjectValue(kind);
+
+  return documentKindLabels[normalized] ?? kind.replaceAll('_', ' ');
 }
 
 export function formatProjectMoney(value: number) {

@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useOwnerProjectsQuery } from '@/entities/owner-project/api/hooks';
+import { getProjectCategoryLabel } from '@/entities/project';
 import { OwnerProjectFormPanel } from '@/features/app-forms/ui/owner-project-form-panel';
 import { formatMoney, formatPercent } from '@/shared/lib/format';
 import { AppEmptyState } from '@/shared/ui/app-cabinet/app-empty-state';
@@ -101,7 +102,7 @@ export default function OwnerProjectsPageV2() {
           {rows.map((project) => (
             <AppSurface
               key={project.id}
-              eyebrow={project.assetType}
+              eyebrow={getProjectCategoryLabel(project.assetType)}
               title={project.title}
               description={project.excerpt}
               action={<AppStatusBadge status={project.status} />}

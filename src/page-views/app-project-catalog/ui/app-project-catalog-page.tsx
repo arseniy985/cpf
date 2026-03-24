@@ -39,11 +39,16 @@ export default function AppProjectCatalogPage() {
   const [budgetFilter, setBudgetFilter] = useState<(typeof budgetOptions)[number]['value']>('all');
   const [yieldFilter, setYieldFilter] = useState<(typeof yieldOptions)[number]['value']>('all');
   const deferredSearch = useDeferredValue(search);
-  const { data: projects = [], isPending, isError } = useProjectsQuery(deferredSearch, category);
+  const { data: projects = [], isPending, isError } = useProjectsQuery('', category);
   const categories = useMemo(() => Object.keys(projectCategoryLabels), []);
   const visibleProjects = useMemo(
     () =>
       projects.filter((project) => {
+        const normalizedSearch = deferredSearch.trim().toLowerCase();
+        const searchMatch =
+          normalizedSearch.length === 0 ||
+          project.title.toLowerCase().includes(normalizedSearch) ||
+          project.location.toLowerCase().includes(normalizedSearch);
         const budgetMatch =
           budgetFilter === 'all' ||
           (budgetFilter === 'up_to_100k' && project.minInvestment <= 100000) ||
@@ -55,9 +60,9 @@ export default function AppProjectCatalogPage() {
           (yieldFilter === '16_to_20' && project.targetYield > 16 && project.targetYield <= 20) ||
           (yieldFilter === '20_plus' && project.targetYield > 20);
 
-        return budgetMatch && yieldMatch;
+        return searchMatch && budgetMatch && yieldMatch;
       }),
-    [budgetFilter, projects, yieldFilter],
+    [budgetFilter, deferredSearch, projects, yieldFilter],
   );
   const featuredProject = visibleProjects[0];
 
@@ -92,13 +97,8 @@ export default function AppProjectCatalogPage() {
           </div>
         </div>
 
-        <AppSurface
-          eyebrow="Быстрый поиск"
-          title="Найдите проект по названию или локации"
-          description="Поиск срабатывает сразу по мере ввода, а фильтры ниже сужают выбор по параметрам сделки."
-          tone="secondary"
-        >
-          <div className="space-y-4">
+        <AppSurface eyebrow="Поиск" title="Поиск по каталогу" description="Введите название проекта или локацию." tone="secondary">
+          <div>
             <label className="block">
               <span className="sr-only">Поиск проекта</span>
               <div className="relative">
@@ -106,25 +106,19 @@ export default function AppProjectCatalogPage() {
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Название, район или ориентир проекта…"
+                  placeholder="Например, Москва или Логистический парк…"
                   className="h-12 rounded-full border-app-cabinet-border bg-white pl-11"
                 />
               </div>
             </label>
-            <div className="rounded-[1.5rem] border border-app-cabinet-border bg-white p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-text-muted">Что важно сейчас</p>
-              <p className="mt-2 text-sm leading-6 text-brand-text">
-                Выберите тип актива, затем ограничьте вход и доходность. Так каталог быстро сойдётся к реальным сценариям инвестирования.
-              </p>
-            </div>
           </div>
         </AppSurface>
       </section>
 
       <AppSurface
         eyebrow="Фильтры"
-        title="Соберите короткий список"
-        description="Оставьте только те проекты, которые подходят по типу актива и параметрам сделки."
+        title="Фильтры каталога"
+        description="Выберите тип актива, размер входа и уровень доходности."
         tone="secondary"
       >
         <div className="space-y-4">
@@ -175,11 +169,10 @@ export default function AppProjectCatalogPage() {
                 <div className="grid h-full gap-0 lg:grid-cols-[0.92fr_1.08fr]">
                   <div className="relative min-h-[240px] border-b border-[#DCE6F5] lg:border-b-0 lg:border-r">
                     <Image
-                      src={getProjectCoverImage(project.coverImageUrl)}
+                      src={getProjectCoverImage(project.coverImageUrl, {title: project.title, accent: project.assetType})}
                       alt={project.title}
                       fill
                       className="object-cover"
-                      referrerPolicy="no-referrer"
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#07162f]/85 via-[#07162f]/35 to-transparent p-5 text-white">
                       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/70">{getProjectCategoryLabel(project.assetType)}</p>

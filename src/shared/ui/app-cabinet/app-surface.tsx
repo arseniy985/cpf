@@ -23,7 +23,7 @@ export function AppSurface({
   return (
     <section
       className={cn(
-        'rounded-3xl border bg-brand-surface px-6 py-6 text-brand-text shadow-lg shadow-slate-200/40',
+        'min-w-0 max-w-full rounded-3xl border bg-brand-surface px-6 py-6 text-brand-text shadow-lg shadow-slate-200/40',
         tone === 'dark'
           ? 'border-brand-primary bg-brand-primary text-white'
           : tone === 'secondary'

@@ -1,9 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { useOwnerRoundHistoryQuery } from '@/entities/audit-log/api/hooks';
 import { toTimelineItems } from '@/entities/audit-log/model/to-timeline-items';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { getProjectPayoutFrequencyLabel } from '@/entities/project';
 import {
   useApproveOwnerDistributionMutation,
   useCloseOwnerRoundMutation,
@@ -13,6 +15,7 @@ import {
   useSubmitOwnerRoundForReviewMutation,
 } from '@/entities/owner-round/api/hooks';
 import { getApiErrorMessage } from '@/shared/lib/api/get-api-error-message';
+import { getStatusMeta } from '@/shared/lib/app-cabinet/status';
 import { formatMoney, formatPercent } from '@/shared/lib/format';
 import { AppEmptyState } from '@/shared/ui/app-cabinet/app-empty-state';
 import { AppPageHeader } from '@/shared/ui/app-cabinet/app-page-header';
@@ -36,7 +39,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
     return (
       <AppEmptyState
         title="Собираем карточку раунда…"
-        description="Подтягиваем условия раунда, прогресс размещения, аллокации, документы и распределения."
+        description="Подтягиваем условия раунда, прогресс размещения, заявки инвесторов, документы и выплаты."
       />
     );
   }
@@ -53,6 +56,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
   }
 
   const round = details.round;
+  const roundStatus = getStatusMeta(round.status).label;
 
   async function runAction(action: 'submit' | 'live' | 'close') {
     try {
@@ -80,10 +84,13 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
       <AppPageHeader
         eyebrow="Кабинет владельца"
         title={round.title}
-        description={`${details.project.title} · раунд привлечения капитала с отдельным разделом заявок и выплат.`}
+        description={`${details.project.title} · раунд привлечения капитала с отдельным разделом заявок инвесторов и выплат.`}
         status={<AppStatusBadge status={round.status} />}
         actions={(
           <>
+            <Button asChild variant="outline" className="h-11 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text">
+              <Link href="/app/owner/rounds">Вернуться к раундам</Link>
+            </Button>
             <Button type="button" variant="outline" className="h-11 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-4 text-app-cabinet-text" onClick={() => runAction('submit')}>
               Отправить на проверку
             </Button>
@@ -117,11 +124,11 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
         <AppSurface eyebrow="Ставка" title={formatPercent(round.targetYield)} description="Ориентир по доходности.">
           <p className="text-sm text-app-cabinet-muted">Срок: <span className="font-semibold text-app-cabinet-text">{round.termMonths} мес</span></p>
         </AppSurface>
-        <AppSurface eyebrow="Прогресс" title={formatMoney(round.currentAmount)} description="Текущий объём подтверждённых аллокаций.">
-          <p className="text-sm text-app-cabinet-muted">Аллокаций: <span className="font-semibold text-app-cabinet-text">{round.allocationCount}</span></p>
+        <AppSurface eyebrow="Прогресс" title={formatMoney(round.currentAmount)} description="Текущий объём подтверждённых инвестиций в раунде.">
+          <p className="text-sm text-app-cabinet-muted">Подтверждённых заявок: <span className="font-semibold text-app-cabinet-text">{round.allocationCount}</span></p>
         </AppSurface>
         <AppSurface eyebrow="Выплаты" title={String(details.distributions.length)} description="Количество распределений, привязанных к раунду.">
-          <p className="text-sm text-app-cabinet-muted">Статус: <span className="font-semibold text-app-cabinet-text">{round.status}</span></p>
+          <p className="text-sm text-app-cabinet-muted">Статус: <span className="font-semibold text-app-cabinet-text">{roundStatus}</span></p>
         </AppSurface>
       </div>
 
@@ -132,7 +139,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
               ['Цель', formatMoney(round.targetAmount)],
               ['Минимальный вход', formatMoney(round.minInvestment)],
               ['Срок размещения', `${round.termMonths} мес`],
-              ['Частота выплат', round.payoutFrequency],
+              ['Частота выплат', getProjectPayoutFrequencyLabel(round.payoutFrequency)],
               ['Открытие', round.opensAt ?? 'Не указано'],
               ['Закрытие', round.closesAt ?? 'Не указано'],
             ].map(([label, value]) => (
@@ -150,7 +157,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <AppSurface eyebrow="Аллокации" title="Инвесторы и лимиты" description="В раунде отображаются все подтверждённые и неподтверждённые распределения заявок.">
+        <AppSurface eyebrow="Заявки" title="Инвесторы и заявки" description="Здесь видны все заявки в раунде: новые, подтверждённые и отменённые.">
           {details.allocations.length ? (
             <div className="space-y-3">
               {details.allocations.map((allocation) => (
@@ -164,7 +171,7 @@ export default function OwnerRoundDetailPageV2({ slug }: { slug: string }) {
               ))}
             </div>
           ) : (
-            <AppEmptyState title="Аллокаций пока нет" description="Когда инвесторы начнут подавать заявки, они появятся здесь." />
+            <AppEmptyState title="Заявок пока нет" description="Когда инвесторы начнут подавать заявки, они появятся здесь." />
           )}
         </AppSurface>
 

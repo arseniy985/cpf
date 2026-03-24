@@ -4,6 +4,11 @@ import Link from 'next/link';
 import { useOwnerProjectHistoryQuery } from '@/entities/audit-log/api/hooks';
 import { toTimelineItems } from '@/entities/audit-log/model/to-timeline-items';
 import { Button } from '@/components/ui/button';
+import {
+  getProjectCategoryLabel,
+  getProjectDocumentKindLabel,
+  getProjectFundingStatusLabel,
+} from '@/entities/project';
 import { useOwnerProjectDocumentsQuery, useOwnerProjectInvestmentsQuery, useOwnerProjectQuery, useOwnerProjectReportsQuery } from '@/entities/owner-project/api/hooks';
 import { useOwnerRoundsQuery } from '@/entities/owner-round/api/hooks';
 import { formatMoney, formatPercent } from '@/shared/lib/format';
@@ -61,7 +66,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
       />
 
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-        <AppSurface eyebrow="Паспорт актива" title={details.project.location} description={details.project.assetType}>
+        <AppSurface eyebrow="Паспорт актива" title={details.project.location} description={getProjectCategoryLabel(details.project.assetType)}>
           <div className="grid gap-2 text-sm text-app-cabinet-muted">
             <p>Минимальный вход: <span className="font-semibold text-app-cabinet-text">{formatMoney(details.project.minInvestment)}</span></p>
             <p>Срок: <span className="font-semibold text-app-cabinet-text">{details.project.termMonths} мес</span></p>
@@ -73,7 +78,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
         <AppSurface eyebrow="Инвестиции" title={formatMoney(details.metrics.confirmedAmount)} description="Подтверждённая сумма участия по проекту.">
           <p className="text-sm text-app-cabinet-muted">Заявок: <span className="font-semibold text-app-cabinet-text">{details.metrics.applicationsCount}</span></p>
         </AppSurface>
-        <AppSurface eyebrow="Публикация" title={details.project.fundingStatus} description="Текущий статус публикации и готовности к размещению.">
+        <AppSurface eyebrow="Публикация" title={getProjectFundingStatusLabel(details.project.fundingStatus)} description="Текущий статус публикации и готовности к размещению.">
           <AppStatusBadge status={details.project.status} className="mt-3" />
         </AppSurface>
       </div>
@@ -109,7 +114,7 @@ export default function OwnerProjectDetailPageV2({ slug }: { slug: string }) {
                 <div key={document.id} className="flex items-center justify-between gap-3 border border-app-cabinet-border bg-app-cabinet-surface px-4 py-4">
                   <div>
                     <p className="text-sm font-semibold text-app-cabinet-text">{document.title}</p>
-                    <p className="mt-1 text-sm text-app-cabinet-muted">{document.kind}</p>
+                    <p className="mt-1 text-sm text-app-cabinet-muted">{getProjectDocumentKindLabel(document.kind)}</p>
                   </div>
                   <Button asChild variant="outline" className="h-10 rounded-full border-app-cabinet-border bg-app-cabinet-surface px-3 text-app-cabinet-text">
                     <a href={document.fileUrl ?? '#'} target="_blank" rel="noreferrer">Открыть</a>
