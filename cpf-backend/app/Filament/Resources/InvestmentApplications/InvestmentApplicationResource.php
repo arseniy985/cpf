@@ -19,7 +19,7 @@ class InvestmentApplicationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Инвестиции';
+    protected static string|UnitEnum|null $navigationGroup = 'Заявки и проверки';
 
     protected static ?string $navigationLabel = 'Заявки инвесторов';
 
@@ -28,6 +28,8 @@ class InvestmentApplicationResource extends Resource
     protected static ?string $pluralModelLabel = 'Заявки инвесторов';
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    protected static ?int $navigationSort = 40;
 
     public static function form(Schema $schema): Schema
     {
@@ -44,5 +46,12 @@ class InvestmentApplicationResource extends Resource
         return [
             'index' => ManageInvestmentApplications::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::query()->where('status', 'pending')->count();
+
+        return $count > 0 ? (string) $count : null;
     }
 }

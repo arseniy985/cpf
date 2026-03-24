@@ -14,10 +14,13 @@ class OfferingRoundForm
     {
         return $schema->components([
             TextInput::make('title')
+                ->label('Название раунда')
                 ->required(),
             TextInput::make('slug')
+                ->label('Slug')
                 ->required(),
             Select::make('status')
+                ->label('Статус раунда')
                 ->options([
                     'draft' => 'Черновик',
                     'pending_review' => 'На проверке',
@@ -29,19 +32,23 @@ class OfferingRoundForm
                 ])
                 ->required(),
             TextInput::make('target_amount')
+                ->label('Цель сбора')
                 ->numeric()
                 ->required(),
             TextInput::make('current_amount')
+                ->label('Собрано')
                 ->numeric()
                 ->required(),
             TextInput::make('min_investment')
+                ->label('Минимальная инвестиция')
                 ->numeric()
                 ->required(),
-            DateTimePicker::make('review_submitted_at'),
-            DateTimePicker::make('opens_at'),
-            DateTimePicker::make('went_live_at'),
-            DateTimePicker::make('closed_at'),
+            DateTimePicker::make('review_submitted_at')->label('Передан на проверку'),
+            DateTimePicker::make('opens_at')->label('Открывается'),
+            DateTimePicker::make('went_live_at')->label('Опубликован'),
+            DateTimePicker::make('closed_at')->label('Закрыт'),
             Textarea::make('notes')
+                ->label('Комментарий')
                 ->rows(5),
         ]);
     }

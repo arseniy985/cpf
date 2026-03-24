@@ -15,12 +15,16 @@ class LegalDocumentForm
         return $schema
             ->components([
                 TextInput::make('slug')
+                    ->label('Slug')
                     ->required(),
                 TextInput::make('title')
+                    ->label('Заголовок')
                     ->required(),
                 Textarea::make('summary')
+                    ->label('Краткое описание')
                     ->rows(4),
                 Select::make('document_type')
+                    ->label('Тип документа')
                     ->options([
                         'agreement' => 'Договор',
                         'risk' => 'Раскрытие рисков',
@@ -28,15 +32,17 @@ class LegalDocumentForm
                     ])
                     ->required(),
                 TextInput::make('file_url')
+                    ->label('Ссылка на файл')
                     ->url(),
                 Select::make('status')
+                    ->label('Статус')
                     ->options([
                         'draft' => 'Черновик',
                         'published' => 'Опубликован',
                         'archived' => 'Архив',
                     ])
                     ->required(),
-                DateTimePicker::make('published_at'),
+                DateTimePicker::make('published_at')->label('Дата публикации'),
             ]);
     }
 }

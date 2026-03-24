@@ -17,10 +17,22 @@ class WithdrawalRequestsTable
         return $table
             ->columns([
                 TextColumn::make('user.email')->label('Пользователь')->searchable(),
-                TextColumn::make('amount')->numeric(),
-                TextColumn::make('status')->badge(),
-                TextColumn::make('bank_name'),
-                TextColumn::make('created_at')->dateTime(),
+                TextColumn::make('amount')->label('Сумма')->numeric(),
+                TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending_review' => 'На проверке',
+                        'approved' => 'Одобрено',
+                        'rejected' => 'Отклонено',
+                        'processing_manual_payout' => 'Ручная выплата',
+                        'paid' => 'Выплачено',
+                        'failed' => 'Ошибка',
+                        'cancelled' => 'Отменено',
+                        default => $state,
+                    }),
+                TextColumn::make('bank_name')->label('Банк'),
+                TextColumn::make('created_at')->label('Создана')->dateTime(),
             ])
             ->recordActions([
                 Action::make('approve')

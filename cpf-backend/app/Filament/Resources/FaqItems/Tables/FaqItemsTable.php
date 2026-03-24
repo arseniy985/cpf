@@ -19,11 +19,14 @@ class FaqItemsTable
                     ->label('Группа')
                     ->sortable(),
                 TextColumn::make('question')
+                    ->label('Вопрос')
                     ->searchable()
                     ->limit(80),
                 TextColumn::make('sort_order')
+                    ->label('Порядок')
                     ->sortable(),
                 IconColumn::make('is_published')
+                    ->label('Опубликован')
                     ->boolean(),
             ])
             ->filters([

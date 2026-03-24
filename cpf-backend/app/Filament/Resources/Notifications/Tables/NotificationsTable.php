@@ -15,9 +15,9 @@ class NotificationsTable
         return $table
             ->columns([
                 TextColumn::make('user.email')->label('Пользователь')->searchable(),
-                TextColumn::make('type')->badge(),
-                TextColumn::make('title')->searchable(),
-                TextColumn::make('read_at')->dateTime(),
+                TextColumn::make('type')->label('Тип')->badge(),
+                TextColumn::make('title')->label('Заголовок')->searchable(),
+                TextColumn::make('read_at')->label('Прочитано')->dateTime(),
             ])
             ->recordActions([
                 EditAction::make(),

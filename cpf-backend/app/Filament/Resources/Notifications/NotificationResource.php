@@ -19,13 +19,15 @@ class NotificationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBell;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контроль';
+    protected static string|UnitEnum|null $navigationGroup = 'Пользователи и доступ';
 
     protected static ?string $navigationLabel = 'Уведомления';
 
     protected static ?string $modelLabel = 'уведомление';
 
     protected static ?string $pluralModelLabel = 'Уведомления';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

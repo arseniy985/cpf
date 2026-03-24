@@ -19,13 +19,15 @@ class OwnerOnboardingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контроль';
+    protected static string|UnitEnum|null $navigationGroup = 'Заявки и проверки';
 
-    protected static ?string $navigationLabel = 'Owner KYB';
+    protected static ?string $navigationLabel = 'Проверка компаний';
 
-    protected static ?string $modelLabel = 'owner onboarding';
+    protected static ?string $modelLabel = 'проверка компании';
 
-    protected static ?string $pluralModelLabel = 'Owner KYB';
+    protected static ?string $pluralModelLabel = 'Проверка компаний';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {
@@ -42,5 +44,12 @@ class OwnerOnboardingResource extends Resource
         return [
             'index' => ManageOwnerOnboardings::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::query()->where('status', 'kyb_under_review')->count();
+
+        return $count > 0 ? (string) $count : null;
     }
 }

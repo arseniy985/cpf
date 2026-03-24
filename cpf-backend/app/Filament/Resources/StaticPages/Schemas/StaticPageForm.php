@@ -12,12 +12,12 @@ class StaticPageForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('key')->required(),
-            TextInput::make('title')->required(),
-            TextInput::make('headline'),
-            Textarea::make('summary')->rows(3),
-            Textarea::make('body')->rows(10),
-            Toggle::make('is_published'),
+            TextInput::make('key')->label('Ключ страницы')->required(),
+            TextInput::make('title')->label('Заголовок в админке')->required(),
+            TextInput::make('headline')->label('Главный заголовок'),
+            Textarea::make('summary')->label('Краткое описание')->rows(3),
+            Textarea::make('body')->label('Текст страницы')->rows(10),
+            Toggle::make('is_published')->label('Опубликована'),
         ]);
     }
 }

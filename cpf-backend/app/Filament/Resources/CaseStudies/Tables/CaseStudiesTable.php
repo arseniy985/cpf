@@ -14,9 +14,9 @@ class CaseStudiesTable
     {
         return $table
             ->columns([
-                TextColumn::make('title')->searchable(),
-                TextColumn::make('result_metric'),
-                TextColumn::make('published_at')->dateTime(),
+                TextColumn::make('title')->label('Заголовок')->searchable(),
+                TextColumn::make('result_metric')->label('Результат'),
+                TextColumn::make('published_at')->label('Дата публикации')->dateTime(),
             ])
             ->recordActions([
                 EditAction::make(),

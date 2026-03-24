@@ -19,13 +19,15 @@ class CaseStudyResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPresentationChartLine;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контент';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
     protected static ?string $navigationLabel = 'Кейсы';
 
     protected static ?string $modelLabel = 'кейс';
 
     protected static ?string $pluralModelLabel = 'Кейсы';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {

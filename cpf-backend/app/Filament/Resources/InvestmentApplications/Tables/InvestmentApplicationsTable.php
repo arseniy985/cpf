@@ -21,11 +21,20 @@ class InvestmentApplicationsTable
                     ->label('Проект')
                     ->searchable(),
                 TextColumn::make('amount')
+                    ->label('Сумма')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending' => 'Новая',
+                        'approved' => 'Одобрена',
+                        'rejected' => 'Отклонена',
+                        default => $state,
+                    }),
                 TextColumn::make('created_at')
+                    ->label('Создана')
                     ->dateTime()
                     ->sortable(),
             ])

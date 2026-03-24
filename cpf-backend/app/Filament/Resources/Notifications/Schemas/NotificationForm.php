@@ -12,11 +12,11 @@ class NotificationForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('user_id')->relationship('user', 'email')->searchable()->required(),
-            TextInput::make('type')->required(),
-            TextInput::make('title')->required(),
-            Textarea::make('body')->rows(4)->required(),
-            TextInput::make('action_url'),
+            Select::make('user_id')->label('Пользователь')->relationship('user', 'email')->searchable()->required(),
+            TextInput::make('type')->label('Тип уведомления')->required(),
+            TextInput::make('title')->label('Заголовок')->required(),
+            Textarea::make('body')->label('Текст уведомления')->rows(4)->required(),
+            TextInput::make('action_url')->label('Ссылка действия'),
         ]);
     }
 }

@@ -19,7 +19,7 @@ class LegalDocumentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedScale;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контент';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
     protected static ?string $navigationLabel = 'Юридические документы';
 
@@ -28,6 +28,8 @@ class LegalDocumentResource extends Resource
     protected static ?string $pluralModelLabel = 'Юридические документы';
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?int $navigationSort = 70;
 
     public static function form(Schema $schema): Schema
     {

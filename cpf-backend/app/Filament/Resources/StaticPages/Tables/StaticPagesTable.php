@@ -15,10 +15,10 @@ class StaticPagesTable
     {
         return $table
             ->columns([
-                TextColumn::make('key')->searchable(),
-                TextColumn::make('title')->searchable(),
-                IconColumn::make('is_published')->boolean(),
-                TextColumn::make('updated_at')->since(),
+                TextColumn::make('key')->label('Ключ')->searchable(),
+                TextColumn::make('title')->label('Заголовок')->searchable(),
+                IconColumn::make('is_published')->label('Опубликована')->boolean(),
+                TextColumn::make('updated_at')->label('Обновлена')->since(),
             ])
             ->recordActions([
                 EditAction::make(),

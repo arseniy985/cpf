@@ -26,7 +26,17 @@ class OwnerOnboardingsTable
                     ->label('Пользователь')
                     ->searchable(),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'account_created' => 'Аккаунт создан',
+                        'kyb_in_progress' => 'Заполняется',
+                        'kyb_under_review' => 'На проверке',
+                        'kyb_approved' => 'Одобрено',
+                        'active' => 'Активно',
+                        'kyb_rejected' => 'Отклонено',
+                        default => $state,
+                    }),
                 TextColumn::make('submitted_at')
                     ->label('Отправлено')
                     ->dateTime(),

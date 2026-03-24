@@ -19,7 +19,7 @@ class ProjectDocumentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Каталог';
+    protected static string|UnitEnum|null $navigationGroup = 'Сделки и проекты';
 
     protected static ?string $navigationLabel = 'Документы проектов';
 
@@ -28,6 +28,8 @@ class ProjectDocumentResource extends Resource
     protected static ?string $pluralModelLabel = 'Документы проектов';
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {

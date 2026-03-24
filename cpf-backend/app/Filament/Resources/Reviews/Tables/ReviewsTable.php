@@ -14,9 +14,9 @@ class ReviewsTable
     {
         return $table
             ->columns([
-                TextColumn::make('author_name')->searchable(),
-                TextColumn::make('rating')->badge(),
-                TextColumn::make('company_name'),
+                TextColumn::make('author_name')->label('Автор')->searchable(),
+                TextColumn::make('rating')->label('Оценка')->badge(),
+                TextColumn::make('company_name')->label('Компания'),
             ])
             ->recordActions([
                 EditAction::make(),

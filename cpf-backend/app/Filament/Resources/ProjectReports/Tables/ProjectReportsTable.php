@@ -16,9 +16,9 @@ class ProjectReportsTable
         return $table
             ->columns([
                 TextColumn::make('project.title')->label('Проект')->searchable(),
-                TextColumn::make('title')->searchable(),
-                TextColumn::make('report_date')->date(),
-                IconColumn::make('is_public')->boolean(),
+                TextColumn::make('title')->label('Название отчёта')->searchable(),
+                TextColumn::make('report_date')->label('Дата отчёта')->date(),
+                IconColumn::make('is_public')->label('Публичный')->boolean(),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -17,10 +17,28 @@ class KycDocumentsTable
         return $table
             ->columns([
                 TextColumn::make('kycProfile.user.email')->label('Пользователь')->searchable(),
-                TextColumn::make('kind')->badge(),
-                TextColumn::make('status')->badge(),
-                TextColumn::make('original_name')->searchable(),
-                TextColumn::make('created_at')->dateTime(),
+                TextColumn::make('kind')
+                    ->label('Тип документа')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'passport' => 'Паспорт',
+                        'tax_id' => 'ИНН',
+                        'address_proof' => 'Подтверждение адреса',
+                        'company_docs' => 'Документы компании',
+                        'other' => 'Прочее',
+                        default => $state,
+                    }),
+                TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending_review' => 'На проверке',
+                        'approved' => 'Одобрен',
+                        'rejected' => 'Отклонён',
+                        default => $state,
+                    }),
+                TextColumn::make('original_name')->label('Файл')->searchable(),
+                TextColumn::make('created_at')->label('Загружен')->dateTime(),
             ])
             ->recordActions([
                 Action::make('approve')

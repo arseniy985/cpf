@@ -19,15 +19,17 @@ class FaqItemResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контент';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
-    protected static ?string $navigationLabel = 'FAQ';
+    protected static ?string $navigationLabel = 'FAQ сайта';
 
-    protected static ?string $modelLabel = 'FAQ';
+    protected static ?string $modelLabel = 'вопрос FAQ';
 
-    protected static ?string $pluralModelLabel = 'FAQ';
+    protected static ?string $pluralModelLabel = 'FAQ сайта';
 
     protected static ?string $recordTitleAttribute = 'question';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

@@ -19,15 +19,17 @@ class PaymentTransactionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Инвестиции';
+    protected static string|UnitEnum|null $navigationGroup = 'Платежи';
 
-    protected static ?string $navigationLabel = 'Платежи';
+    protected static ?string $navigationLabel = 'Платёжные операции';
 
-    protected static ?string $modelLabel = 'платеж';
+    protected static ?string $modelLabel = 'платёжная операция';
 
-    protected static ?string $pluralModelLabel = 'Платежи';
+    protected static ?string $pluralModelLabel = 'Платёжные операции';
 
     protected static ?string $recordTitleAttribute = 'external_id';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {
@@ -44,5 +46,12 @@ class PaymentTransactionResource extends Resource
         return [
             'index' => ManagePaymentTransactions::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::query()->whereIn('status', ['pending', 'waiting_for_capture'])->count();
+
+        return $count > 0 ? (string) $count : null;
     }
 }

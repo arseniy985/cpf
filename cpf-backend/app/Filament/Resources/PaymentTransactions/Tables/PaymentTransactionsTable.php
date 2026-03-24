@@ -20,24 +20,37 @@ class PaymentTransactionsTable
                     ->label('Инвестор')
                     ->searchable(),
                 TextColumn::make('gateway')
+                    ->label('Шлюз')
                     ->badge(),
                 TextColumn::make('type')
+                    ->label('Тип')
                     ->badge(),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending' => 'Ожидает оплаты',
+                        'waiting_for_capture' => 'Ожидает подтверждения',
+                        'succeeded' => 'Успешно',
+                        'canceled' => 'Отменено',
+                        default => $state,
+                    }),
                 TextColumn::make('amount')
                     ->numeric()
                     ->label('Сумма')
                     ->sortable(),
-                TextColumn::make('currency'),
+                TextColumn::make('currency')->label('Валюта'),
                 TextColumn::make('external_id')
+                    ->label('Внешний ID')
                     ->searchable()
                     ->copyable()
                     ->toggleable(),
                 TextColumn::make('processed_at')
+                    ->label('Обработана')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Создана')
                     ->dateTime()
                     ->sortable(),
             ])

@@ -15,14 +15,14 @@ class BlogPostForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('category_id')->relationship('category', 'name')->searchable(),
-            TextInput::make('slug')->required(),
-            TextInput::make('title')->required(),
-            Textarea::make('excerpt')->rows(3)->required(),
-            Textarea::make('body')->rows(10)->required(),
-            TagsInput::make('tags'),
-            Toggle::make('is_published'),
-            DateTimePicker::make('published_at'),
+            Select::make('category_id')->label('Категория')->relationship('category', 'name')->searchable(),
+            TextInput::make('slug')->label('Slug')->required(),
+            TextInput::make('title')->label('Заголовок')->required(),
+            Textarea::make('excerpt')->label('Краткое описание')->rows(3)->required(),
+            Textarea::make('body')->label('Текст публикации')->rows(10)->required(),
+            TagsInput::make('tags')->label('Теги'),
+            Toggle::make('is_published')->label('Опубликована'),
+            DateTimePicker::make('published_at')->label('Дата публикации'),
         ]);
     }
 }

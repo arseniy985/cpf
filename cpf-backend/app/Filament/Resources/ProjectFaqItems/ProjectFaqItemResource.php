@@ -19,13 +19,15 @@ class ProjectFaqItemResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Сделки';
+    protected static string|UnitEnum|null $navigationGroup = 'Сделки и проекты';
 
     protected static ?string $navigationLabel = 'FAQ проектов';
 
     protected static ?string $modelLabel = 'FAQ проекта';
 
     protected static ?string $pluralModelLabel = 'FAQ проектов';
+
+    protected static ?int $navigationSort = 50;
 
     public static function form(Schema $schema): Schema
     {

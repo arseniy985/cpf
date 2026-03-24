@@ -14,17 +14,22 @@ class FaqItemForm
         return $schema
             ->components([
                 TextInput::make('group_name')
+                    ->label('Группа')
                     ->required(),
                 TextInput::make('question')
+                    ->label('Вопрос')
                     ->required()
                     ->maxLength(255),
                 Textarea::make('answer')
+                    ->label('Ответ')
                     ->required()
                     ->rows(5),
                 TextInput::make('sort_order')
+                    ->label('Порядок')
                     ->numeric()
                     ->required(),
                 Toggle::make('is_published')
+                    ->label('Опубликован')
                     ->required(),
             ]);
     }

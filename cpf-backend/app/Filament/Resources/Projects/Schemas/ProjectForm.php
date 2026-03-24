@@ -16,28 +16,37 @@ class ProjectForm
         return $schema
             ->components([
                 Select::make('owner_id')
+                    ->label('Владелец')
                     ->relationship('owner', 'email')
                     ->searchable(),
                 TextInput::make('slug')
+                    ->label('Slug')
                     ->required()
                     ->maxLength(160),
                 TextInput::make('title')
+                    ->label('Название проекта')
                     ->required()
                     ->maxLength(255),
                 Textarea::make('excerpt')
+                    ->label('Краткое описание')
                     ->required()
                     ->rows(3)
                     ->maxLength(500),
                 Textarea::make('description')
+                    ->label('Полное описание')
                     ->required()
                     ->rows(6),
                 Textarea::make('thesis')
+                    ->label('Инвестиционный тезис')
                     ->rows(3),
                 Textarea::make('risk_summary')
+                    ->label('Риски')
                     ->rows(3),
                 TextInput::make('location')
+                    ->label('Локация')
                     ->required(),
                 Select::make('asset_type')
+                    ->label('Тип актива')
                     ->options([
                         'commercial_real_estate' => 'Коммерческая недвижимость',
                         'income_property' => 'Доходный объект',
@@ -45,6 +54,7 @@ class ProjectForm
                     ])
                     ->required(),
                 Select::make('status')
+                    ->label('Статус проекта')
                     ->options([
                         'draft' => 'Черновик',
                         'pending_review' => 'На модерации',
@@ -53,6 +63,7 @@ class ProjectForm
                     ])
                     ->required(),
                 Select::make('funding_status')
+                    ->label('Статус сбора')
                     ->options([
                         'preparing' => 'Подготовка',
                         'collecting' => 'Сбор средств',
@@ -60,6 +71,7 @@ class ProjectForm
                     ])
                     ->required(),
                 Select::make('risk_level')
+                    ->label('Уровень риска')
                     ->options([
                         'low' => 'Низкий',
                         'moderate' => 'Средний',
@@ -67,6 +79,7 @@ class ProjectForm
                     ])
                     ->required(),
                 Select::make('payout_frequency')
+                    ->label('Частота выплат')
                     ->options([
                         'monthly' => 'Ежемесячно',
                         'quarterly' => 'Ежеквартально',
@@ -74,26 +87,32 @@ class ProjectForm
                     ])
                     ->required(),
                 TextInput::make('min_investment')
+                    ->label('Минимальная инвестиция')
                     ->numeric()
                     ->minValue(10000)
                     ->required(),
                 TextInput::make('target_amount')
+                    ->label('Цель сбора')
                     ->numeric()
                     ->required(),
                 TextInput::make('current_amount')
+                    ->label('Собрано')
                     ->numeric()
                     ->required(),
                 TextInput::make('target_yield')
+                    ->label('Целевая доходность')
                     ->numeric()
                     ->required(),
                 TextInput::make('term_months')
+                    ->label('Срок, месяцев')
                     ->numeric()
                     ->required(),
                 TextInput::make('cover_image_url')
+                    ->label('Обложка')
                     ->url(),
-                TextInput::make('hero_metric'),
-                Toggle::make('is_featured'),
-                DateTimePicker::make('published_at'),
+                TextInput::make('hero_metric')->label('Главная метрика'),
+                Toggle::make('is_featured')->label('Показывать в подборке'),
+                DateTimePicker::make('published_at')->label('Дата публикации'),
             ]);
     }
 }

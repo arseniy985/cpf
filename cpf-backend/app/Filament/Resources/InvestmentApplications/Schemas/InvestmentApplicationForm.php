@@ -14,24 +14,29 @@ class InvestmentApplicationForm
         return $schema
             ->components([
                 Select::make('user_id')
+                    ->label('Пользователь')
                     ->relationship('user', 'name')
                     ->searchable()
                     ->required(),
                 Select::make('project_id')
+                    ->label('Проект')
                     ->relationship('project', 'title')
                     ->searchable()
                     ->required(),
                 TextInput::make('amount')
+                    ->label('Сумма заявки')
                     ->numeric()
                     ->required(),
                 Select::make('status')
+                    ->label('Статус заявки')
                     ->options([
-                        'pending' => 'Pending',
-                        'approved' => 'Approved',
-                        'rejected' => 'Rejected',
+                        'pending' => 'Новая',
+                        'approved' => 'Одобрена',
+                        'rejected' => 'Отклонена',
                     ])
                     ->required(),
                 Textarea::make('notes')
+                    ->label('Комментарий')
                     ->rows(4),
             ]);
     }

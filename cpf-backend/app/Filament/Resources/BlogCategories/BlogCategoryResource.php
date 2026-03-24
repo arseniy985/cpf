@@ -19,13 +19,15 @@ class BlogCategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контент';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
     protected static ?string $navigationLabel = 'Категории блога';
 
     protected static ?string $modelLabel = 'категория блога';
 
     protected static ?string $pluralModelLabel = 'Категории блога';
+
+    protected static ?int $navigationSort = 60;
 
     public static function form(Schema $schema): Schema
     {

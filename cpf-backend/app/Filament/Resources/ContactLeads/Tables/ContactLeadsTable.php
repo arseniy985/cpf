@@ -15,14 +15,19 @@ class ContactLeadsTable
         return $table
             ->columns([
                 TextColumn::make('full_name')
+                    ->label('ФИО')
                     ->searchable(),
                 TextColumn::make('email')
+                    ->label('Email')
                     ->searchable(),
                 TextColumn::make('subject')
+                    ->label('Тема')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->label('Статус')
                     ->badge(),
                 TextColumn::make('created_at')
+                    ->label('Создан')
                     ->dateTime()
                     ->sortable(),
             ])

@@ -14,12 +14,12 @@ class ProjectReportForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('project_id')->relationship('project', 'title')->searchable()->required(),
-            TextInput::make('title')->required(),
-            Textarea::make('summary')->rows(4),
-            TextInput::make('file_url')->url(),
-            DatePicker::make('report_date')->required(),
-            Toggle::make('is_public'),
+            Select::make('project_id')->label('Проект')->relationship('project', 'title')->searchable()->required(),
+            TextInput::make('title')->label('Название отчёта')->required(),
+            Textarea::make('summary')->label('Краткое описание')->rows(4),
+            TextInput::make('file_url')->label('Ссылка на файл')->url(),
+            DatePicker::make('report_date')->label('Дата отчёта')->required(),
+            Toggle::make('is_public')->label('Публичный'),
         ]);
     }
 }

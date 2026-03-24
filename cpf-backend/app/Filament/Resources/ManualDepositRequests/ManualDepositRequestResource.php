@@ -27,6 +27,8 @@ class ManualDepositRequestResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Ручные пополнения';
 
+    protected static ?int $navigationSort = 10;
+
     public static function form(Schema $schema): Schema
     {
         return ManualDepositRequestForm::configure($schema);
@@ -42,5 +44,12 @@ class ManualDepositRequestResource extends Resource
         return [
             'index' => ManageManualDepositRequests::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::query()->whereIn('status', ['under_review', 'approved'])->count();
+
+        return $count > 0 ? (string) $count : null;
     }
 }

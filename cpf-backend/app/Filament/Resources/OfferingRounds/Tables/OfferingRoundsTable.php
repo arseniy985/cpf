@@ -29,9 +29,10 @@ class OfferingRoundsTable
                     ->label('Кабинет')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->label('Статус')
                     ->badge(),
                 TextColumn::make('ownerAccount.onboarding.status')
-                    ->label('KYB')
+                    ->label('Проверка компании')
                     ->badge(),
                 TextColumn::make('target_amount')
                     ->label('Цель')

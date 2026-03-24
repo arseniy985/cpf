@@ -19,15 +19,17 @@ class ContactLeadResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
-    protected static string|UnitEnum|null $navigationGroup = 'CRM';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
-    protected static ?string $navigationLabel = 'Лиды инвесторов';
+    protected static ?string $navigationLabel = 'Лиды';
 
     protected static ?string $modelLabel = 'лид';
 
     protected static ?string $pluralModelLabel = 'Лиды';
 
     protected static ?string $recordTitleAttribute = 'full_name';
+
+    protected static ?int $navigationSort = 80;
 
     public static function form(Schema $schema): Schema
     {

@@ -19,13 +19,15 @@ class BlogPostResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контент';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
-    protected static ?string $navigationLabel = 'Посты блога';
+    protected static ?string $navigationLabel = 'Блог';
 
-    protected static ?string $modelLabel = 'пост блога';
+    protected static ?string $modelLabel = 'публикация блога';
 
-    protected static ?string $pluralModelLabel = 'Посты блога';
+    protected static ?string $pluralModelLabel = 'Блог';
+
+    protected static ?int $navigationSort = 50;
 
     public static function form(Schema $schema): Schema
     {

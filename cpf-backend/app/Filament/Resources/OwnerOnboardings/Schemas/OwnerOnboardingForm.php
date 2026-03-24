@@ -13,6 +13,7 @@ class OwnerOnboardingForm
     {
         return $schema->components([
             Select::make('status')
+                ->label('Статус проверки')
                 ->options([
                     'account_created' => 'Аккаунт создан',
                     'kyb_in_progress' => 'Проверка компании',
@@ -22,10 +23,11 @@ class OwnerOnboardingForm
                     'kyb_rejected' => 'Отклонено',
                 ])
                 ->required(),
-            DateTimePicker::make('submitted_at'),
-            DateTimePicker::make('reviewed_at'),
-            DateTimePicker::make('activated_at'),
+            DateTimePicker::make('submitted_at')->label('Отправлена'),
+            DateTimePicker::make('reviewed_at')->label('Проверена'),
+            DateTimePicker::make('activated_at')->label('Активирована'),
             Textarea::make('rejection_reason')
+                ->label('Причина отклонения')
                 ->rows(4),
         ]);
     }

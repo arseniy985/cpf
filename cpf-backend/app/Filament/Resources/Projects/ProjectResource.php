@@ -21,7 +21,7 @@ class ProjectResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Каталог';
+    protected static string|UnitEnum|null $navigationGroup = 'Сделки и проекты';
 
     protected static ?string $navigationLabel = 'Проекты';
 
@@ -30,6 +30,8 @@ class ProjectResource extends Resource
     protected static ?string $pluralModelLabel = 'Проекты';
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {

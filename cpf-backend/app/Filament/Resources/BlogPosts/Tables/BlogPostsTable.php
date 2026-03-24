@@ -14,9 +14,9 @@ class BlogPostsTable
     {
         return $table
             ->columns([
-                TextColumn::make('title')->searchable(),
+                TextColumn::make('title')->label('Заголовок')->searchable(),
                 TextColumn::make('category.name')->label('Категория'),
-                TextColumn::make('published_at')->dateTime(),
+                TextColumn::make('published_at')->label('Дата публикации')->dateTime(),
             ])
             ->recordActions([
                 EditAction::make(),

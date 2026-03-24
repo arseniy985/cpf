@@ -12,9 +12,9 @@ class WithdrawalRequestForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('user_id')->relationship('user', 'email')->searchable()->required(),
-            TextInput::make('amount')->numeric()->required(),
-            Select::make('status')->options([
+            Select::make('user_id')->label('Пользователь')->relationship('user', 'email')->searchable()->required(),
+            TextInput::make('amount')->label('Сумма')->numeric()->required(),
+            Select::make('status')->label('Статус заявки')->options([
                 'pending_review' => 'На проверке',
                 'approved' => 'Одобрено',
                 'rejected' => 'Отклонено',
@@ -23,10 +23,10 @@ class WithdrawalRequestForm
                 'failed' => 'Ошибка',
                 'cancelled' => 'Отменено',
             ])->required(),
-            TextInput::make('bank_name')->required(),
-            TextInput::make('bank_account')->required(),
-            Textarea::make('comment')->rows(3),
-            Textarea::make('review_note')->rows(3),
+            TextInput::make('bank_name')->label('Банк')->required(),
+            TextInput::make('bank_account')->label('Счёт')->required(),
+            Textarea::make('comment')->label('Комментарий пользователя')->rows(3),
+            Textarea::make('review_note')->label('Комментарий менеджера')->rows(3),
         ]);
     }
 }

@@ -14,8 +14,8 @@ class BlogCategoriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('slug')->searchable(),
+                TextColumn::make('name')->label('Название')->searchable(),
+                TextColumn::make('slug')->label('Slug')->searchable(),
             ])
             ->recordActions([
                 EditAction::make(),

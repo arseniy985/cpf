@@ -19,13 +19,15 @@ class ProjectReportResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Сделки';
+    protected static string|UnitEnum|null $navigationGroup = 'Сделки и проекты';
 
     protected static ?string $navigationLabel = 'Отчеты проектов';
 
     protected static ?string $modelLabel = 'отчет проекта';
 
     protected static ?string $pluralModelLabel = 'Отчеты проектов';
+
+    protected static ?int $navigationSort = 40;
 
     public static function form(Schema $schema): Schema
     {

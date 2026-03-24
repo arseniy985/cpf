@@ -13,13 +13,13 @@ class CaseStudyForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('slug')->required(),
-            TextInput::make('title')->required(),
-            Textarea::make('excerpt')->rows(3)->required(),
-            Textarea::make('body')->rows(10)->required(),
-            TextInput::make('result_metric'),
-            Toggle::make('is_published'),
-            DateTimePicker::make('published_at'),
+            TextInput::make('slug')->label('Slug')->required(),
+            TextInput::make('title')->label('Заголовок')->required(),
+            Textarea::make('excerpt')->label('Краткое описание')->rows(3)->required(),
+            Textarea::make('body')->label('Текст кейса')->rows(10)->required(),
+            TextInput::make('result_metric')->label('Ключевой результат'),
+            Toggle::make('is_published')->label('Опубликован'),
+            DateTimePicker::make('published_at')->label('Дата публикации'),
         ]);
     }
 }

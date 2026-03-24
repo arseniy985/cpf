@@ -19,14 +19,19 @@ class ProjectDocumentsTable
                     ->label('Проект')
                     ->searchable(),
                 TextColumn::make('title')
+                    ->label('Название')
                     ->searchable(),
                 TextColumn::make('kind')
+                    ->label('Тип')
                     ->badge(),
                 TextColumn::make('label')
+                    ->label('Бейдж')
                     ->badge(),
                 IconColumn::make('is_public')
+                    ->label('Публичный')
                     ->boolean(),
                 TextColumn::make('sort_order')
+                    ->label('Порядок')
                     ->sortable(),
             ])
             ->recordActions([

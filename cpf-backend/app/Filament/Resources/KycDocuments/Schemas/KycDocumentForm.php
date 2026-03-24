@@ -12,22 +12,38 @@ class KycDocumentForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('kyc_profile_id')->relationship('kycProfile', 'legal_name')->searchable()->required(),
-            Select::make('kind')->options([
-                'passport' => 'Паспорт',
-                'tax_id' => 'ИНН',
-                'address_proof' => 'Подтверждение адреса',
-                'company_docs' => 'Документы компании',
-                'other' => 'Прочее',
-            ])->required(),
-            Select::make('status')->options([
-                'pending_review' => 'На проверке',
-                'approved' => 'Одобрено',
-                'rejected' => 'Отклонено',
-            ])->required(),
-            TextInput::make('original_name')->required(),
-            TextInput::make('path')->required(),
-            Textarea::make('review_comment')->rows(4),
+            Select::make('kyc_profile_id')
+                ->label('Анкета инвестора')
+                ->relationship('kycProfile', 'legal_name')
+                ->searchable()
+                ->required(),
+            Select::make('kind')
+                ->label('Тип документа')
+                ->options([
+                    'passport' => 'Паспорт',
+                    'tax_id' => 'ИНН',
+                    'address_proof' => 'Подтверждение адреса',
+                    'company_docs' => 'Документы компании',
+                    'other' => 'Прочее',
+                ])
+                ->required(),
+            Select::make('status')
+                ->label('Статус проверки')
+                ->options([
+                    'pending_review' => 'На проверке',
+                    'approved' => 'Одобрен',
+                    'rejected' => 'Отклонён',
+                ])
+                ->required(),
+            TextInput::make('original_name')
+                ->label('Имя файла')
+                ->required(),
+            TextInput::make('path')
+                ->label('Путь к файлу')
+                ->required(),
+            Textarea::make('review_comment')
+                ->label('Причина отклонения')
+                ->rows(4),
         ]);
     }
 }

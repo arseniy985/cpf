@@ -27,6 +27,8 @@ class WithdrawalRequestResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Заявки на вывод';
 
+    protected static ?int $navigationSort = 20;
+
     public static function form(Schema $schema): Schema
     {
         return WithdrawalRequestForm::configure($schema);
@@ -42,5 +44,12 @@ class WithdrawalRequestResource extends Resource
         return [
             'index' => ManageWithdrawalRequests::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::query()->whereIn('status', ['pending_review', 'approved'])->count();
+
+        return $count > 0 ? (string) $count : null;
     }
 }

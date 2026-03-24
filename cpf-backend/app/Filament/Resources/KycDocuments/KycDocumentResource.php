@@ -19,13 +19,15 @@ class KycDocumentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPaperClip;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контроль';
+    protected static string|UnitEnum|null $navigationGroup = 'Заявки и проверки';
 
-    protected static ?string $navigationLabel = 'KYC документы';
+    protected static ?string $navigationLabel = 'Документы инвесторов';
 
-    protected static ?string $modelLabel = 'KYC документ';
+    protected static ?string $modelLabel = 'документ инвестора';
 
-    protected static ?string $pluralModelLabel = 'KYC документы';
+    protected static ?string $pluralModelLabel = 'Документы инвесторов';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {
@@ -42,5 +44,12 @@ class KycDocumentResource extends Resource
         return [
             'index' => ManageKycDocuments::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::query()->where('status', 'pending_review')->count();
+
+        return $count > 0 ? (string) $count : null;
     }
 }

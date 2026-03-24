@@ -19,13 +19,15 @@ class StaticPageResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentDuplicate;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Контент';
+    protected static string|UnitEnum|null $navigationGroup = 'Сайт и контент';
 
-    protected static ?string $navigationLabel = 'Статические страницы';
+    protected static ?string $navigationLabel = 'Страницы сайта';
 
     protected static ?string $modelLabel = 'страница';
 
     protected static ?string $pluralModelLabel = 'Страницы';
+
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {

@@ -13,11 +13,11 @@ class ProjectFaqItemForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('project_id')->relationship('project', 'title')->searchable()->required(),
-            TextInput::make('question')->required(),
-            Textarea::make('answer')->rows(4)->required(),
-            TextInput::make('sort_order')->numeric()->default(0),
-            Toggle::make('is_published'),
+            Select::make('project_id')->label('Проект')->relationship('project', 'title')->searchable()->required(),
+            TextInput::make('question')->label('Вопрос')->required(),
+            Textarea::make('answer')->label('Ответ')->rows(4)->required(),
+            TextInput::make('sort_order')->label('Порядок')->numeric()->default(0),
+            Toggle::make('is_published')->label('Опубликован'),
         ]);
     }
 }

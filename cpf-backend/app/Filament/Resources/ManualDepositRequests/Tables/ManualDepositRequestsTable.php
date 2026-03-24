@@ -22,7 +22,20 @@ class ManualDepositRequestsTable
                 TextColumn::make('amount')->label('Сумма')->numeric()->sortable(),
                 TextColumn::make('payer_name')->label('Плательщик')->searchable(),
                 TextColumn::make('payer_bank')->label('Банк плательщика')->toggleable(),
-                TextColumn::make('status')->badge(),
+                TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'awaiting_transfer' => 'Ожидает перевода',
+                        'under_review' => 'На проверке',
+                        'awaiting_user_clarification' => 'Ждёт уточнение от пользователя',
+                        'approved' => 'Подтверждено',
+                        'credited' => 'Зачислено',
+                        'rejected' => 'Отклонено',
+                        'cancelled' => 'Отменено',
+                        'expired' => 'Истекло',
+                        default => $state,
+                    }),
                 TextColumn::make('receipt_uploaded_at')->label('Чек')->dateTime()->placeholder('Нет'),
                 TextColumn::make('created_at')->label('Создана')->dateTime()->sortable(),
             ])
@@ -55,7 +68,7 @@ class ManualDepositRequestsTable
                         $data['review_note'],
                     )),
                 Action::make('approve')
-                    ->label('Подтвердить')
+                    ->label('Подтвердить заявку')
                     ->visible(fn ($record): bool => in_array($record->status, ['under_review', 'awaiting_user_clarification'], true))
                     ->form([
                         Textarea::make('review_note')->label('Комментарий')->required()->rows(4),
@@ -66,7 +79,7 @@ class ManualDepositRequestsTable
                         $data['review_note'],
                     )),
                 Action::make('credit')
-                    ->label('Зачислить')
+                    ->label('Зачислить средства')
                     ->color('success')
                     ->visible(fn ($record): bool => in_array($record->status, ['approved', 'under_review'], true))
                     ->form([

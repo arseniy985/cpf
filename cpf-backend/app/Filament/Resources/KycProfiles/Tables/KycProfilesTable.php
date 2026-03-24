@@ -17,10 +17,19 @@ class KycProfilesTable
         return $table
             ->columns([
                 TextColumn::make('user.email')->label('Пользователь')->searchable(),
-                TextColumn::make('legal_name')->searchable(),
-                TextColumn::make('status')->badge(),
-                TextColumn::make('submitted_at')->dateTime(),
-                TextColumn::make('reviewed_at')->dateTime(),
+                TextColumn::make('legal_name')->label('ФИО')->searchable(),
+                TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'draft' => 'Черновик',
+                        'pending_review' => 'На проверке',
+                        'approved' => 'Одобрена',
+                        'rejected' => 'Отклонена',
+                        default => $state,
+                    }),
+                TextColumn::make('submitted_at')->label('Отправлена')->dateTime(),
+                TextColumn::make('reviewed_at')->label('Проверена')->dateTime(),
             ])
             ->recordActions([
                 Action::make('approve')

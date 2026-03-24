@@ -16,8 +16,8 @@ class ProjectFaqItemsTable
         return $table
             ->columns([
                 TextColumn::make('project.title')->label('Проект')->searchable(),
-                TextColumn::make('question')->searchable()->wrap(),
-                IconColumn::make('is_published')->boolean(),
+                TextColumn::make('question')->label('Вопрос')->searchable()->wrap(),
+                IconColumn::make('is_published')->label('Опубликован')->boolean(),
             ])
             ->recordActions([
                 EditAction::make(),

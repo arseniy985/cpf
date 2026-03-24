@@ -19,13 +19,17 @@ class ProjectsTable
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label('Проект')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('location')
+                    ->label('Локация')
                     ->searchable(),
                 TextColumn::make('funding_status')
+                    ->label('Статус сбора')
                     ->badge(),
                 TextColumn::make('target_yield')
+                    ->label('Доходность')
                     ->suffix('%')
                     ->sortable(),
                 TextColumn::make('current_amount')
@@ -33,8 +37,10 @@ class ProjectsTable
                     ->label('Собрано')
                     ->sortable(),
                 IconColumn::make('is_featured')
+                    ->label('В подборке')
                     ->boolean(),
                 TextColumn::make('published_at')
+                    ->label('Дата публикации')
                     ->dateTime()
                     ->sortable(),
             ])

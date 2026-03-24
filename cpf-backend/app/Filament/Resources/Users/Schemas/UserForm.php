@@ -15,22 +15,29 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Имя')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label('Email')
                     ->email()
                     ->required(),
-                DateTimePicker::make('email_verified_at'),
+                DateTimePicker::make('email_verified_at')
+                    ->label('Email подтверждён'),
                 TextInput::make('password')
+                    ->label('Пароль')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->dehydrated(fn (?string $state): bool => filled($state)),
                 TextInput::make('phone')
+                    ->label('Телефон')
                     ->tel(),
                 Toggle::make('is_active')
+                    ->label('Активен')
                     ->required(),
-                DateTimePicker::make('last_login_at'),
+                DateTimePicker::make('last_login_at')
+                    ->label('Последний вход'),
                 Select::make('roles')
+                    ->label('Роли')
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload(),

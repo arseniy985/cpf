@@ -2,11 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -30,6 +31,25 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Рабочий стол'),
+                NavigationGroup::make()
+                    ->label('Заявки и проверки'),
+                NavigationGroup::make()
+                    ->label('Платежи'),
+                NavigationGroup::make()
+                    ->label('Сделки и проекты'),
+                NavigationGroup::make()
+                    ->label('Сайт и контент')
+                    ->collapsed(),
+                NavigationGroup::make()
+                    ->label('Пользователи и доступ')
+                    ->collapsed(),
+                NavigationGroup::make()
+                    ->label('Система')
+                    ->collapsed(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
