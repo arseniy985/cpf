@@ -34,10 +34,12 @@ class ManagerWorkspaceData
         $sections = [
             [
                 'title' => 'Заявки и проверки',
+                'icon' => 'checks',
                 'description' => 'Очереди, где менеджеру нужно принять решение по инвесторам и компаниям.',
                 'items' => [
                     self::queue(
                         label: 'Анкеты инвесторов',
+                        icon: 'profile',
                         description: 'Новые анкеты инвесторов, которые ждут проверки и решения.',
                         count: KycProfile::query()->where('status', 'pending_review')->count(),
                         overdue: KycProfile::query()
@@ -51,6 +53,7 @@ class ManagerWorkspaceData
                     ),
                     self::queue(
                         label: 'Документы инвесторов',
+                        icon: 'document',
                         description: 'Паспорта и другие документы, которые ждут подтверждения.',
                         count: KycDocument::query()->where('status', 'pending_review')->count(),
                         overdue: KycDocument::query()->where('status', 'pending_review')->where('created_at', '<=', $cutoff)->count(),
@@ -59,6 +62,7 @@ class ManagerWorkspaceData
                     ),
                     self::queue(
                         label: 'Проверка компаний',
+                        icon: 'shield',
                         description: 'Компании владельцев, которые ждут KYB-проверки и активации.',
                         count: OwnerOnboarding::query()->where('status', 'kyb_under_review')->count(),
                         overdue: OwnerOnboarding::query()
@@ -72,6 +76,7 @@ class ManagerWorkspaceData
                     ),
                     self::queue(
                         label: 'Заявки инвесторов',
+                        icon: 'briefcase',
                         description: 'Новые инвестиционные заявки по проектам и раундам.',
                         count: InvestmentApplication::query()->where('status', 'pending')->count(),
                         overdue: InvestmentApplication::query()->where('status', 'pending')->where('created_at', '<=', $cutoff)->count(),
@@ -82,10 +87,12 @@ class ManagerWorkspaceData
             ],
             [
                 'title' => 'Платежи',
+                'icon' => 'payments',
                 'description' => 'Очереди, связанные с ручными пополнениями, выводами и синхронизацией операций.',
                 'items' => [
                     self::queue(
                         label: 'Пополнения вручную',
+                        icon: 'deposit',
                         description: 'Заявки, которые нужно проверить, подтвердить или зачислить.',
                         count: ManualDepositRequest::query()->whereIn('status', ['under_review', 'approved'])->count(),
                         overdue: ManualDepositRequest::query()
@@ -97,6 +104,7 @@ class ManagerWorkspaceData
                     ),
                     self::queue(
                         label: 'Заявки на вывод',
+                        icon: 'withdrawal',
                         description: 'Выводы, которые ждут одобрения или подтверждения выплаты.',
                         count: WithdrawalRequest::query()->whereIn('status', ['pending_review', 'approved'])->count(),
                         overdue: WithdrawalRequest::query()
@@ -108,6 +116,7 @@ class ManagerWorkspaceData
                     ),
                     self::queue(
                         label: 'Платёжные операции',
+                        icon: 'card',
                         description: 'Онлайн-платежи, которые нужно сверить или синхронизировать.',
                         count: PaymentTransaction::query()->whereIn('status', ['pending', 'waiting_for_capture'])->count(),
                         overdue: PaymentTransaction::query()
@@ -121,10 +130,12 @@ class ManagerWorkspaceData
             ],
             [
                 'title' => 'Сделки и проекты',
+                'icon' => 'projects',
                 'description' => 'Очереди модерации проектов и раундов, влияющие на витрину и сделки.',
                 'items' => [
                     self::queue(
                         label: 'Раунды размещения',
+                        icon: 'round',
                         description: 'Раунды, которые ждут публикации или возврата на доработку.',
                         count: OfferingRound::query()->where('status', 'pending_review')->count(),
                         overdue: OfferingRound::query()
@@ -152,24 +163,28 @@ class ManagerWorkspaceData
             'summary' => [
                 [
                     'label' => 'Требует решения',
+                    'icon' => 'inbox',
                     'value' => $allQueues->sum('count'),
                     'description' => 'Все очереди, где менеджеру нужно действие прямо сейчас.',
                     'tone' => 'slate',
                 ],
                 [
                     'label' => 'Просрочено > 24 часов',
+                    'icon' => 'warning',
                     'value' => $allQueues->sum('overdue'),
                     'description' => 'Задачи, которые уже висят дольше рабочего дня.',
                     'tone' => $allQueues->sum('overdue') > 0 ? 'rose' : 'emerald',
                 ],
                 [
                     'label' => 'Ждут ответа пользователя',
+                    'icon' => 'message',
                     'value' => $awaitingCustomer,
                     'description' => 'Пополнения, где менеджер уже запросил уточнение.',
                     'tone' => 'amber',
                 ],
                 [
                     'label' => 'Открыть все входящие',
+                    'icon' => 'arrow',
                     'value' => 'Перейти',
                     'description' => 'Единая страница со всеми очередями и прямыми переходами.',
                     'tone' => 'blue',
@@ -178,11 +193,11 @@ class ManagerWorkspaceData
             ],
             'sections' => $sections,
             'quickLinks' => [
-                ['label' => 'Проекты', 'description' => 'Каталог проектов и их статусы.', 'url' => ProjectResource::getUrl('index')],
-                ['label' => 'Страницы сайта', 'description' => 'Основные CMS-страницы и публикации.', 'url' => StaticPageResource::getUrl('index')],
-                ['label' => 'FAQ сайта', 'description' => 'Ответы на частые вопросы на витрине.', 'url' => FaqItemResource::getUrl('index')],
-                ['label' => 'Лиды', 'description' => 'Новые обращения и контакты инвесторов.', 'url' => ContactLeadResource::getUrl('index')],
-                ['label' => 'Пользователи', 'description' => 'Управление доступом и ролями.', 'url' => UserResource::getUrl('index')],
+                ['label' => 'Проекты', 'icon' => 'projects', 'description' => 'Каталог проектов и их статусы.', 'url' => ProjectResource::getUrl('index')],
+                ['label' => 'Страницы сайта', 'icon' => 'globe', 'description' => 'Основные CMS-страницы и публикации.', 'url' => StaticPageResource::getUrl('index')],
+                ['label' => 'FAQ сайта', 'icon' => 'faq', 'description' => 'Ответы на частые вопросы на витрине.', 'url' => FaqItemResource::getUrl('index')],
+                ['label' => 'Лиды', 'icon' => 'leads', 'description' => 'Новые обращения и контакты инвесторов.', 'url' => ContactLeadResource::getUrl('index')],
+                ['label' => 'Пользователи', 'icon' => 'users', 'description' => 'Управление доступом и ролями.', 'url' => UserResource::getUrl('index')],
             ],
         ];
     }
@@ -206,6 +221,7 @@ class ManagerWorkspaceData
      */
     private static function queue(
         string $label,
+        string $icon,
         string $description,
         int $count,
         int $overdue,
@@ -214,6 +230,7 @@ class ManagerWorkspaceData
     ): array {
         return [
             'label' => $label,
+            'icon' => $icon,
             'description' => $description,
             'count' => $count,
             'overdue' => $overdue,

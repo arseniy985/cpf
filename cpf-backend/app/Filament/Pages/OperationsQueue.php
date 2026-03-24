@@ -9,6 +9,8 @@ use UnitEnum;
 
 class OperationsQueue extends Page
 {
+    protected static ?string $title = 'Входящие задачи';
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?string $navigationLabel = 'Входящие задачи';
