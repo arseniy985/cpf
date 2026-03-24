@@ -19,7 +19,7 @@ class WithdrawalRequestResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Операции';
+    protected static string|UnitEnum|null $navigationGroup = 'Платежи';
 
     protected static ?string $navigationLabel = 'Заявки на вывод';
 

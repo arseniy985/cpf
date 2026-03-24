@@ -24,7 +24,7 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $panel = $panel
             ->default()
             ->id('admin')
             ->path('admin')
@@ -75,5 +75,16 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+
+        if ($this->hasAdminThemeAssets()) {
+            $panel->viteTheme('resources/css/filament/admin/theme.css');
+        }
+
+        return $panel;
+    }
+
+    private function hasAdminThemeAssets(): bool
+    {
+        return file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot'));
     }
 }

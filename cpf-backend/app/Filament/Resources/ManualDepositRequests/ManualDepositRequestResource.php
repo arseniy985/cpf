@@ -19,7 +19,7 @@ class ManualDepositRequestResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Операции';
+    protected static string|UnitEnum|null $navigationGroup = 'Платежи';
 
     protected static ?string $navigationLabel = 'Ручные пополнения';
 
